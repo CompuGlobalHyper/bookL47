@@ -1,17 +1,12 @@
 const express = require('express')
-const { google } = require('googleapis')
 const routes = require('./routes.js')
+const dotenv = require("dotenv")
+
 
 const app = express()
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
-const GOOGLE_CALENDAR_API = process.env.GOOGLE_CALENDAR_API
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
+dotenv.config();
 
-const oauth2Client = new google.auth.OAuth2(
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  "http://localhost:3000/auth/google/callback"
-);
+
 
 app.use(routes)
 const PORT = process.env.PORT || 3000
