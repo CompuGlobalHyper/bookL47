@@ -1,0 +1,38 @@
+{
+  "name": "bookl47",
+  "version": "1.0.0",
+  "description": "The backend code for a Local 47 booking application",
+  "homepage": "https://github.com/CompuGlobalHyper/bookL47#readme",
+  "bugs": {
+    "url": "https://github.com/CompuGlobalHyper/bookL47/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CompuGlobalHyper/bookL47.git"
+  },
+  "license": "ISC",
+  "author": "phin",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.1",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "express-validator": "^7.3.2",
+    "fs": "^0.0.1-security",
+    "googleapis": "^173.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "pg": "^8.20.0"
+  }
+}
