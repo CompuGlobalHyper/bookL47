@@ -1,6 +1,14 @@
 const { google } = require('googleapis')
 const Jotform = require('jotform').default
+const { createClient } = require('@supabase/supabase-js')
 
+
+function supabaseClient () {
+    return createClient(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_SECRET_KEY
+    )
+}
 
 function googleAuth () {
     return new google.auth.OAuth2(
@@ -10,7 +18,6 @@ function googleAuth () {
     );
 }
 
-let storedTokens = null
 
 const controllers = {
     //sign in to get auth
@@ -34,12 +41,27 @@ const controllers = {
         oauth2Client.setCredentials(tokens);
         console.log("TOKENS:", tokens);
         //store in db
-        storedTokens = tokens
+        const supabase = supabaseClient()
+        const { data, error } = await supabase
+        .from('admin')
+        .insert(
+            {
+                name: 'phin',
+                google_token: tokens, 
+            }
+        )
+        if (error) console.log(error)
         res.redirect("http://localhost:3000/calendar");
     },
     async calendarGet(req, res) {
         const oauth2Client = googleAuth()
-        oauth2Client.setCredentials(storedTokens);
+        const supabase = supabaseClient()
+        const { data, error } = await supabase
+        .from('admin')
+        .select('google_token')
+        .eq('name', 'phin')
+        const tokens = data[0].google_token
+        oauth2Client.setCredentials(tokens);
         //create calendar client
         const calendar = google.calendar({
             version: "v3",
@@ -57,21 +79,34 @@ const controllers = {
         res.json(result.data.items);
     },
     async jotformGet(req, res) {
-        const result = await fetch(
-            `https://api.jotform.com/form/223185389394973/submissions?apiKey=${process.env.JOTFORM_API}`
-        );
+        const getAllSubmissions = async () => {
+            let all = []
+            let limit = 100
+            let offset = 0
 
-        data = await result.json();
-        const content = data.content
-        const sortedContent = content
+            while (true) {
+                const result = await fetch(
+                    `https://api.jotform.com/form/223185389394973/submissions?apiKey=${process.env.JOTFORM_API}&limit=${limit}&offset=${offset}`
+                );
+                data = await result.json();
+                const content = data.content || []
+                all.push(...content)
+                if (content.length < limit) break
+                offset += limit
+
+            }
+            console.log(all.length)
+            return all
+        }
+        const unsortedContent = await getAllSubmissions()
+        const sortedContent = unsortedContent
         .sort((a, b) => {
             return new Date(a.answers["6"].answer.date) - new Date(b.answers["6"].answer.date)
         })
         .map((item) => {
             return { name: item.answers["3"].prettyFormat, date: item.answers["6"].answer.date}
         })
-        const sortedData = {content: sortedContent}
-        res.json(sortedData);
+        res.json(sortedContent);
     }
 }
 
