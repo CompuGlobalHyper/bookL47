@@ -28,6 +28,7 @@
     "express-validator": "^7.3.2",
     "fs": "^0.0.1-security",
     "googleapis": "^173.0.0",
+    "jotform": "^1.0.1",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
     "passport": "^0.7.0",
