@@ -33,7 +33,7 @@ const controllers = {
     //redirect to the callback page
     res.redirect(url);
     },
-    async googleAuthCallbackGet(req, res) {
+    async googleAuthCallbackGet(req, res) { 
         //get access and refresh token
         const oauth2Client = googleAuth()
         const code = req.query.code;
@@ -56,11 +56,11 @@ const controllers = {
     async calendarGet(req, res) {
         const oauth2Client = googleAuth()
         const supabase = supabaseClient()
-        const { data, error } = await supabase
+        const { data: adminData, error: adminError } = await supabase
         .from('admin')
         .select('google_token')
         .eq('name', 'phin')
-        const tokens = data[0].google_token
+        const tokens = adminData[0].google_token
         oauth2Client.setCredentials(tokens);
         //create calendar client
         const calendar = google.calendar({
@@ -71,12 +71,31 @@ const controllers = {
             calendarId: "primary",
             //from today onward
             timeMin: new Date().toISOString(),
-            maxResults: 50,
+            timeMax: new Date(
+                Date.now() + 1000 * 60 * 60 * 24 * 180
+            ).toISOString(),
             //expand recurring
             singleEvents: true,
             orderBy: "startTime"
         });
-        res.json(result.data.items);
+        const events = result.data.items
+        const rows = events.map((event) => {
+            return {
+                google_id: event.id,
+                created_at: event.created,
+                start: event.start.dateTime,
+                end: event.end.dateTime,
+                location: event.location || "No location found",
+                timezone: event.start.timeZone,
+                description: event.summary || "No description"
+            }
+        })
+        const { bookingdData, bookingError } = await supabase
+        .from('booking')
+        .upsert(rows,{
+            onConflict: 'google_id'
+        })
+        res.json(events);
     },
     async jotformGet(req, res) {
         const getAllSubmissions = async () => {
@@ -88,7 +107,7 @@ const controllers = {
                 const result = await fetch(
                     `https://api.jotform.com/form/223185389394973/submissions?apiKey=${process.env.JOTFORM_API}&limit=${limit}&offset=${offset}`
                 );
-                data = await result.json();
+                const data = await result.json();
                 const content = data.content || []
                 all.push(...content)
                 if (content.length < limit) break
