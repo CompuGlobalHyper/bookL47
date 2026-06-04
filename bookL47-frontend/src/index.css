@@ -54,3 +54,13 @@ h1, h2, h3, h4, h5, h6 {
 #root, #__next {
   isolation: isolate;
 }
+
+:root {
+    --afm-color: rgb(47, 203, 255);
+    --highlight-color: rgb(0, 136, 255);
+    --white-color: rgb(231, 243, 255);
+    --text-color: rgb(31, 32, 53);
+    --grey-color: rgb(213, 213, 213);
+    --confirm-color: rgb(0, 224, 97);
+    --reject-color: rgb(255, 69, 36);  
+}

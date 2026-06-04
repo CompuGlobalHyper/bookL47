@@ -1,3 +1,10 @@
+.currentDate {
+}
+
 .activeDate {
-    background-color: red;
+    background-color: var(--highlight-color);
+}
+
+.notAllowedDate {
+    background-color: var(--grey-color);
 }

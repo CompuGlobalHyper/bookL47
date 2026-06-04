@@ -1,3 +1,18 @@
-.fc-day-today {
-    background-color: red !important;
+/* Target the current day cell in FullCalendar */
+.fc .fc-day-today {
+  position: relative;
+  background-color: var(--grey-color) !important;
+}
+
+/* Use a pseudo-element to build an overlay border */
+.fc .fc-day-today::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 3px solid var(--highlight-color); /* Change this to your preferred color */
+  z-index: 2; /* Ensures the border sits on top of cell backgrounds */
+  pointer-events: none; /* Allows users to still click the cell */
 }
