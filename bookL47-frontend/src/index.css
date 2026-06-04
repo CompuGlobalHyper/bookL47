@@ -16,6 +16,9 @@
   }
 }
 
+html {
+    height: 100%;
+}
 body {
   /* 4. Increase line-height */
   line-height: 1.5;
@@ -48,6 +51,12 @@ h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
 }
 
+ul, li {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
 /*
   10. Create a root stacking context
 */
@@ -58,6 +67,7 @@ h1, h2, h3, h4, h5, h6 {
 :root {
     --afm-color: rgb(47, 203, 255);
     --highlight-color: rgb(0, 136, 255);
+    --dark-highlight-color: rgb(0, 80, 149);
     --white-color: rgb(231, 243, 255);
     --text-color: rgb(31, 32, 53);
     --grey-color: rgb(213, 213, 213);

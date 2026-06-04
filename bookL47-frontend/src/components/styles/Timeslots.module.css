@@ -1,0 +1,45 @@
+.container {
+    margin: auto 0;
+    min-width: 30vw;
+    padding: 5px 5px;
+    border: 2px solid black;
+    border-radius: 8px;
+}
+.list {
+    list-style-type: none;
+}
+
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 20px;
+    padding: 5px 5px;
+    border: 2px solid black;
+    border-radius: 8px;
+}
+
+.unavailableItem {
+    color: var(--white-color);
+    background-color: var(--reject-color);
+
+}
+.isActive {
+    color: var(--white-color);
+    background-color: var(--confirm-color);
+}
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 20px;
+    padding: 5px 5px;
+    border: 1px solid var(--white-color);
+    outline: 2px solid var(--dark-highlight-color);
+    color: var(--white-color);
+    background-color: var(--highlight-color);
+    border-radius: 8px;
+
+}

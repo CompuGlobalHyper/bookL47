@@ -1,16 +1,16 @@
 .container {
     display: flex;
     flex-direction: column;
+    
 }
 .list {
     display: flex;
     justify-content: center;
     gap: 20px;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+    flex-wrap: wrap;
 }
 .item {
+    cursor: pointer;
     margin-top: 20px;
     padding: 5px 5px;
     border: 2px solid black;

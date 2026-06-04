@@ -8,3 +8,19 @@
 .notAllowedDate {
     background-color: var(--grey-color);
 }
+
+.monthView {
+    flex: 1;
+}
+
+@media screen and (min-width: 700px) {
+  .dayView {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .monthView {
+    display: none;
+  }
+}

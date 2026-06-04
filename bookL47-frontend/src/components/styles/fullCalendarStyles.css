@@ -16,3 +16,11 @@
   z-index: 2; /* Ensures the border sits on top of cell backgrounds */
   pointer-events: none; /* Allows users to still click the cell */
 }
+
+/* month view */
+.fc-dayGridMonth-view {
+}
+
+/* day view*/
+.fc-timeGridDay-view {
+}

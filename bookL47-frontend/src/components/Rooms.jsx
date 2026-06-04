@@ -4,12 +4,6 @@ import styles from './styles/Rooms.module.css'
 export default function Rooms() {
     const [selected, setSelected] = useState(null)
 
-    function handleClick(e) {
-        e.preventDefault()
-
-
-
-    }
     const smallRooms = [
         { id: 1, name: "Room 1", isActive: false },
         { id: 2, name: "Room 2", isActive: false },
