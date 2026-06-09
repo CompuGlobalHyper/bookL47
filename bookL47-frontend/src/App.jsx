@@ -1,19 +1,29 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Calendar from './components/Calendar'
-import Rooms from './components/Rooms'
-import Timeslots from './components/Timeslots'
 import styles from './App.module.css'
 
 function App() {
+  const API = import.meta.env.VITE_API_URL
+  const [events, setEvents] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchEvents() {
+      const res = await fetch(`${API}/calendar`, {
+        method: 'GET'
+      })
+      console.log('retrieving data...')
+      const data = await res.json()
+      setEvents(data)
+      setLoading(false)
+    }
+    fetchEvents()
+  }, [])
 
   return (
     <div className={styles.body}>
       <div className={styles.main}>
-        <Calendar></Calendar>
-        <div className={styles.side}>
-          <Rooms></Rooms>
-          <Timeslots></Timeslots>
-        </div>
+        <Calendar events={events} loading={loading}></Calendar>
       </div>
       
 

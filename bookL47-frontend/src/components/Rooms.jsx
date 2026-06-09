@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import styles from './styles/Rooms.module.css'
 
-export default function Rooms() {
-    const [selected, setSelected] = useState(null)
+export default function Rooms({ selectedRoom, setSelectedRoom }) {
 
     const smallRooms = [
         { id: 1, name: "Room 1", isActive: false },
@@ -20,24 +19,26 @@ export default function Rooms() {
     <div className={styles.container}>
         <ul className={styles.list}>
             { smallRooms.map((room) => {
-                room.isActive = room.id === selected
+                room.isActive = room.id === selectedRoom
                 return (
                     <li 
                         key={room.id} 
                         className={`${styles.item} ${room.isActive ? styles.activeItem : ''}`}
-                        onClick={() => setSelected(room.id)}>
+                        onClick={() => {
+                            setSelectedRoom(room.id)
+                            console.log(room.id)}}>
                         {room.name}
                     </li>)
             })}
         </ul>
         <ul className={styles.list}>
             { bigRooms.map((room) => {
-                room.isActive = room.id === selected
+                room.isActive = room.id === selectedRoom
                 return (
                     <li 
                         key={room.id} 
                         className={`${styles.item} ${room.isActive ? styles.activeItem : ''}`}
-                        onClick={() => setSelected(room.id)}>
+                        onClick={() => setSelectedRoom(room.id)}>
                         {room.name}
                     </li>)
             })}

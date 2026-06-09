@@ -1,54 +1,71 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './styles/Timeslots.module.css'
-const slotsTest = [
+
+export default function Timeslots({ selectedRoom, slots = [] }) {
+    const [message, setMessage] = useState('')
+    const [buttons, setButtons] = useState([
         {
             id: 1,
             name: "10am - 12:30pm",
-            date: null,
+            dateTime: '10:00:00',
             available: true,
             selected: false,
         },
         {
             id: 2,
             name: "1pm - 3:30pm",
-            date: null,
+            dateTime: '13:00:00',
             available: true,
             selected: false,
         },
         {
             id: 3,
             name: "4pm - 6:30pm",
-            date: null,
+            dateTime: '16:00:00',
             available: true,
             selected: false,
         },
         {
             id: 4,
-            name: "6:30pm - 9:30pm",
-            date: null,
+            name: "7:00pm - 9:30pm",
+            dateTime: '19:00:00',
             available: true,
             selected: false,
         },
-    ];
-
-export default function Timeslots() {
-    const [slots, setSlots] = useState(slotsTest)
+    ])
 
     function handleSelect(id) {
-        setSlots((prev) => {
-            return prev.map((slot) => 
-            slot.id === id 
-            ? {...slot, selected: !slot.selected}
-            : slot
+        setButtons((prev) => {
+            return prev.map((button) => 
+            button.id === id 
+            ? {...button, selected: !button.selected}
+            : button
             )
         })
     }
+
+    useEffect(() => {
+        if (!slots || Object.keys(slots).length === 0) return;
+        console.log(JSON.stringify(slots))
+        const filledTimes = slots?.filledTimes;
+        const filledSet = new Set(
+            filledTimes.map((time) => time.startTime)
+        );
+
+        setButtons(prev =>
+            prev.map(button => ({
+                ...button,
+                available: !filledSet.has(button.dateTime)
+            }))
+        );
+    }, [slots]);
+
     
   return (
     <div className={styles.container}>
       <div>Available slots:</div>
       <ul className={styles.list}>
-        {slots ? slots.map((item) => {
+        {buttons ? buttons.map((item) => {
             return (
                 <li 
                 className=
@@ -68,3 +85,4 @@ export default function Timeslots() {
     </div>
   )
 }
+

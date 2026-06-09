@@ -5,23 +5,5 @@
     margin: 0 clamp(5rem, 3dvw, 15rem)
 }
 
-.main {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap:40px;
-}
 
-@media screen and (max-width: 900px) {
-    .main {
-        flex-direction: column;
-    }
-}
 
-.side {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}

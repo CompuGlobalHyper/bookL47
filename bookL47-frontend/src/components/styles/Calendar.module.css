@@ -1,3 +1,17 @@
+.main {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap:40px;
+}
+
+@media screen and (max-width: 900px) {
+    .main {
+        flex-direction: column;
+    }
+}
+
 .currentDate {
 }
 
@@ -23,4 +37,11 @@
   .monthView {
     display: none;
   }
+}
+
+.side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }

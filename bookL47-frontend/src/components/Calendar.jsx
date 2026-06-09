@@ -5,16 +5,30 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from "@fullcalendar/interaction";
 import './styles/fullCalendarStyles.css'
 import styles from "./styles/Calendar.module.css"
+import Rooms from './Rooms';
+import Timeslots from './Timeslots';
 
 const fullView = "dayGridMonth"
 const mobileView = 'timeGridDay'
 const firstDate = new Date();
 firstDate.setDate(firstDate.getDate() + 2)
 
-//700px width
+function findDateObject(list, date) {
+    return list.find((item) => item.date === date)
+}
 
-export default function Calendar({ events = [{title: 'Hello World', start: '2026-06-03'}] }) {
+function findSlotObject(list, room) {
+    
+    return list.find((item) => item.name === `Room ${room}`
+    )
+}
+
+
+export default function Calendar({ events, loading }) {
   const [selectedDate, setSelectedDate] = useState(firstDate)
+  const [dateObject, setDateObject] = useState({})
+  const [selectedRoom, setSelectedRoom] = useState(4)
+  const [slots, setSlots] = useState({})
   const dayCalendarRef = useRef(null)
   const handleClick = (cell) => {
     setSelectedDate(cell.dateStr)
@@ -22,14 +36,34 @@ export default function Calendar({ events = [{title: 'Hello World', start: '2026
 
   }
   useEffect(() => {
+    if(Object.keys(dateObject).length === 0) return
+    setSlots(findSlotObject(dateObject.rooms, selectedRoom))
+  }, [selectedRoom])
+
+  useEffect(() => {
+    function setInitial() {
+        let firstDateStr = firstDate.toISOString().split('T')[0]
+        let firstDateObject = findDateObject(events, firstDateStr)
+        let firstSlotObject = findSlotObject(firstDateObject.rooms, 4)
+        setDateObject(firstDateObject)
+        setSlots(firstSlotObject)
+    }
+    if(!loading) {
+        setInitial()
+    }
+  }, [loading])
+  
+  useEffect(() => {
     if (!dayCalendarRef.current) return;
-
+    let dateObject = events.find((obj) => obj.date === selectedDate)
+    setSlots(findSlotObject(dateObject.rooms, selectedRoom))
     const api = dayCalendarRef.current.getApi();
-
     api.gotoDate(selectedDate);
     }, [selectedDate]);
-    return (
-        <>  
+    return ( 
+        <div className={styles.main}>
+            {loading ? <div>Loading...</div> : 
+            <>
             <div className={styles.dayView}>
                 <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
@@ -50,7 +84,7 @@ export default function Calendar({ events = [{title: 'Hello World', start: '2026
                 plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
                 initialView={fullView}
                 height={'auto'}
-                events={events}
+                events={[]}
                 dateClick={handleClick}
                 dayCellClassNames={(cell) => {
                     const today = new Date();
@@ -60,7 +94,6 @@ export default function Calendar({ events = [{title: 'Hello World', start: '2026
                     const todayStr = today.toISOString().split('T')[0];
                     const tomorrowStr = tomorrow.toISOString().split('T')[0]
 
-                    console.log('hello')
                     let formattedDate = cell.date.toISOString().split('T')[0]
                     if (todayStr === formattedDate) {
                         return [styles.currentDate]
@@ -77,7 +110,18 @@ export default function Calendar({ events = [{title: 'Hello World', start: '2026
                 }}
                 />
             </div>
-        </>
-    
+            <div className={styles.side}>
+                <Rooms
+                selectedRoom={selectedRoom}
+                setSelectedRoom={setSelectedRoom} 
+                ></Rooms>
+                <Timeslots 
+                selectedRoom={selectedRoom} 
+                slots={slots}
+                ></Timeslots>
+            </div>
+            </> }
+            
+        </div> 
   );
 }
