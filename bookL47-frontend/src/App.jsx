@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import Calendar from './components/Calendar'
 import styles from './App.module.css'
 
 function App() {
+  const user = "member"
   const API = import.meta.env.VITE_API_URL
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
@@ -22,11 +22,9 @@ function App() {
 
   return (
     <div className={styles.body}>
-      <div className={styles.main}>
-        <Calendar events={events} loading={loading}></Calendar>
-      </div>
-      
-
+      <Header user={user} ></Header>
+      <Outlet />
+      <Footer />
     </div>
   )
 }
