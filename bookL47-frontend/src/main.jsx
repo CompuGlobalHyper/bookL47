@@ -8,6 +8,7 @@ import Home from './routes/homeRoutes/Home.jsx';
 import About from './routes/About.jsx';
 import Join from './routes/Join.jsx';
 import Conduct from './routes/Conduct.jsx';
+import Book from './routes/Book.jsx';
 
 
 

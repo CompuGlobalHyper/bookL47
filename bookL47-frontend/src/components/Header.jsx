@@ -1,4 +1,6 @@
 import React from 'react'
+import styles from "./styles/Header.module.css"
+import { Link } from 'react-router'
 
 export default function Header({ user }) {
     const role = user?.role || "member";

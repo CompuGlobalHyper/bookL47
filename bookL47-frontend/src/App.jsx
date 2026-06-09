@@ -1,24 +1,11 @@
 import { useState, useEffect } from 'react'
+import { Outlet } from 'react-router'
 import styles from './App.module.css'
+import Header from './components/Header'
+import Footer from './components/Footer'
 
 function App() {
   const user = { role: "member" }
-  const API = import.meta.env.VITE_API_URL
-  const [events, setEvents] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function fetchEvents() {
-      const res = await fetch(`${API}/calendar`, {
-        method: 'GET'
-      })
-      console.log('retrieving data...')
-      const data = await res.json()
-      setEvents(data)
-      setLoading(false)
-    }
-    fetchEvents()
-  }, [])
 
   return (
     <div className={styles.body}>

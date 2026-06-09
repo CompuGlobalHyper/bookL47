@@ -1,5 +1,7 @@
 import React from 'react'
+import { useState, useEffect } from 'react'
 import Calendar from '../components/Calendar'
+import styles from './styles/Book.module.css'
 
 export default function Book() {
     const API = import.meta.env.VITE_API_URL
