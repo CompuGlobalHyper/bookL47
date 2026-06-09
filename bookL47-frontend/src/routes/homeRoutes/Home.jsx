@@ -1,9 +1,9 @@
 import React from 'react'
-import GuestHome from './GuestHome'
-import NonMemberHome from './NonMemberHome'
-import MemberHome from './MemberHome'
-import CrewHome from './CrewHome'
-import AdminHome from './AdminHome'
+import GuestHome from './GuestHome.jsx'
+import NonMemberHome from './NonMemberHome.jsx'
+import MemberHome from './MemberHome.jsx'
+import CrewHome from './CrewHome.jsx'
+import AdminHome from './AdminHome.jsx'
 
 export default function Home( {user } ) {
 
