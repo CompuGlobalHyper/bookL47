@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import styles from './App.module.css'
 
 function App() {
-  const user = "member"
+  const user = { role: "member" }
   const API = import.meta.env.VITE_API_URL
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
@@ -23,7 +23,7 @@ function App() {
   return (
     <div className={styles.body}>
       <Header user={user} ></Header>
-      <Outlet />
+      <Outlet context={user}/>
       <Footer />
     </div>
   )

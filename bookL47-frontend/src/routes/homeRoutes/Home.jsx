@@ -5,8 +5,7 @@ import MemberHome from './MemberHome'
 import CrewHome from './CrewHome'
 import AdminHome from './AdminHome'
 
-export default function Home() {
-  const user = { role: "member" }
+export default function Home( {user } ) {
 
   switch (user.role) {
     case "guest":
