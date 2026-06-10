@@ -1,7 +1,7 @@
 const { google } = require('googleapis')
 const Jotform = require('jotform').default
 const { createClient } = require('@supabase/supabase-js')
-
+const jwt = require('jsonwebtoken')
 
 function supabaseClient () {
     return createClient(
@@ -20,6 +20,40 @@ function googleAuth () {
 
 
 const controllers = {
+
+    loginPost(req, res) {
+        //get id from req.user
+        const user = {id: 1}
+        if (!user) {
+            console.log('login failed')
+            //frontend reads res.auth = false
+            return res.status(400).json({auth: false})
+        }
+        //store id in token as well as secret
+        jwt.sign({ id: user.id }, process.env.JWT_SECRET, {expiresIn: '1hr'}, (err, token) => {
+            if (err) {
+                console.error(err);
+                //frontend reads res.auth = false
+                return res.status(500).json({ auth: false });
+            }
+            res.cookie('access_token', token, {
+                httpOnly: true, //frontend can't read?
+                secure: true, //cookie sent over https
+                sameSite: 'none', //allow cross site requests
+                maxAge: 3600000 // 60 mins
+            })
+            console.log('login successful, token created')
+            //frontend reads res.auth = true
+            return res.status(200).json({auth: true})
+        })
+    },
+
+
+
+
+
+
+
     //sign in to get auth
     googleAuthGet(req, res) {
         const oauth2Client = googleAuth()
@@ -33,6 +67,7 @@ const controllers = {
     //redirect to the callback page
     res.redirect(url);
     },
+    //get the token & store in db
     async googleAuthCallbackGet(req, res) { 
         //get access and refresh token
         const oauth2Client = googleAuth()
@@ -53,6 +88,7 @@ const controllers = {
         if (error) console.log(error)
         res.redirect("http://localhost:3000/calendar");
     },
+    //populate db with google calendar data
     async calendarGet(req, res) {
         const oauth2Client = googleAuth()
         const supabase = supabaseClient()
@@ -130,6 +166,7 @@ const controllers = {
 
         res.json(bookingData);
     },
+    //populate db with jotform data
     async jotformGet(req, res) {
         const getAllSubmissions = async () => {
             let all = []
