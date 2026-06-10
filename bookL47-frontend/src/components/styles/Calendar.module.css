@@ -27,6 +27,11 @@
     flex: 1;
 }
 
+.dayView {
+    padding-top: 20px;
+}
+
+
 @media screen and (min-width: 700px) {
   .dayView {
     display: none;

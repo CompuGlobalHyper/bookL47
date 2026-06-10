@@ -11,8 +11,10 @@ function App() {
   return (
     <div className={styles.body}>
       <Header user={user} ></Header>
-      <Outlet context={{ user, setLoading }}/>
-      <Footer />
+      <div className={styles.main}>
+        <Outlet context={{ user, setLoading }}/>
+      </div>
+      <div className={styles.footer}><Footer/></div>  
     </div>
   )
 }

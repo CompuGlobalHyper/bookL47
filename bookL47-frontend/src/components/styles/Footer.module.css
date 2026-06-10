@@ -1,0 +1,11 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--afm-color);
+}
+
+.text {
+    color: var(--white-color);
+
+}

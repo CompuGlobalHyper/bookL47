@@ -29,14 +29,27 @@
     position: relative;
 }
 
-.list {
+@media screen and (min-width: 900px) {
+    .list {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        padding: 5px 0;
+        gap: 60px;
+        background-color: var(--text-color);
+    }
+    .item {
+        color: var(--white-color);
+        font-weight: bold;
+    }
 
-
+    .item:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        text-decoration-thickness: 1px;
+    }
 }
 
-.item {
-
-}
 
 @media screen and (max-width: 900px) {
     .main {

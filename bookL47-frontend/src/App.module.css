@@ -1,15 +1,11 @@
 .body {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    margin: 0 15dvw
+    min-height: 100dvh;
 }
 
-@media screen and (max-width: 900px) {
-    .body {
-        margin: 0;
-    }
+.main {
+    flex: 1;
 }
-
 
 

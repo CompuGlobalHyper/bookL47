@@ -31,6 +31,10 @@ export default function Calendar({ events, loading }) {
   const [slots, setSlots] = useState({})
   const dayCalendarRef = useRef(null)
   const handleClick = (cell) => {
+    if (cell.dateStr <= firstDate.toISOString().split('T')[0]) {
+        console.log('resetting to first allowed date')
+        return setSelectedDate(firstDate.toISOString().split('T')[0])
+    }
     setSelectedDate(cell.dateStr)
     console.log(cell.dateStr)
 
@@ -72,9 +76,13 @@ export default function Calendar({ events, loading }) {
                 events={events}
                 ref={dayCalendarRef}
                 datesSet={(info) => {
+                    console.log(info)
                     const date = new Date(info.view.currentStart)
                     const dateStr = date.toISOString().split('T')[0]
                     setSelectedDate(dateStr)
+                }}
+                validRange={{
+                    start: firstDate
                 }}
                 >
                 </FullCalendar>
