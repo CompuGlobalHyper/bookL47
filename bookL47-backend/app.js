@@ -2,6 +2,11 @@ const express = require('express')
 const routes = require('./routes.js')
 const dotenv = require("dotenv")
 const cors = require("cors")
+const passport = require('passport');
+const { Strategy: LocalStrategy } = require('passport-local');
+const bcrypt = require('bcryptjs');
+const cookieParser = require('cookie-parser');
+const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 
 
 const app = express()
