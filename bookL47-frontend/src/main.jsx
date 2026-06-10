@@ -9,6 +9,7 @@ import About from './routes/About.jsx';
 import Join from './routes/Join.jsx';
 import Conduct from './routes/Conduct.jsx';
 import Book from './routes/Book.jsx';
+import NotFound from './routes/NotFound.jsx';
 
 
 
@@ -20,8 +21,10 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/about", element: <About />},
       { path: "/join", element: <Join />},
-      { path: "/conduct", element: <Conduct />},
-      { path: "/book", element: <Book />}
+      { path: "/cod-of-conduct", element: <Conduct />},
+      { path: "/book", element: <Book />},
+      { path: "*", element: <NotFound />}
+
     ],
   }
 ])

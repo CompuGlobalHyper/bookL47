@@ -1,28 +1,74 @@
 import React from 'react'
+import { useState } from 'react'
 import styles from "./styles/Header.module.css"
 import { Link } from 'react-router'
 
 export default function Header({ user }) {
+    const [viewMenu, setViewMenu] = useState(false)
     const role = user?.role || "member";
+    const navLinks = {
+  guest: [
+    { name: "Home", link: "/" },
+    { name: "About", link: "/about" },
+    { name: "Join Local47", link: "/join" },
+    { name: "Code of Conduct", link: "/code-of-conduct" },
+  ],
 
-  const links = {
-    guest: ["Home", "About", "Join Local47", "Code of Conduct"],
-    nonmember: ["Home", "Join Local47", "Book", "About", "Code of Conduct", "Logout"],
-    member: ["Home", "Book", "Profile", "About", "Code of Conduct", "Logout"],
-    crew: ["Home", "Events", "Shifts", "Logout"],
-    admin: ["Home", "Admin Panel", "Events", "Shifts", "Logout"],
-  };
+  nonmember: [
+    { name: "Home", link: "/" },
+    { name: "Join Local47", link: "/join" },
+    { name: "Book", link: "/book" },
+    { name: "About", link: "/about" },
+    { name: "Code of Conduct", link: "/code-of-conduct" },
+    { name: "Logout", link: "/logout" },
+  ],
+
+  member: [
+    { name: "Home", link: "/" },
+    { name: "Book", link: "/book" },
+    { name: "Profile", link: "/profile" },
+    { name: "About", link: "/about" },
+    { name: "Code of Conduct", link: "/code-of-conduct" },
+    { name: "Logout", link: "/logout" },
+  ],
+
+  crew: [
+    { name: "Home", link: "/" },
+    { name: "Events", link: "/events" },
+    { name: "Shifts", link: "/shifts" },
+    { name: "Logout", link: "/logout" },
+  ],
+
+  admin: [
+    { name: "Home", link: "/" },
+    { name: "Admin Panel", link: "/admin" },
+    { name: "Events", link: "/events" },
+    { name: "Shifts", link: "/shifts" },
+    { name: "Logout", link: "/logout" },
+  ],
+    };
+
   return (
     <div className={styles.container}>
         <div className={styles.main}>
-            <h1 className={styles.image}>{`{image goes here}`}</h1>
+            <div className={styles.image}></div>
+            <h1 className={styles.title}>{`AFM 47`}</h1>
+            <div 
+                className={styles.hamburger}
+                onClick={() => {
+                    setViewMenu(prev => !prev)
+                }}>
+                { viewMenu ? "Close" : "Menu"}</div>
         </div>
-        <div className={styles.listContainer}>
-            <ul className={styles.list}>
-                {links[role].map((link) => {
+        <div className={`${styles.listContainer}`}>
+            <ul className={`${styles.list} ${viewMenu ? styles.open : styles.hidden}`}>
+                {navLinks[role].map((link) => {
                     return (
-                        <li key={link} className={styles.item}>
-                            <Link to={`/${link.toLowerCase()}`}>{link}</Link>
+                        <li key={link.link} className={styles.item}>
+                            <Link to={link.link}
+                            onClick={() => {
+                                setViewMenu(false)
+                            }}>{link.name}</Link>
                         </li>
                     )
                 })}

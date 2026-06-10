@@ -1,19 +1,32 @@
 .container {
+    display: flex;
+    flex-direction: column;
+
 
 }
 
 .main {
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--afm-color);
+}
 
+.title {
+    color: var(--white-color);
 
 }
 
-.image {
-
+.hamburger {
+    margin-left: auto;
+    display: none;
 }
 
 .listContainer {
-
-
+    display: flex;
+    flex: 1;
+    position: relative;
 }
 
 .list {
@@ -23,5 +36,63 @@
 
 .item {
 
-    
+}
+
+@media screen and (max-width: 900px) {
+    .main {
+        padding: 4px 16px;
+    }
+    .hamburger {
+        display: block;
+        color: var(--white-color);
+        cursor: pointer;
+    }
+    .list {
+        z-index: 1;
+        position: absolute;
+        width: 100%;
+        background-color: var(--white-color);
+    }
+
+    .item {
+        padding: 24px 0 0 16px;
+        font-weight: bold;
+        font-size: 32px;
+        color: var(--text-color);
+    }
+    .hidden {
+        overflow: hidden;
+        pointer-events: none;
+        height: 0;
+        transition: height 350ms ease 50ms;
+    }
+    .open {
+        pointer-events: all;
+        height: 100dvh;
+        transition: height 350ms ease-in-out 50ms;
+    }
+
+    .hidden .item {
+        transform: translateY(-10px);
+        transition: 
+            opacity 350ms ease,
+            transform 350ms ease;
+        opacity: 0;
+        pointer-events: none;
+        
+    }
+
+    .open .item {
+        transition: 
+            opacity 350ms ease-in-out,
+            transform 350ms ease-in-out;
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .open .item:nth-child(1) { transition-delay: 150ms; }
+    .open .item:nth-child(2) { transition-delay: 175ms; }
+    .open .item:nth-child(3) { transition-delay: 200ms; }
+    .open .item:nth-child(4) { transition-delay: 225ms; }
+    .open .item:nth-child(5) { transition-delay: 250ms; }
+    .open .item:nth-child(6) { transition-delay: 275ms; }
 }

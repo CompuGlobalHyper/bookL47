@@ -57,6 +57,11 @@ ul, li {
     margin: 0;
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
 /*
   10. Create a root stacking context
 */
@@ -69,7 +74,7 @@ ul, li {
     --highlight-color: rgb(0, 136, 255);
     --dark-highlight-color: rgb(0, 80, 149);
     --white-color: rgb(231, 243, 255);
-    --text-color: rgb(31, 32, 53);
+    --text-color: rgb(28, 30, 72);
     --grey-color: rgb(213, 213, 213);
     --confirm-color: rgb(0, 224, 97);
     --reject-color: rgb(255, 69, 36);  

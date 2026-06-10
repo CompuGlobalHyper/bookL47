@@ -5,12 +5,13 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 
 function App() {
+  const [loading, setLoading] = useState(true)
   const user = { role: "member" }
 
   return (
     <div className={styles.body}>
       <Header user={user} ></Header>
-      <Outlet context={user}/>
+      <Outlet context={{ user, setLoading }}/>
       <Footer />
     </div>
   )

@@ -2,7 +2,13 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin: 0 clamp(5rem, 3dvw, 15rem)
+    margin: 0 15dvw
+}
+
+@media screen and (max-width: 900px) {
+    .body {
+        margin: 0;
+    }
 }
 
 
