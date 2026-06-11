@@ -6,7 +6,7 @@ import Footer from './components/Footer'
 
 function App() {
   const [loading, setLoading] = useState(true)
-  const user = { role: "member" }
+  const user = { role: "guest" }
 
   return (
     <div className={styles.body}>

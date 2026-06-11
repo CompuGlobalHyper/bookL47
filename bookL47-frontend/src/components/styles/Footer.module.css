@@ -6,6 +6,7 @@
 }
 
 .text {
+    padding: 10px 0;
     color: var(--white-color);
 
 }

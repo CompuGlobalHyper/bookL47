@@ -1,11 +1,10 @@
 import React from 'react'
 import { useState } from 'react'
 import styles from "./styles/Header.module.css"
-import { Link } from 'react-router'
+import { Link, useOutletContext } from 'react-router'
 
-export default function Header({ user }) {
+export default function Header( { user }) {
     const [viewMenu, setViewMenu] = useState(false)
-    const role = user?.role || "member";
     const navLinks = {
   guest: [
     { name: "Home", link: "/" },
@@ -62,7 +61,7 @@ export default function Header({ user }) {
         </div>
         <div className={`${styles.listContainer}`}>
             <ul className={`${styles.list} ${viewMenu ? styles.open : styles.hidden}`}>
-                {navLinks[role].map((link) => {
+                {navLinks[user.role].map((link) => {
                     return (
                         <li key={link.link} className={styles.item}>
                             <Link to={link.link}
