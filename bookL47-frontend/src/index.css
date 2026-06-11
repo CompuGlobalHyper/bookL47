@@ -70,12 +70,115 @@ a {
 }
 
 :root {
-    --afm-color: rgb(47, 203, 255);
-    --highlight-color: rgb(0, 136, 255);
-    --dark-highlight-color: rgb(0, 80, 149);
-    --white-color: rgb(231, 243, 255);
-    --text-color: rgb(28, 30, 72);
-    --grey-color: rgb(213, 213, 213);
-    --confirm-color: rgb(0, 224, 97);
-    --reject-color: rgb(255, 69, 36);  
+  color-scheme: light dark;
+
+  /* Brand */
+  --brand-color: light-dark(
+    rgb(1, 179, 227),
+    rgb(60, 205, 245)
+  );
+
+  --brand-text-color: light-dark(
+    rgb(248, 252, 255),
+    rgb(250, 253, 255)
+  );
+
+  --brand-hover-color: light-dark(
+    rgb(0, 155, 197),
+    rgb(30, 190, 235)
+  );
+
+  --brand-soft-color: light-dark(
+    rgb(224, 247, 253),
+    rgb(16, 52, 64)
+  );
+
+  /* Backgrounds */
+  --bg-color: light-dark(
+    rgb(248, 250, 252),
+    rgb(14, 18, 24)
+  );
+
+  --surface-color: light-dark(
+    rgb(255, 255, 255),
+    rgb(28, 34, 42)
+  );
+
+  --surface-elevated-color: light-dark(
+    rgb(242, 246, 249),
+    rgb(38, 45, 56)
+  );
+
+  /* Text */
+  --text-color: light-dark(
+    rgb(26, 32, 44),
+    rgb(238, 243, 247)
+  );
+
+  --text-secondary-color: light-dark(
+    rgb(97, 107, 122),
+    rgb(168, 177, 191)
+  );
+
+  /* Borders */
+  --border-color: light-dark(
+    rgb(214, 221, 228),
+    rgb(72, 80, 92)
+  );
+
+  /* Status */
+  --confirm-color: light-dark(
+    rgb(22, 163, 74),
+    rgb(74, 222, 128)
+  );
+
+  --reject-color: light-dark(
+    rgb(220, 38, 38),
+    rgb(248, 113, 113)
+  );
+
+  /* Focus */
+  --focus-ring-color: light-dark(
+    rgba(1, 179, 227, 0.25),
+    rgba(1, 179, 227, 0.4)
+  );
+
+  /* Shadows */
+  --shadow-color: light-dark(
+    rgba(0, 0, 0, 0.08),
+    rgba(0, 0, 0, 0.35)
+  );
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.primaryText {
+  color: var(--text-color);
+}
+
+.secondaryText {
+  color: var(--text-secondary-color);
+
+}
+
+.small {
+  font-size: 10px;
+
+}
+
+.regular {
+  font-size: 14px;
+
+}
+
+.medium {
+  font-size: 20px;
+
+}
+
+.big {
+  font-size: 32px;
+
 }

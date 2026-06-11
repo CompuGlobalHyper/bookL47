@@ -16,11 +16,11 @@
 }
 
 .activeDate {
-    background-color: var(--highlight-color);
+    background-color: var(--brand-color);
 }
 
 .notAllowedDate {
-    background-color: var(--grey-color);
+    background-color: var(--text-secondary-color);
 }
 
 .monthView {

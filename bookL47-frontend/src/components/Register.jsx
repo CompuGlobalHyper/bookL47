@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles/Register.module.css'
 
-export default function Register({viewRegister, setViewRegister}) {
+export default function Register({viewRegister, setViewRegister, setViewLogin, setHomeMessage}) {
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -45,12 +45,18 @@ export default function Register({viewRegister, setViewRegister}) {
     );
     };
 
+    const handleClick = () => {
+        setViewRegister(false)
+        setViewLogin(true)
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const currentErrors = Object.values(errors)
         if (!currentErrors.every((val) => val === '')) return
         
         console.log(formData)
+        setHomeMessage('Account created successfully!')
         setFormData((prev) => {
             return Object.keys(prev).reduce((acc, key) => {
                 acc[key] = ''
@@ -134,7 +140,7 @@ export default function Register({viewRegister, setViewRegister}) {
         onCancel={handleCancel}
         autoFocus>
         <div className={styles.registerContainer}>
-            <div className={styles.closeButton}>
+            <div className={`${styles.closeButton} bold`}>
                 <span onClick={() => {
                 setViewRegister(false)}}>
                     Close
@@ -142,7 +148,7 @@ export default function Register({viewRegister, setViewRegister}) {
             </div>
             <div className={styles.header}>
                 <h1>Create a free account today and start booking!</h1>
-                <p>Already have an account? <span className={styles.link}>Sign in!</span></p>
+                <p>Already have an account? <span className={styles.link} onClick={() => handleClick()}>Sign in!</span></p>
             </div>
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
                 <div className={styles.field}>
@@ -158,7 +164,7 @@ export default function Register({viewRegister, setViewRegister}) {
                     />
                     <label htmlFor="firstName">First Name</label>
                 </div>
-                {errors.firstName && (<p className={styles.error}> {errors.firstName}</p>)}
+                {errors.firstName && (<p className={`${styles.error} bold small`}> {errors.firstName}</p>)}
 
                 <div className={styles.field}>
                     <input
@@ -173,7 +179,7 @@ export default function Register({viewRegister, setViewRegister}) {
                     />
                     <label htmlFor="lastName">Last Name</label>
                 </div>
-                {errors.lastName && (<p className={styles.error}> {errors.lastName}</p>)}
+                {errors.lastName && (<p className={`${styles.error} bold small`}> {errors.lastName}</p>)}
 
                 <div className={styles.field}>
                     <input
@@ -188,7 +194,7 @@ export default function Register({viewRegister, setViewRegister}) {
                     />
                     <label htmlFor="email">miles@jazz.com</label>
                 </div>
-                {errors.email && (<p className={styles.error}> {errors.email}</p>)}
+                {errors.email && (<p className={`${styles.error} bold small`}> {errors.email}</p>)}
 
                 <div className={styles.field}>
                     <input
@@ -208,7 +214,7 @@ export default function Register({viewRegister, setViewRegister}) {
                     > {passwordType === "password" ? "Show" : "Hide"}
                     </div>
                 </div>
-                {errors.password && (<p className={styles.error}> {errors.password}</p>)}
+                {errors.password && (<p className={`${styles.error} bold small`}> {errors.password}</p>)}
                 <div className={styles.field}>
                     <input
                     id="confirm"
@@ -222,9 +228,9 @@ export default function Register({viewRegister, setViewRegister}) {
                     />
                     <label htmlFor="confirm">Confirm Password</label>
                 </div>
-                {errors.confirm && (<p className={styles.error}> {errors.confirm}</p>)}
-
-                <button type="submit">Register</button>
+                {errors.confirm && (<p className={`${styles.error} bold small`}> {errors.confirm}</p>)}
+                <div className={styles.buttonContainer}><button type="submit" className={styles.button}>Register</button></div>
+                
             </form>
         </div>
     </dialog>

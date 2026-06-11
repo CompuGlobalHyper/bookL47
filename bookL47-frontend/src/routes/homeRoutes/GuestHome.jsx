@@ -9,25 +9,38 @@ export default function GuestHome() {
 
   return (
     <div className={styles.main}>
-      <div className={styles.message}></div>
+      <div className={styles.message}>{homeMessage}</div>
       <Register
         viewRegister={viewRegister}
         setViewRegister={setViewRegister}
-        setHomeMessage={setHomeMessage}>
+        setHomeMessage={setHomeMessage}
+        setViewLogin={setViewLogin}>
       </Register>
-      <div className={styles.content}>
-        <div>Welcome to BookL47</div>
-        <div>Image goes here</div>
+      {!viewLogin 
+      ? <div className={styles.content}>
+          <div className={styles.textContainer}>
+            <h1>Welcome to BookL47</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, quos?</p>
+          </div>
+          <div>Image goes here</div>
+          <div>
+            <div onClick={() => setViewLogin(true)}>Sign in</div>
+            <div>First time? <span onClick={() =>  setViewRegister(true)}>Create an account!</span></div>
 
-      </div>
-      <div className={styles.mainFormContainer}>
+          </div>
+        </div>
+      : <div className={styles.mainFormContainer}>
           <div className={styles.loginContainer}>
+            <p onClick={() => setViewLogin(false)}>Back</p>
             <form></form>
           <div onClick={() => {
             setViewRegister(true)
           }}>Create an account</div>
           </div>
-      </div>
+        </div>
+      }
+      
+      
     </div>
   )
 }
