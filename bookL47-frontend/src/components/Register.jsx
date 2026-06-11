@@ -3,36 +3,114 @@ import styles from './styles/Register.module.css'
 
 export default function Register({viewRegister, setViewRegister}) {
     const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirm: ""
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirm: ""
   });
 
-  const [passwordType, setPasswordType] = useState("password");
+    const [errors, setErrors] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirm: ""
+    })
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+    const [touched, setTouched] = useState({})
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+    const [passwordType, setPasswordType] = useState("password");
 
-  const togglePassword = () => {
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+            }));
+        
+    };
+
+    const handleBlur = (e) => {
+        const { name, value } = e.target
+        setErrors((prev) => ({
+            ...prev,
+            [name]: validateField(name, value)
+        }))
+    }
+
+    const togglePassword = () => {
     setPasswordType((prev) =>
-      prev === "password" ? "text" : "password"
+    prev === "password" ? "text" : "password"
     );
-  };
+    };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const currentErrors = Object.values(errors)
+        if (!currentErrors.every((val) => val === '')) return
+        
+        console.log(formData)
+        setFormData((prev) => {
+            return Object.keys(prev).reduce((acc, key) => {
+                acc[key] = ''
+                return acc
+            }, {})
+        });
+    }
+    const validatePassword = (value) => {
+        switch (true) {
+            case value.length < 8:
+            return "Must be at least 8 characters.";
 
-    console.log(formData);
-  }
-    
+            case !/[A-Z]/.test(value):
+            return "Must include an uppercase letter.";
+
+            case !/[0-9]/.test(value):
+            return "Must include a number.";
+
+            case !/[!@#$%^&*(),.?\":{}|<>]/.test(value):
+            return "Must include a special character.";
+
+            default:
+            return "";
+        }
+    };
+    const validateConfirmPassword = (value) => {
+        switch (true) {
+            case value.length < 8:
+            return "Must be at least 8 characters.";
+
+            case !/[A-Z]/.test(value):
+            return "Must include an uppercase letter.";
+
+            case !/[0-9]/.test(value):
+            return "Must include a number.";
+
+            case !/[!@#$%^&*(),.?\":{}|<>]/.test(value):
+            return "Must include a special character.";
+
+            case formData.password !== formData.confirm:
+            return "Passwords must match."
+            
+            default:
+            return "";
+        }
+    };
+    const validateField = (name, value) => {
+        switch (name) {
+            case "firstName":
+                return value.trim() ? "" : "First name required.";
+            case "lastName":
+                return value.trim() ? "" : "Last name required.";
+            case "email":
+                return value.includes("@") ? "" : "Enter a valid email address.";
+            case "password":
+                return validatePassword(value)
+            case "confirm":
+                return validateConfirmPassword(value)
+        }
+    }   
     const dialogRef = useRef(null)
     useEffect(() => {
         const dialog = dialogRef.current
@@ -51,86 +129,100 @@ export default function Register({viewRegister, setViewRegister}) {
     }
   return (
     <dialog
+        className={styles.dialog}
         ref={dialogRef}
-        onCancel={handleCancel}>
+        onCancel={handleCancel}
+        autoFocus>
         <div className={styles.registerContainer}>
-            <div className={styles.closeButton} onClick={() => {
-                setViewRegister(false)
-            }}>close</div>
-            <form>
-                <div>
-                    <label htmlFor="firstName">First name</label>
+            <div className={styles.closeButton}>
+                <span onClick={() => {
+                setViewRegister(false)}}>
+                    Close
+                </span>
+            </div>
+            <div className={styles.header}>
+                <h1>Create a free account today and start booking!</h1>
+                <p>Already have an account? <span className={styles.link}>Sign in!</span></p>
+            </div>
+            <form className={styles.form} onSubmit={handleSubmit} noValidate>
+                <div className={styles.field}>
                     <input
                     id="firstName"
                     name="firstName"
                     type="text"
                     value={formData.firstName}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     placeholder=' '
                     required
                     />
+                    <label htmlFor="firstName">First Name</label>
                 </div>
+                {errors.firstName && (<p className={styles.error}> {errors.firstName}</p>)}
 
-                <div>
-                    <label htmlFor="lastName">Last name</label>
+                <div className={styles.field}>
                     <input
                     id="lastName"
                     name="lastName"
                     type="text"
                     value={formData.lastName}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     placeholder=' '
                     required
                     />
+                    <label htmlFor="lastName">Last Name</label>
                 </div>
+                {errors.lastName && (<p className={styles.error}> {errors.lastName}</p>)}
 
-                <div>
-                    <label htmlFor="email">name@example.com</label>
+                <div className={styles.field}>
                     <input
                     id="email"
                     name="email"
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     placeholder=' '
                     required
                     />
+                    <label htmlFor="email">miles@jazz.com</label>
                 </div>
+                {errors.email && (<p className={styles.error}> {errors.email}</p>)}
 
-                <div>
-                    <label htmlFor="password">Enter password</label>
+                <div className={styles.field}>
                     <input
                     id="password"
                     name="password"
                     type={passwordType}
                     value={formData.password}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     placeholder=' '
                     required
                     />
+                    <label htmlFor="password">Password</label>
                     <div
                     type="button"
                     onClick={togglePassword}
                     > {passwordType === "password" ? "Show" : "Hide"}
                     </div>
                 </div>
-                <div>
-                    <label htmlFor="confirm">Confirm password</label>
+                {errors.password && (<p className={styles.error}> {errors.password}</p>)}
+                <div className={styles.field}>
                     <input
-                    id="password"
-                    name="password"
-                    type={passwordType}
-                    value={formData.password}
+                    id="confirm"
+                    name="confirm"
+                    type='password'
+                    value={formData.confirm}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     placeholder=' '
                     required
                     />
-                    <div
-                    type="button"
-                    onClick={togglePassword}
-                    > {passwordType === "password" ? "Show" : "Hide"}
-                    </div>
+                    <label htmlFor="confirm">Confirm Password</label>
                 </div>
+                {errors.confirm && (<p className={styles.error}> {errors.confirm}</p>)}
 
                 <button type="submit">Register</button>
             </form>
