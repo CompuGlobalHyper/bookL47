@@ -8,4 +8,23 @@
     flex: 1;
 }
 
+.adminMessage {
+    background-color: var(--gold-color);
+}
+
+.adminMessage span {
+    color: var(--brand-text-color);
+}
+.message {
+    background-color: var(--confirm-color);
+}
+
+.error {
+    background-color: var(--reject-color)
+}
+
+.text {
+    color: var(--brand-text-color);
+}
+
 

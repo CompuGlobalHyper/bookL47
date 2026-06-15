@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useOutletContext } from "react-router";
 
 import GuestHome from './GuestHome.jsx'
@@ -11,18 +11,23 @@ import AdminHome from './AdminHome.jsx'
 
 export default function Home() {
 
-  const { user, setLoading } = useOutletContext()
+  const { user, setUser, setLoading, setMessage } = useOutletContext()
+
+  useEffect(() => {
+    console.log(user)
+
+  }, [user])
 
   switch (user.role) {
     case "guest":
-      return <GuestHome />;
+      return <GuestHome setMessage={setMessage}/>;
     case "nonMember":
-      return <NonMemberHome />;
+      return <NonMemberHome setMessage={setMessage}/>;
     case "member":
-      return <MemberHome />;
+      return <MemberHome setMessage={setMessage}/>;
     case "crew":
-      return <CrewHome />;
+      return <CrewHome setMessage={setMessage}/>;
     case "admin":
-      return <AdminHome />;
+      return <AdminHome setMessage={setMessage}/>;
   } 
 }

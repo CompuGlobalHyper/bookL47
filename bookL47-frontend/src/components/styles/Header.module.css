@@ -10,11 +10,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--afm-color);
+    background-color: var(--brand-color);
 }
 
 .title {
-    color: var(--white-color);
+    color: var(--brand-text-color);
 
 }
 
@@ -36,10 +36,10 @@
         justify-content: center;
         padding: 5px 0;
         gap: 60px;
-        background-color: var(--text-color);
+        background-color: var(--surface-elevated-color);
     }
     .item {
-        color: var(--white-color);
+        color: var(--text-color);
         font-weight: bold;
     }
 
@@ -57,14 +57,14 @@
     }
     .hamburger {
         display: block;
-        color: var(--white-color);
+        color: var(--brand-text-color);
         cursor: pointer;
     }
     .list {
         z-index: 1;
         position: absolute;
         width: 100%;
-        background-color: var(--white-color);
+        background-color: var(--surface-color);
     }
 
     .item {

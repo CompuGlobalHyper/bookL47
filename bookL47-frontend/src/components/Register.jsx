@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles/Register.module.css'
 
-export default function Register({viewRegister, setViewRegister, setViewLogin, setHomeMessage}) {
+export default function Register({viewRegister, setViewRegister, setViewLogin, setMessage}) {
+    const API = import.meta.env.VITE_API_URL
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -50,19 +51,38 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
         setViewLogin(true)
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const currentErrors = Object.values(errors)
         if (!currentErrors.every((val) => val === '')) return
-        
-        console.log(formData)
-        setHomeMessage('Account created successfully!')
-        setFormData((prev) => {
-            return Object.keys(prev).reduce((acc, key) => {
-                acc[key] = ''
-                return acc
-            }, {})
-        });
+        try {
+            const res = await fetch(`${API}/register`, {
+                method:"POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    email: formData.email.toLowerCase(),
+                    password: formData.password,
+                })
+            })
+            console.log(formData)
+            setMessage((prev) => {
+                return ({...prev, text: "Account created successfully", error: false})
+            })
+            setFormData((prev) => {
+                return Object.keys(prev).reduce((acc, key) => {
+                    acc[key] = ''
+                    return acc
+                }, {})
+            });
+        } catch (error) {
+            setMessage(error)
+            console.log(error)
+        }
+        setViewRegister(false)
     }
     const validatePassword = (value) => {
         switch (true) {

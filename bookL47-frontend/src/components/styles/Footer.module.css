@@ -2,11 +2,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--afm-color);
+    background-color: var(--brand-color);
 }
 
 .text {
     padding: 10px 0;
-    color: var(--white-color);
+    color: var(--brand-text-color);
 
 }
