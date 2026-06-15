@@ -20,7 +20,7 @@
 }
 
 .notAllowedDate {
-    background-color: var(--text-secondary-color);
+    background-color: var(--bg-color);
 }
 
 .monthView {

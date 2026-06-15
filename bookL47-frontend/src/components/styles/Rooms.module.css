@@ -13,11 +13,12 @@
     cursor: pointer;
     margin-top: 20px;
     padding: 5px 5px;
-    border: 2px solid black;
+    border: 2px solid var(--border-color);
+    background-color: var(--surface-elevated-color);
     border-radius: 8px;
 }
 
 .activeItem {
-    color: white;
-    background-color: rgb(0, 174, 213);
+    color: var(--brand-text-color);
+    background-color: var(--brand-color);
 }

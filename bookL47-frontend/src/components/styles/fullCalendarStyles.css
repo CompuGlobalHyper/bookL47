@@ -1,7 +1,7 @@
 /* Target the current day cell in FullCalendar */
 .fc .fc-day-today {
   position: relative;
-  background-color: var(--grey-color) !important;
+  background-color: var(--bg-color) !important;
 }
 
 /* Use a pseudo-element to build an overlay border */
@@ -19,11 +19,31 @@
 
 /* month view */
 .fc-dayGridMonth-view {
+  background-color: var(--surface-elevated-color);
+  user-select: none;
 }
 
-/* day view*/
+/* day view */
 .fc-timeGridDay-view {
 }
+
+/*Days of week header */
+.fc-scrollgrid thead {
+  background-color: var(--surface-elevated-color) !important;
+}
+
+/* Arrow and today buttons*/
+.fc-button {
+  background-color: var(--surface-elevated-color);
+}
+/* Today button */
+.fc-button.fc-today-button {
+  background-color: var(--brand-color);
+}
+.fc-button.fc-today-button:hover {
+  background-color: var(--brand-hover-color);
+}
+
 
 @media screen and (max-width: 700px) {
   .fc-view-harness{
