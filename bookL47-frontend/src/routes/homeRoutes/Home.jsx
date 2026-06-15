@@ -14,13 +14,11 @@ export default function Home() {
   const { user, setUser, setLoading, setMessage } = useOutletContext()
 
   useEffect(() => {
-    console.log(user)
-
   }, [user])
 
   switch (user.role) {
     case "guest":
-      return <GuestHome setMessage={setMessage}/>;
+      return <GuestHome setMessage={setMessage} setUser={setUser}/>;
     case "nonMember":
       return <NonMemberHome setMessage={setMessage}/>;
     case "member":

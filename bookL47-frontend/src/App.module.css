@@ -9,6 +9,8 @@
 }
 
 .adminMessage {
+    display: flex;
+    justify-content: center;
     background-color: var(--gold-color);
 }
 

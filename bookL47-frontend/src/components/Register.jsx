@@ -33,6 +33,8 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
     };
 
     const handleBlur = (e) => {
+        const currentFields = Object.values(formData)
+        if (currentFields.every(val => val === '')) return
         const { name, value } = e.target
         setErrors((prev) => ({
             ...prev,

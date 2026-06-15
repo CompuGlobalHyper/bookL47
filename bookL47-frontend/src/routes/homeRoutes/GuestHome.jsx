@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styles from './styles/GuestHome.module.css'
 import Register from '../../components/Register'
 
-export default function GuestHome({ setMessage }) {
+export default function GuestHome({ setMessage, setUser }) {
   const [viewLogin, setViewLogin] = useState(false)
   const [viewRegister, setViewRegister] = useState(false)
   const [formData, setFormData] = useState({
@@ -44,6 +44,7 @@ export default function GuestHome({ setMessage }) {
 
       const data = await res.json()
       console.log(data)
+      setUser(data)
     } catch(error) {
       console.log(error)
     }
@@ -65,13 +66,17 @@ export default function GuestHome({ setMessage }) {
           </div>
           <div>Image goes here</div>
           <div>
-            <div onClick={() => setViewLogin(true)}>Sign in</div>
-            <div>First time? <span onClick={() =>  setViewRegister(true)}>Create an account!</span></div>
+            <div onClick={() => setViewLogin(true)} className={styles.registerLink}>Sign in</div>
+            <div>First time? <span onClick={() =>  setViewRegister(true)}
+              className={styles.registerLink}>
+                Create an account!
+              </span>
+            </div>
 
           </div>
         </div>
       : <div className={styles.mainFormContainer}>
-        <p onClick={() => setViewLogin(false)}>Back</p>
+        <p onClick={() => setViewLogin(false)} className={styles.backLink}>Back</p>
           <div className={styles.loginContainer}>
             <form className={styles.form} onSubmit={handleSubmit}>
               <div className={styles.field}>
@@ -108,7 +113,7 @@ export default function GuestHome({ setMessage }) {
 
           <div onClick={() => {
             setViewRegister(true)
-          }}>Create an account</div>
+          }} className={styles.registerLink}>Create an account</div>
           </div>
         </div>
       }

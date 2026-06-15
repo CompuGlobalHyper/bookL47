@@ -88,3 +88,13 @@
     background-color: var(--brand-hover-color);
 
 }
+.registerLink, .backLink {
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.registerLink:hover,
+.backLink:hover {
+    color: var(--brand-color);
+}
+
