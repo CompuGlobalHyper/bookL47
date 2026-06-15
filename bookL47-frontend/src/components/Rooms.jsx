@@ -26,7 +26,7 @@ export default function Rooms({ selectedRoom, setSelectedRoom }) {
                         className={`${styles.item} ${room.isActive ? styles.activeItem : ''}`}
                         onClick={() => {
                             setSelectedRoom(room.id)
-                            console.log(room.id)}}>
+                            }}>
                         {room.name}
                     </li>)
             })}

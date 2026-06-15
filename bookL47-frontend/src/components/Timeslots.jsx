@@ -46,12 +46,16 @@ export default function Timeslots({ selectedRoom, slots = [] }) {
 
     useEffect(() => {
         if (!slots || Object.keys(slots).length === 0) return;
-        console.log(JSON.stringify(slots))
         const filledTimes = slots?.filledTimes;
         const filledSet = new Set(
             filledTimes.map((time) => time.startTime)
         );
-
+        setButtons(prev => 
+            prev.map(button => ({
+                ...button, 
+                selected: false
+            }))
+        )
         setButtons(prev =>
             prev.map(button => ({
                 ...button,

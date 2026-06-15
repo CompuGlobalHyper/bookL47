@@ -18,7 +18,6 @@ function findDateObject(list, date) {
 }
 
 function findSlotObject(list, room) {
-    
     return list.find((item) => item.name === `Room ${room}`
     )
 }
@@ -30,13 +29,13 @@ export default function Calendar({ events, loading }) {
   const [selectedRoom, setSelectedRoom] = useState(4)
   const [slots, setSlots] = useState({})
   const dayCalendarRef = useRef(null)
+
   const handleClick = (cell) => {
     if (cell.dateStr <= firstDate.toISOString().split('T')[0]) {
         console.log('resetting to first allowed date')
         return setSelectedDate(firstDate.toISOString().split('T')[0])
     }
     setSelectedDate(cell.dateStr)
-    console.log(cell.dateStr)
 
   }
   useEffect(() => {
@@ -59,11 +58,13 @@ export default function Calendar({ events, loading }) {
   
   useEffect(() => {
     if (!dayCalendarRef.current) return;
-    let dateObject = events.find((obj) => obj.date === selectedDate)
-    setSlots(findSlotObject(dateObject.rooms, selectedRoom))
+    let tempDateObject = events.find((obj) => obj.date === selectedDate)
+    setSlots(findSlotObject(tempDateObject.rooms, selectedRoom))
+    setDateObject(tempDateObject)
     const api = dayCalendarRef.current.getApi();
     api.gotoDate(selectedDate);
     }, [selectedDate]);
+
     return ( 
         <div className={styles.main}>
             {loading ? <div>Loading...</div> : 
@@ -76,7 +77,6 @@ export default function Calendar({ events, loading }) {
                 events={events}
                 ref={dayCalendarRef}
                 datesSet={(info) => {
-                    console.log(info)
                     const date = new Date(info.view.currentStart)
                     const dateStr = date.toISOString().split('T')[0]
                     setSelectedDate(dateStr)
