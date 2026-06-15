@@ -24,6 +24,7 @@ function App() {
         }
       )
       const data = await res.json()
+      console.log(data)
       if (data.auth === true) {
         setUser(data)
       } else {
@@ -44,7 +45,7 @@ function App() {
         <p>{message.text}</p>
       </div>
       <div className={styles.main}>
-        <Outlet context={{ user, setUser, setLoading, setMessage }}/>
+        <Outlet context={{ user, setUser, loading, setLoading, setMessage }}/>
       </div>
       <div className={styles.footer}><Footer/></div>  
     </div>

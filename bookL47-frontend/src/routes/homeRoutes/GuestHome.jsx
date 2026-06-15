@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './styles/GuestHome.module.css'
 import Register from '../../components/Register'
 
@@ -29,6 +29,8 @@ export default function GuestHome({ setMessage, setUser }) {
   const handleSubmit = async (e) => {
     const API = import.meta.env.VITE_API_URL
     e.preventDefault()
+    const currentFields = Object.values(formData)
+    if (currentFields.every((val) => val === '')) return
     try {
       const res = await fetch(`${API}/login`, {
         method:"POST",
@@ -46,9 +48,20 @@ export default function GuestHome({ setMessage, setUser }) {
       console.log(data)
       setUser(data)
     } catch(error) {
+      setFormData((prev) => {
+        return {...prev, email: '', password: ''}
+      })
+      setMessage({
+        text: "Invalid email/password",
+        error: true
+      })
       console.log(error)
     }
   }
+
+  useEffect(() => {
+    setMessage({text: '', error: false})
+  }, [viewLogin, viewRegister])
 
   return (
     <div className={styles.main}>
@@ -76,9 +89,12 @@ export default function GuestHome({ setMessage, setUser }) {
           </div>
         </div>
       : <div className={styles.mainFormContainer}>
-        <p onClick={() => setViewLogin(false)} className={styles.backLink}>Back</p>
+        <p onClick={() => {
+          setViewLogin(false)
+        }
+        } className={styles.backLink}>Back</p>
           <div className={styles.loginContainer}>
-            <form className={styles.form} onSubmit={handleSubmit}>
+            <form className={styles.form} onSubmit={handleSubmit} noValidate>
               <div className={styles.field}>
                 <input
                 id="email"

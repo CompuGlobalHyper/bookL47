@@ -18,14 +18,24 @@ export default function Home() {
 
   switch (user.role) {
     case "guest":
-      return <GuestHome setMessage={setMessage} setUser={setUser}/>;
+      return <GuestHome 
+      setMessage={setMessage} 
+      setUser={setUser}/>;
+
     case "nonMember":
-      return <NonMemberHome setMessage={setMessage}/>;
+      return <NonMemberHome 
+      setMessage={setMessage}/>;
+
     case "member":
-      return <MemberHome setMessage={setMessage}/>;
+      return <MemberHome 
+      setMessage={setMessage}/>;
+
     case "crew":
-      return <CrewHome setMessage={setMessage}/>;
+      return <CrewHome 
+      setMessage={setMessage}/>;
+
     case "admin":
-      return <AdminHome setMessage={setMessage}/>;
+      return <AdminHome 
+      setMessage={setMessage}/>;
   } 
 }

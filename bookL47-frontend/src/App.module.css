@@ -18,15 +18,21 @@
     color: var(--brand-text-color);
 }
 .message {
+    display: flex;
+    justify-content: center;
     background-color: var(--confirm-color);
+    color: var(--brand-text-color);
+    font-weight: bold;
 }
 
 .error {
-    background-color: var(--reject-color)
+    display: flex;
+    justify-content: center;
+    background-color: var(--reject-color);
+    color: var(--brand-text-color);
+    font-weight: bold;
 }
 
-.text {
-    color: var(--brand-text-color);
-}
+
 
 
