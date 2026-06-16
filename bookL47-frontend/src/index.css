@@ -94,8 +94,8 @@ a {
   );
 
   --gold-color: light-dark(
-    rgb(212, 175, 55),
-    rgb(232, 196, 85)
+    rgb(211, 172, 43),
+    rgb(232, 191, 68)
   );
   /* Backgrounds */
   --bg-color: light-dark(

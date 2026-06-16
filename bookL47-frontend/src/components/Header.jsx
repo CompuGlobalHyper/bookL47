@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState } from 'react'
 import styles from "./styles/Header.module.css"
 import { Link, useOutletContext } from 'react-router'
+import { CartContext } from '../contexts/CartContext'
 
 export default function Header( { user }) {
+
+    const { cart } = useContext(CartContext)
+
     const [viewMenu, setViewMenu] = useState(false)
     const navLinks = {
   guest: [
@@ -52,6 +56,7 @@ export default function Header( { user }) {
         <div className={styles.main}>
             <div className={styles.image}></div>
             <h1 className={styles.title}>{`AFM 47`}</h1>
+            {user.role !== 'guest' ? <></> : <Link to='/cart'className={`${styles.cart} text`}>Cart ({cart.length})</Link>}
             <div 
                 className={styles.hamburger}
                 onClick={() => {

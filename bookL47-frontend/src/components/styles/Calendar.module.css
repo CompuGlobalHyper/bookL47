@@ -24,6 +24,7 @@
 }
 
 .monthView {
+    z-index: 0 !important;
     flex: 1;
 }
 

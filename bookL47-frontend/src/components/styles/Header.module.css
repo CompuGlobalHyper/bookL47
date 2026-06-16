@@ -19,8 +19,17 @@
 }
 
 .hamburger {
-    margin-left: auto;
     display: none;
+}
+
+.cart {
+    cursor: pointer;
+    margin: 0 20px 0 auto;
+}
+
+.cart:active {
+    text-decoration: underline;
+    text-underline-offset: 4px;
 }
 
 .listContainer {
@@ -29,8 +38,9 @@
     position: relative;
 }
 
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 700px) {
     .list {
+        z-index: 1;
         display: flex;
         width: 100%;
         justify-content: center;
@@ -51,7 +61,7 @@
 }
 
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 700px) {
     .main {
         padding: 4px 16px;
     }
