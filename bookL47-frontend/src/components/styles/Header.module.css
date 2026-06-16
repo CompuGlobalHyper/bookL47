@@ -15,6 +15,7 @@
 
 .title {
     color: var(--brand-text-color);
+    cursor: pointer;
 
 }
 
