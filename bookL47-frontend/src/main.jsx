@@ -10,6 +10,7 @@ import About from './routes/About.jsx';
 import Join from './routes/Join.jsx';
 import Conduct from './routes/Conduct.jsx';
 import Book from './routes/Book.jsx';
+import Cart from './routes/Cart.jsx';
 import NotFound from './routes/NotFound.jsx';
 
 
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       { path: "/join", element: <Join />},
       { path: "/code-of-conduct", element: <Conduct />},
       { path: "/book", element: <Book />},
+      { path: '/cart', element: <Cart />},
       { path: "*", element: <NotFound />}
 
     ],

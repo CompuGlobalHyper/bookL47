@@ -205,7 +205,7 @@ const controllers = {
             let roomsAndSlots = roomData.map((room) => {
                 let filteredBookings = rows.filter((row) => row.room === room.name && row.date === date.booking_date)
                 let timeObjects = filteredBookings.map((booking) => {
-                    return { startTime: booking.start, endTime: booking.end }
+                    return { start: booking.start, end: booking.end }
                 })
                 return { name: room.name, filledTimes: timeObjects}
             })

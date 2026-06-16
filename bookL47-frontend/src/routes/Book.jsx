@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import Calendar from '../components/Calendar'
 import styles from './styles/Book.module.css'
 
-export default function Book() {
+export default function Book(user) {
     const API = import.meta.env.VITE_API_URL
     const [events, setEvents] = useState([])
     const [loading, setLoading] = useState(true)
@@ -23,7 +23,7 @@ export default function Book() {
     return (
     <div className={styles.body}>
       <div className={styles.main}>
-        <Calendar events={events} loading={loading}></Calendar>
+        <Calendar events={events} loading={loading} user={user}></Calendar>
       </div>
     </div>
   )

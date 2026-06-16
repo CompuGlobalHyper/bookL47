@@ -42,5 +42,9 @@
     color: var(--text-color);
     background-color: var(--surface-elevated-color);
     border-radius: 8px;
+}
 
+.button:active {
+    background-color: var(--brand-color);
+    color: var(--brand-text-color)
 }

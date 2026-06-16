@@ -1,38 +1,51 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styles from './styles/Timeslots.module.css'
+import { CartContext } from '../contexts/CartContext'
 
-export default function Timeslots({ selectedRoom, slots = [] }) {
+export default function Timeslots({ selectedRoom, slots = [], user, selectedDate }) {
+
+    const { addToCart, cart } = useContext(CartContext)
     const [message, setMessage] = useState('')
     const [buttons, setButtons] = useState([
         {
             id: 1,
             name: "10am - 12:30pm",
-            dateTime: '10:00:00',
+            start: '10:00:00',
+            end: '12:30:00',
             available: true,
             selected: false,
+            inCart: false
         },
         {
             id: 2,
             name: "1pm - 3:30pm",
-            dateTime: '13:00:00',
+            start: '13:00:00',
+            end: '15:30:00',
             available: true,
             selected: false,
+            inCart: false
         },
         {
             id: 3,
             name: "4pm - 6:30pm",
-            dateTime: '16:00:00',
+            start: '16:00:00',
+            end: '18:30:00',
             available: true,
             selected: false,
+            inCart: false
         },
         {
             id: 4,
             name: "7:00pm - 9:30pm",
-            dateTime: '19:00:00',
+            start: '19:00:00',
+            end: '21:30:00',
             available: true,
             selected: false,
+            inCart: false
         },
     ])
+
+    
 
     function handleSelect(id) {
         setButtons((prev) => {
@@ -43,26 +56,56 @@ export default function Timeslots({ selectedRoom, slots = [] }) {
             )
         })
     }
+    
+    const { firstName, lastName, email } = user
+    
+    function handleClick() {
+
+        buttons.map((button) => {
+            if (button.selected && button.available) {
+                let booking = {
+                    first_name: firstName || "Phin",
+                    last_name: lastName || "Crisp",
+                    email: email || "phineas.crisp@afm47.org",
+                    date: selectedDate,
+                    room: selectedRoom,
+                    start: button.start,
+                    end: button.end
+                }
+                addToCart(booking)
+            }
+        })
+    }
 
     useEffect(() => {
         if (!slots || Object.keys(slots).length === 0) return;
-        const filledTimes = slots?.filledTimes;
-        const filledSet = new Set(
-            filledTimes.map((time) => time.startTime)
-        );
-        setButtons(prev => 
-            prev.map(button => ({
-                ...button, 
-                selected: false
-            }))
-        )
-        setButtons(prev =>
-            prev.map(button => ({
-                ...button,
-                available: !filledSet.has(button.dateTime)
-            }))
-        );
-    }, [slots]);
+        const filledTimes = slots.filledTimes || []
+        const slotSet = new Set(filledTimes.map((time) => time.start));
+        const cartSet = new Set(
+            cart
+            .filter(item =>
+                item.date === selectedDate 
+                && item.room === selectedRoom
+            )
+            .map((item) => 
+                item.start
+            ))
+        setButtons((prev) => {
+            return prev
+            .map((button) => {
+                const isInSlot = slotSet.has(button.start);
+                const isInCart = cartSet.has(button.start);
+                return {
+                    ...button,
+                    selected: false,
+                    available: !isInSlot && !isInCart,
+                    inCart: isInCart
+                }
+            })
+        })
+
+        
+    }, [slots, cart, selectedDate, selectedRoom]);
 
     
   return (
@@ -81,11 +124,11 @@ export default function Timeslots({ selectedRoom, slots = [] }) {
                     if (item.available) {
                         handleSelect(item.id)
                 }
-                }}><span>{item.name}</span></li>
+                }}><span>{`${item.name}${item.inCart ? ' (In cart)' : ''}`}</span></li>
             )
         }) : <div>Loading...</div>}
       </ul>
-      <div className={styles.button}><span>Add booking</span></div>
+      <div className={styles.button} onClick={handleClick}><span>Add booking</span></div>
     </div>
   )
 }

@@ -17,13 +17,18 @@ function findDateObject(list, date) {
     return list.find((item) => item.date === date)
 }
 
+// {room: 'Room 6, filledSlots: [{start: x, end, x}]}
 function findSlotObject(list, room) {
-    return list.find((item) => item.name === `Room ${room}`
-    )
+    if (list.find((item) => item.room === `Room ${room}`)) {
+        return list.find((item) => item.room === `Room ${room}`)
+    } else {
+        let roomValue = `Room ${room}` 
+        return {room: roomValue, filledSlots: []}
+    }
 }
 
 
-export default function Calendar({ events, loading }) {
+export default function Calendar({ events, loading, user }) {
   const [selectedDate, setSelectedDate] = useState(firstDate)
   const [dateObject, setDateObject] = useState({})
   const [selectedRoom, setSelectedRoom] = useState(4)
@@ -40,6 +45,7 @@ export default function Calendar({ events, loading }) {
   }
   useEffect(() => {
     if(Object.keys(dateObject).length === 0) return
+    console.log(dateObject)
     setSlots(findSlotObject(dateObject.rooms, selectedRoom))
   }, [selectedRoom])
 
@@ -48,6 +54,8 @@ export default function Calendar({ events, loading }) {
         let firstDateStr = firstDate.toISOString().split('T')[0]
         let firstDateObject = findDateObject(events, firstDateStr)
         let firstSlotObject = findSlotObject(firstDateObject.rooms, 4)
+        console.log(firstSlotObject)
+        console.log(firstDateObject)
         setDateObject(firstDateObject)
         setSlots(firstSlotObject)
     }
@@ -125,7 +133,9 @@ export default function Calendar({ events, loading }) {
                 ></Rooms>
                 <Timeslots 
                 selectedRoom={selectedRoom} 
+                selectedDate={selectedDate}
                 slots={slots}
+                user={user}
                 ></Timeslots>
             </div>
             </> }
