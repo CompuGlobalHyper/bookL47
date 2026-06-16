@@ -3,6 +3,7 @@ const routes = require('./routes.js')
 const dotenv = require("dotenv")
 const cors = require("cors")
 const passport = require('passport');
+const { createClient } = require('@supabase/supabase-js')
 const { Strategy: LocalStrategy } = require('passport-local');
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
@@ -18,6 +19,14 @@ app.use(cors({
   origin: clientUrl,
   credentials: true
 })) // allows clientUrl to make requests
+
+//create Supabase client
+function supabaseClient () {
+    return createClient(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_SECRET_KEY
+    )
+}
 
 app.use(express.json()) // places readable json into req.body
 app.use(express.urlencoded({ extended: false })); // creates object from form in req.body
@@ -48,24 +57,35 @@ passport.use(new JwtStrategy(
   //defaults to outputing a payload with id prop, check db if id is real
   async (payload, done) => {
     //search db for payload.id
-    const user = {}
+    const supabase = supabaseClient()
+    const { data, error } = await supabase
+    .from('user')
+    .select('*')
+    .eq("id", `${payload.id}`)
+    const user = data
     return user ? done(null, user) : done(null, false)
   }
 ))
 
 
 passport.use(
-  new LocalStrategy(async (username, password, done) => {
+  new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
     try {
-      //Fetch username from db
-      const user = {}
-      // if (!user) {
-      //   return done(null, false, { message: "Incorrect username" });
-      // }
-      // const match = await bcrypt.compare(password, user.password);
-      // if (!match) {
-      //   return done(null, false, { message: "Incorrect password" })
-      // }
+      const supabase = supabaseClient()
+      const { data, error } = await supabase
+      .from('user')
+      .select('*')
+      .eq("email", `${email}`)
+      
+      if (error) return console.log(error)
+      const user = data[0]
+       if (!user) {
+         return done(null, false, { message: "Invalid email address/password" });
+      }
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+        return done(null, false, { message: "Incorrect email address/password" })
+      }
       return done(null, user);
     } catch(err) {
       return done(err);

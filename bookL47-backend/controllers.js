@@ -2,6 +2,8 @@ const { google } = require('googleapis')
 const Jotform = require('jotform').default
 const { createClient } = require('@supabase/supabase-js')
 const jwt = require('jsonwebtoken')
+const { register } = require('node:module')
+const bcrypt = require('bcryptjs')
 
 function supabaseClient () {
     return createClient(
@@ -21,16 +23,32 @@ function googleAuth () {
 
 const controllers = {
 
-    loginPost(req, res) {
+    async meGet(req, res) {
+        const user = req.user
+        if (user) {
+            return res.status(200).json(
+                { 
+                    auth: true, 
+                    firstName: user.first_name,
+                    lastName: user.last_name,
+                    email: user.email,
+                    role: user.role
+                })
+        } else {
+            return res.status(200).json({ auth: false })
+        }
+    },
+
+    async loginPost(req, res) {
         //get id from req.user
-        const user = {id: 1}
+        const user = req.user
         if (!user) {
             console.log('login failed')
             //frontend reads res.auth = false
             return res.status(400).json({auth: false})
         }
         //store id in token as well as secret
-        jwt.sign({ id: user.id }, process.env.JWT_SECRET, {expiresIn: '1hr'}, (err, token) => {
+        jwt.sign({ id: user.id }, process.env.JWT_SECRET, {expiresIn: '1m'}, (err, token) => {
             if (err) {
                 console.error(err);
                 //frontend reads res.auth = false
@@ -40,14 +58,44 @@ const controllers = {
                 httpOnly: true, //frontend can't read?
                 secure: true, //cookie sent over https
                 sameSite: 'none', //allow cross site requests
-                maxAge: 3600000 // 60 mins
+                maxAge: 60000 // 1 min
             })
             console.log('login successful, token created')
             //frontend reads res.auth = true
-            return res.status(200).json({auth: true})
+            return res.status(200).json(
+                { 
+                    auth: true, 
+                    firstName: user.first_name,
+                    lastName: user.last_name,
+                    email: user.email,
+                    role: user.role
+                })
         })
     },
+    async registerPost(req, res) {
+        if (!req.body.firstName
+            || !req.body.lastName
+            || !req.body.email
+            || !req.body.password) {
+                return res.status(400).json({error: "Missing fields"})
+            }
+        const password = await bcrypt.hash(req.body.password, 10)
+        const user = {
+            first_name: req.body.firstName,
+            last_name: req.body.lastName,
+            email: req.body.email,
+            password: password
+        }
+        const supabase = supabaseClient()
+        const { data, error } =  await supabase
+        .from('user')
+        .insert(user)
 
+        if (error) {
+            return res.status(400).json({error: error})
+        }
+        return res.status(200).json({message: 'successful registration'})
+    },
 
 
 

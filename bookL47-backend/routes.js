@@ -25,10 +25,22 @@ const requireRole = (...roles) => {
   };
 };
 
+router.get('/api/me', (req, res, next) => {
+  passport.authenticate( "jwt", { session: false }, (err, user) => {
+    if (err) {
+      return next(err)
+    }
+    req.user = user[0] || null
+    next()
+  })(req, res, next)
+}, controllers.meGet)
+
 router.post('/login', 
     passport.authenticate(
     "local", { session: false }),
-    controller.loginPost)
+    controllers.loginPost)
+
+router.post('/register', controllers.registerPost)
 
 //routes to populate db and gain google auth
 router.get('/auth/google', controllers.googleAuthGet)
