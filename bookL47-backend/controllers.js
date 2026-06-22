@@ -48,7 +48,7 @@ const controllers = {
             return res.status(400).json({auth: false})
         }
         //store id in token as well as secret
-        jwt.sign({ id: user.id }, process.env.JWT_SECRET, {expiresIn: '1m'}, (err, token) => {
+        jwt.sign({ id: user.id }, process.env.JWT_SECRET, {expiresIn: '8hr'}, (err, token) => {
             if (err) {
                 console.error(err);
                 //frontend reads res.auth = false
@@ -58,7 +58,7 @@ const controllers = {
                 httpOnly: true, //frontend can't read?
                 secure: true, //cookie sent over https
                 sameSite: 'none', //allow cross site requests
-                maxAge: 60000 // 1 min
+                maxAge: 60000 * 60 * 8 // 1 min * 60 (1hr) * 8 (8hr)
             })
             console.log('login successful, token created')
             //frontend reads res.auth = true
