@@ -14,6 +14,22 @@ export function CartProvider({ children }) {
     function addToCart(booking) {
       setCart(prev => [...prev, booking])
     }
+    function deleteCartItem(id) {
+      setCart(prev => prev.filter((item) => item.id !== id))
+    }
+    function updateCartItem(checked, id, equipmentName) {
+      setCart((prev) => {
+        return prev.map((item) => {
+          if (item.id !== id) return item
+          return {
+            ...item, equipmentRequest: checked 
+            ? [...item.equipmentRequest, equipmentName]
+            : item.equipmentRequest.filter(d => d !== equipmentName)
+          }
+        })
+      })
+
+    }
     function clearCart() {
       localStorage.removeItem("cart")
       setCart([])
@@ -22,7 +38,7 @@ export function CartProvider({ children }) {
   return (
    <CartContext.Provider 
    value={{
-    cart, setCart, addToCart, clearCart
+    cart, setCart, addToCart, clearCart, deleteCartItem, updateCartItem
    }}>
     {children}
    </CartContext.Provider>

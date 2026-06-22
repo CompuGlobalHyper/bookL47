@@ -55,8 +55,8 @@ export default function Header( { user }) {
     <div className={styles.container}>
         <div className={styles.main}>
             <div className={styles.image}></div>
-            <Link to='/' className={`${styles.title} text large`}>{`AFM 47`}</Link>
-            {user.role !== 'guest' 
+            <Link to='/' className={`${styles.title} text large`} onClick={() => setViewMenu(false)}>{`AFM 47`}</Link>
+            {user.role === 'placeholder' 
             ? <></> 
             : <Link 
                 to='/cart'

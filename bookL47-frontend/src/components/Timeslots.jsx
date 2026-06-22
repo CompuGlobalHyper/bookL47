@@ -64,13 +64,16 @@ export default function Timeslots({ selectedRoom, slots = [], user, selectedDate
         buttons.map((button) => {
             if (button.selected && button.available) {
                 let booking = {
+                    id: crypto.randomUUID(),
                     first_name: firstName || "Phin",
                     last_name: lastName || "Crisp",
                     email: email || "phineas.crisp@afm47.org",
                     date: selectedDate,
                     room: selectedRoom,
                     start: button.start,
-                    end: button.end
+                    end: button.end,
+                    equipmentRequest: [],
+                    description: ''
                 }
                 addToCart(booking)
             }
