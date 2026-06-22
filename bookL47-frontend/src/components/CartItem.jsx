@@ -28,9 +28,7 @@ const equipmentOptions = [
 
 export default function CartItem({ item, active, setActive }) {
 
-  const { deleteCartItem, updateCartItem } = useContext(CartContext)
-
-  const [textArea, setTextArea] = useState('')
+  const { deleteCartItem, updateCartItemEquipment, updateCartItemDescription, applyToAllCartItems } = useContext(CartContext)
 
   function formatDate(dateString) {
     const date = new Date(dateString)
@@ -74,7 +72,7 @@ export default function CartItem({ item, active, setActive }) {
                     type="checkbox" 
                     name={equipment.name} 
                     id={`${equipment.id}:${item.id}`} 
-                    onChange={(e) => updateCartItem(e.target.checked, item.id, equipment.name)}
+                    onChange={(e) => updateCartItemEquipment(e.target.checked, item.id, equipment.name)}
                     checked={item.equipmentRequest.includes(equipment.name)}/>
                     <label htmlFor={equipment.id}>{equipment.name}</label>
                   </div>
@@ -88,9 +86,13 @@ export default function CartItem({ item, active, setActive }) {
               id="info"
               placeholder='We will need 3 microphones as well as microphone stands. We will arrive 30 minutes later than our scheduled time.'
               maxLength={250}
-              onChange={(e) => setTextArea(e.target.value)}></textarea>
+              value={item.description}
+              onChange={(e) => updateCartItemDescription(item.id, e.target.value)}></textarea>
             </div>
-             <div>Apply requests to all bookings</div>
+             <div 
+             className={styles.button}
+             onClick={() => applyToAllCartItems(item.id)}
+             >Apply these requests to all bookings</div>
           </div> 
         : <></>}
         <div onClick={() => deleteCartItem(item.id)}>Delete booking from cart</div>

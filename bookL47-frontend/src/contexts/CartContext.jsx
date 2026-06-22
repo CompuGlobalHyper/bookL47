@@ -17,7 +17,7 @@ export function CartProvider({ children }) {
     function deleteCartItem(id) {
       setCart(prev => prev.filter((item) => item.id !== id))
     }
-    function updateCartItem(checked, id, equipmentName) {
+    function updateCartItemEquipment(checked, id, equipmentName) {
       setCart((prev) => {
         return prev.map((item) => {
           if (item.id !== id) return item
@@ -30,6 +30,30 @@ export function CartProvider({ children }) {
       })
 
     }
+    function updateCartItemDescription(id, newDescription) {
+      setCart((prev) => {
+        return prev.map((item) => {
+          if (item.id !== id) return item
+          return {
+            ...item, description: newDescription
+          }
+        })
+      })
+
+    }
+    function applyToAllCartItems(sourceID) {
+      const source = cart.find(item => item.id === sourceID)
+
+      setCart((prev) => {
+        return prev.map(item => {
+          return {
+            ...item, 
+            equipmentRequest: source.equipmentRequest,
+            description: source.description}
+        })
+      })
+
+    }
     function clearCart() {
       localStorage.removeItem("cart")
       setCart([])
@@ -38,7 +62,14 @@ export function CartProvider({ children }) {
   return (
    <CartContext.Provider 
    value={{
-    cart, setCart, addToCart, clearCart, deleteCartItem, updateCartItem
+    cart, 
+    setCart, 
+    addToCart, 
+    clearCart, 
+    deleteCartItem, 
+    updateCartItemEquipment, 
+    updateCartItemDescription,
+    applyToAllCartItems
    }}>
     {children}
    </CartContext.Provider>
