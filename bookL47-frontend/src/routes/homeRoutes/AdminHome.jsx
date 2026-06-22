@@ -1,9 +1,11 @@
 import React from 'react'
+import { Link } from 'react-router'
 
 export default function AdminHome() {
   return (
     <div>
-      AdminHome
+      <div>Links:</div>
+      <Link to='/book'>Book</Link>
     </div>
   )
 }

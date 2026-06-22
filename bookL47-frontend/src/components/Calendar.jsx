@@ -36,10 +36,15 @@ export default function Calendar({ events, loading, user }) {
   const dayCalendarRef = useRef(null)
 
   const handleClick = (cell) => {
-    if (cell.dateStr <= firstDate.toISOString().split('T')[0]) {
-        console.log('resetting to first allowed date')
-        return setSelectedDate(firstDate.toISOString().split('T')[0])
+    if (cell.date.getDay() === 0 || cell.date.getDay() === 6) {
+        console.log('no weekends')
+        return
     }
+    if (cell.dateStr < firstDate.toISOString().split('T')[0]) {
+        console.log('not allow date')
+        return
+    }
+    console.log(cell)
     setSelectedDate(cell.dateStr)
 
   }
@@ -83,6 +88,7 @@ export default function Calendar({ events, loading, user }) {
                 initialView={mobileView}
                 initialDate={selectedDate}
                 events={events}
+                titleFormat={{weekday: "long", month: "long", day: "numeric"}}
                 ref={dayCalendarRef}
                 datesSet={(info) => {
                     const date = new Date(info.view.currentStart)
