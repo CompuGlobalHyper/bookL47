@@ -49,19 +49,21 @@ export default function CartItem({ item, active, setActive }) {
     const period = hour >= 12 ? 'pm' : 'am'
     const displayHour = hour % 12 || 12
 
-    return `${displayHour}${minutes !== '00' ? ":" + minutes : ""} ${period}`
+    return `${displayHour}${minutes !== '00' ? ":" + minutes : ""}${period}`
 
   }
   return (
-    <div>
+    <div className={styles.main}>
       <div className={styles.container}>
-        <div className={styles.date}>{formatDate(item.date)}</div>
-        <div className={styles.room}>{`Room ${item.room}`}</div>
-        <div className={styles.time}>{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
-        <div onClick={ () =>
+        <div className={`${styles.date} text bold medium`}>{formatDate(item.date)}</div>
+        <div className={`${styles.time} text bold`}>{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
+        <div className={`${styles.room} text bold`}>{`Room ${item.room}`}</div>
+        <div 
+        className={`${styles.option} text`}
+        onClick={ () =>
           active === item.id 
           ? setActive(null) 
-          : setActive(item.id)} >{active === item.id ? 'Close options menu' : 'Options'}</div>
+          : setActive(item.id)} >{active === item.id ? '' : 'View options'}</div>
         { active === item.id
         ? <div className={styles.backlineTab}>
             <div className={styles.inputContainer}>
@@ -89,13 +91,26 @@ export default function CartItem({ item, active, setActive }) {
               value={item.description}
               onChange={(e) => updateCartItemDescription(item.id, e.target.value)}></textarea>
             </div>
-             <div 
-             className={styles.button}
-             onClick={() => applyToAllCartItems(item.id)}
-             >Apply these requests to all bookings</div>
+            <div className={`${styles.buttonContainer}`}>
+              <div className={`${styles.applyAll} text bold`}
+                    onClick={() => applyToAllCartItems(item.id)}
+                    ><span>Apply to all bookings</span>
+              </div>
+              <div className={`${styles.closeButton} text bold`}
+                    onClick={() => setActive(null)}
+                    ><span>Close</span>
+              </div>
+              
+
+            </div>
+            
+              
+            
           </div> 
         : <></>}
-        <div onClick={() => deleteCartItem(item.id)}>Delete booking from cart</div>
+        <div 
+        onClick={() => deleteCartItem(item.id)}
+        className={`${styles.delete} text bold`}><span>Delete booking</span></div>
       </div>
         
       

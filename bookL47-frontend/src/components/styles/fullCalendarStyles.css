@@ -38,10 +38,9 @@
 }
 /* Today button */
 .fc-button.fc-today-button {
-  background-color: var(--brand-color);
+  display: none;
 }
 .fc-button.fc-today-button:hover {
-  background-color: var(--brand-hover-color);
 }
 
 

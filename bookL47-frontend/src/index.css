@@ -94,8 +94,8 @@ a {
   );
 
   --gold-color: light-dark(
-    rgb(211, 172, 43),
-    rgb(232, 191, 68)
+    rgb(255, 196, 0),
+    rgb(242, 193, 46)
   );
   /* Backgrounds */
   --bg-color: light-dark(
@@ -152,6 +152,14 @@ a {
     rgba(0, 0, 0, 0.08),
     rgba(0, 0, 0, 0.35)
   );
+}
+
+input[type="checkbox"] {
+  accent-color: var(--brand-color);
+}
+
+textarea {
+  background-color: var(--surface-elevated-color);
 }
 
 .bold {

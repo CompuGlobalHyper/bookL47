@@ -41,7 +41,7 @@ export default function Calendar({ events, loading, user }) {
         return
     }
     if (cell.dateStr < firstDate.toISOString().split('T')[0]) {
-        console.log('not allow date')
+        console.log('not an allowed date')
         return
     }
     console.log(cell)
@@ -88,6 +88,7 @@ export default function Calendar({ events, loading, user }) {
                 initialView={mobileView}
                 initialDate={selectedDate}
                 events={events}
+                weekends={false}
                 titleFormat={{weekday: "long", month: "long", day: "numeric"}}
                 ref={dayCalendarRef}
                 datesSet={(info) => {
@@ -108,6 +109,7 @@ export default function Calendar({ events, loading, user }) {
                 height={'auto'}
                 events={[]}
                 dateClick={handleClick}
+                weekends={false}
                 dayCellClassNames={(cell) => {
                     const today = new Date();
                     const tomorrow = new Date();
