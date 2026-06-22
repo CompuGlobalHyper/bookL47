@@ -56,8 +56,10 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
     const handleSubmit = async (e) => {
         e.preventDefault();
         const currentErrors = Object.values(errors)
+        console.log(currentErrors)
         if (currentErrors.every((val) => val === '')) return
         const currentFields = Object.values(formData)
+        console.log(currentFields)
         if (currentFields.every((val) => val === '')) return
         try {
             const res = await fetch(`${API}/register`, {
