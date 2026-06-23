@@ -83,6 +83,7 @@ export default function Timeslots({ selectedRoom, slots = [], user, selectedDate
     useEffect(() => {
         if (!slots || Object.keys(slots).length === 0) return;
         const filledTimes = slots.filledTimes || []
+        console.log(slots)
         const slotSet = new Set(filledTimes.map((time) => time.start));
         const cartSet = new Set(
             cart

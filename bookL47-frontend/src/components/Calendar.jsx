@@ -19,11 +19,11 @@ function findDateObject(list, date) {
 
 // {room: 'Room 6, filledSlots: [{start: x, end, x}]}
 function findSlotObject(list, room) {
-    if (list.find((item) => item.room === `Room ${room}`)) {
-        return list.find((item) => item.room === `Room ${room}`)
+    if (list.find((item) => item.name === `Room ${room}`)) {
+        return list.find((item) => item.name === `Room ${room}`)
     } else {
         let roomValue = `Room ${room}` 
-        return {room: roomValue, filledSlots: []}
+        return {room: roomValue, filledTimes: []}
     }
 }
 
