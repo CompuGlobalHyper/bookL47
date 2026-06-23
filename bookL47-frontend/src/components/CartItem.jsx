@@ -71,7 +71,7 @@ export default function CartItem({ abridged, item, active, setActive }) {
             <div className={styles.inputContainer}>
               { equipmentOptions.map((equipment) => {
                 return (
-                  <div className={styles.checkboxContainer}>
+                  <div className={`text ${styles.checkboxContainer}`}>
                     <input 
                     type="checkbox" 
                     name={equipment.name} 
@@ -83,7 +83,7 @@ export default function CartItem({ abridged, item, active, setActive }) {
                 )
               })}
             </div>
-            <div className={styles.infoBox}>
+            <div className={`${styles.infoBox} text`}>
               <span>Anything else we should know?</span>
               <textarea 
               name="info" 

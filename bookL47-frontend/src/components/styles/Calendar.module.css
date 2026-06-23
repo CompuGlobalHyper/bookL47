@@ -30,7 +30,6 @@
 }
 
 .dayView {
-    padding-top: 20px;
 }
 
 
@@ -48,8 +47,7 @@
 
 .side {
     display: flex;
-    gap: 20px;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 }

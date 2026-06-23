@@ -6,7 +6,7 @@
 
 .main {
     flex: 1;
-    margin: 0 clamp(20px, 5dvw, 200px);
+    margin: 20px clamp(20px, 5dvw, 200px);
 }
 
 .adminMessage {

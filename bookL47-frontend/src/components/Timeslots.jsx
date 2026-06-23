@@ -9,7 +9,7 @@ export default function Timeslots({ selectedRoom, slots = [], user, selectedDate
     const [buttons, setButtons] = useState([
         {
             id: 1,
-            name: "10am - 12:30pm",
+            name: "10:00am - 12:30pm",
             start: '10:00:00',
             end: '12:30:00',
             available: true,
@@ -18,7 +18,7 @@ export default function Timeslots({ selectedRoom, slots = [], user, selectedDate
         },
         {
             id: 2,
-            name: "1pm - 3:30pm",
+            name: "1:00pm - 3:30pm",
             start: '13:00:00',
             end: '15:30:00',
             available: true,
@@ -27,7 +27,7 @@ export default function Timeslots({ selectedRoom, slots = [], user, selectedDate
         },
         {
             id: 3,
-            name: "4pm - 6:30pm",
+            name: "4:00pm - 6:30pm",
             start: '16:00:00',
             end: '18:30:00',
             available: true,
@@ -113,27 +113,30 @@ export default function Timeslots({ selectedRoom, slots = [], user, selectedDate
 
     
   return (
-    <div className={styles.container}>
-      <div className='text'>Available slots:</div>
-      <ul className={styles.list}>
-        {buttons ? buttons.map((item) => {
-            return (
-                <li 
-                className=
-                {`text ${styles.item} 
-                ${item.available ? '': styles.unavailableItem} 
-                ${item.selected ? styles.isActive : ''}`} 
-                key={item.id}
-                onClick={() => {
-                    if (item.available) {
-                        handleSelect(item.id)
-                }
-                }}><span>{`${item.name}${item.inCart ? ' (in cart)' : ''}`}</span></li>
-            )
-        }) : <div>Loading...</div>}
-      </ul>
-      <div className={`${styles.button} text medium`} onClick={handleClick}><span>Add booking</span></div>
+    <div className={styles.main}>
+        <div className={styles.container}>
+            <div className='text'>Available slots:</div>
+            <ul className={styles.list}>
+                {buttons ? buttons.map((item) => {
+                    return (
+                        <li 
+                        className=
+                        {`text ${styles.item} 
+                        ${item.available ? '': styles.unavailableItem} 
+                        ${item.selected ? styles.isActive : ''}`} 
+                        key={item.id}
+                        onClick={() => {
+                            if (item.available) {
+                                handleSelect(item.id)
+                        }
+                        }}><span>{`${item.name}${item.inCart ? ' (in cart)' : ''}`}</span></li>
+                    )
+                }) : <div>Loading...</div>}
+            </ul>
+        </div>
+        <div className={`${styles.button} text medium bold`} onClick={handleClick}><span>Add booking</span></div>
     </div>
+    
   )
 }
 

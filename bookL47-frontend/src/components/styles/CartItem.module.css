@@ -5,7 +5,7 @@
 .container {
     width: clamp(50dvw, 90dvw, 500px);
     margin: 10px 0;
-    padding: 10px;
+    padding: 10px 20px;
     border: 2px solid var(--border-color);
     background-color: var(--surface-color);
 }
@@ -60,11 +60,6 @@
 }
 
 .infoBox span {
-}
-.infoBox textarea {
-    padding: 5px 10px;
-    width: clamp(100%, 300px, 500px);
-    height: clamp(100px, 150px, 200px);
 }
 
 .infoBox:focus {

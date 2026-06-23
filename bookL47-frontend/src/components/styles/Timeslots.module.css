@@ -1,7 +1,12 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
 .container {
     margin: auto 0;
     width: clamp(250px, 100%, 500px);
-    padding: 5px 5px;
+    padding: 15px 10px;
     border: 2px solid var(--border-color);
     background-color: var(--surface-color);
     border-radius: 8px;
