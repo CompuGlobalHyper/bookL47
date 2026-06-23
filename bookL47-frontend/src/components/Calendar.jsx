@@ -82,7 +82,7 @@ export default function Calendar({ events, loading, user }) {
         <div className={styles.main}>
             {loading ? <div>Loading...</div> : 
             <>
-            <div className={styles.dayView}>
+            <div className={`${styles.dayView} text`}>
                 <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
                 initialView={mobileView}
@@ -102,7 +102,7 @@ export default function Calendar({ events, loading, user }) {
                 >
                 </FullCalendar>
             </div>
-            <div className={styles.monthView}>
+            <div className={`${styles.monthView} text`}>
                 <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
                 initialView={fullView}

@@ -23,7 +23,7 @@ export default function Rooms({ selectedRoom, setSelectedRoom }) {
                 return (
                     <li 
                         key={room.id} 
-                        className={`${styles.item} ${room.isActive ? styles.activeItem : ''}`}
+                        className={`text ${styles.item} ${room.isActive ? styles.activeItem : ''}`}
                         onClick={() => {
                             setSelectedRoom(room.id)
                             }}>
@@ -37,7 +37,7 @@ export default function Rooms({ selectedRoom, setSelectedRoom }) {
                 return (
                     <li 
                         key={room.id} 
-                        className={`${styles.item} ${room.isActive ? styles.activeItem : ''}`}
+                        className={`text ${styles.item} ${room.isActive ? styles.activeItem : ''}`}
                         onClick={() => setSelectedRoom(room.id)}>
                         {room.name}
                     </li>)

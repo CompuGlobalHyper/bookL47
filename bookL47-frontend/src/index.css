@@ -127,7 +127,7 @@ a {
   /* Borders */
   --border-color: light-dark(
     rgb(214, 221, 228),
-    rgb(72, 80, 92)
+    rgb(96, 107, 124)
   );
 
   /* Status */
@@ -161,33 +161,43 @@ input[type="checkbox"] {
 textarea {
   background-color: var(--surface-elevated-color);
 }
+.thin {
+  font-weight: 100;
 
-.bold {
-  font-weight: bold;
 }
 
-.primaryText {
+.regular {
+  font-weight: 400;
+
+}
+.bold {
+  font-weight: 700;
+}
+
+.text {
+  font-family: "DM Sans", sans-serif;
+  font-optical-sizing: auto;
   color: var(--text-color);
 }
 
 .secondaryText {
   color: var(--text-secondary-color);
+}
 
+.tiny {
+  font-size: 6px;
 }
 
 .small {
   font-size: 10px;
-
 }
 
 .regular {
   font-size: 14px;
 
 }
-
 .medium {
   font-size: 20px;
-
 }
 
 .large {

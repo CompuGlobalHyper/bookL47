@@ -68,7 +68,7 @@ export default function Header( { setUser, user }) {
     <div className={styles.container}>
         <div className={styles.main}>
             <div className={styles.image}></div>
-            <Link to='/' className={`${styles.title} text large`} onClick={() => setViewMenu(false)}>{`AFM 47`}</Link>
+            <Link to='/' className={`${styles.title} text large bold`} onClick={() => setViewMenu(false)}>{`AFM 47`}</Link>
             {user.role === 'placeholder' 
             ? <></> 
             : <Link 
@@ -76,14 +76,14 @@ export default function Header( { setUser, user }) {
                 className={`${styles.cart} text`}
                 onClick={() => setViewMenu(false)}>Cart ({cart.length})</Link>}
             <div 
-                className={styles.hamburger}
+                className={`${styles.hamburger} text`}
                 onClick={() => {
                     setViewMenu(prev => !prev)
                 }}>
                 { viewMenu ? "Close" : "Menu"}</div>
         </div>
         <div className={`${styles.listContainer}`}>
-            <ul className={`${styles.list} ${viewMenu ? styles.open : styles.hidden}`}>
+            <ul className={`text thin ${styles.list} ${viewMenu ? styles.open : styles.hidden}`}>
                 {navLinks[user.role].map((link) => {
                     return (
                         <li key={link.name} className={styles.item}>

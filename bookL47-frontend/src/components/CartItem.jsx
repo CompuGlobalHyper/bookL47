@@ -26,22 +26,22 @@ const equipmentOptions = [
 ];
 
 
-export default function CartItem({ item, active, setActive }) {
+export default function CartItem({ abridged, item, active, setActive }) {
 
   const { deleteCartItem, updateCartItemEquipment, updateCartItemDescription, applyToAllCartItems } = useContext(CartContext)
 
   function formatDate(dateString) {
-    const date = new Date(dateString)
+    const date = new Date(`${dateString}T12:00:00Z`)
 
-    const formatted = date.toLocaleDateString('en-US',
-      {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      }
-    )
-    return formatted
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'America/Los_Angeles',
+    });
+    
+    return formatter.format(date)
   }
   function formatTime(timeString = '12:30:00') {
     const [ hours, minutes ] = timeString.split(':')
@@ -58,12 +58,14 @@ export default function CartItem({ item, active, setActive }) {
         <div className={`${styles.date} text bold medium`}>{formatDate(item.date)}</div>
         <div className={`${styles.time} text bold`}>{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
         <div className={`${styles.room} text bold`}>{`Room ${item.room}`}</div>
+        { abridged ? <></> : 
         <div 
         className={`${styles.option} text`}
         onClick={ () =>
           active === item.id 
           ? setActive(null) 
           : setActive(item.id)} >{active === item.id ? '' : 'View options'}</div>
+        }
         { active === item.id
         ? <div className={styles.backlineTab}>
             <div className={styles.inputContainer}>
@@ -100,17 +102,12 @@ export default function CartItem({ item, active, setActive }) {
                     onClick={() => setActive(null)}
                     ><span>Close</span>
               </div>
-              
-
             </div>
-            
-              
-            
           </div> 
         : <></>}
         <div 
         onClick={() => deleteCartItem(item.id)}
-        className={`${styles.delete} text bold`}><span>Delete booking</span></div>
+        className={`${styles.delete} text bold`}><span>Delete</span></div>
       </div>
         
       

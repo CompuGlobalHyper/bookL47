@@ -114,13 +114,13 @@ export default function Timeslots({ selectedRoom, slots = [], user, selectedDate
     
   return (
     <div className={styles.container}>
-      <div>Available slots:</div>
+      <div className='text'>Available slots:</div>
       <ul className={styles.list}>
         {buttons ? buttons.map((item) => {
             return (
                 <li 
                 className=
-                {`${styles.item} 
+                {`text ${styles.item} 
                 ${item.available ? '': styles.unavailableItem} 
                 ${item.selected ? styles.isActive : ''}`} 
                 key={item.id}
@@ -128,11 +128,11 @@ export default function Timeslots({ selectedRoom, slots = [], user, selectedDate
                     if (item.available) {
                         handleSelect(item.id)
                 }
-                }}><span>{`${item.name}${item.inCart ? ' (In cart)' : ''}`}</span></li>
+                }}><span>{`${item.name}${item.inCart ? ' (in cart)' : ''}`}</span></li>
             )
         }) : <div>Loading...</div>}
       </ul>
-      <div className={styles.button} onClick={handleClick}><span>Add booking</span></div>
+      <div className={`${styles.button} text medium`} onClick={handleClick}><span>Add booking</span></div>
     </div>
   )
 }

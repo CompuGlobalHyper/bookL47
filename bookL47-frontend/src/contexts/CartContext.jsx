@@ -11,11 +11,15 @@ export function CartProvider({ children }) {
       localStorage.setItem("cart", JSON.stringify(cart))
 
     }, [cart])
+
+    function sortCart(cart) {
+      return cart.toSorted((a, b) => new Date(`${a.date}T${a.start}`) - new Date(`${b.date}T${b.start}`))
+    }
     function addToCart(booking) {
-      setCart(prev => [...prev, booking])
+      setCart(prev => sortCart([...prev, booking]))
     }
     function deleteCartItem(id) {
-      setCart(prev => prev.filter((item) => item.id !== id))
+      setCart(prev => sortCart(prev.filter((item) => item.id !== id)))
     }
     function updateCartItemEquipment(checked, id, equipmentName) {
       setCart((prev) => {

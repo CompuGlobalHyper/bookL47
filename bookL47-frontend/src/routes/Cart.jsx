@@ -16,7 +16,8 @@ export default function Cart() {
           cart.map((item) => {
             return (
             <li key={item.id}>
-              <CartItem 
+              <CartItem
+                abridged={false}
                 item={item} 
                 active={active} 
                 setActive={setActive}>
