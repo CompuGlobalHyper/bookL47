@@ -40,7 +40,11 @@ function App() {
   return (
     <div className={styles.body}>
       {user.role === 'admin' ? <div className={`${styles.adminMessage} text bold medium`}><span>You are in admin mode</span></div> : <div></div>}
-      <Header user={user} setMessage={setMessage}></Header>
+      <Header 
+        user={user} 
+        setUser={setUser}
+        setMessage={setMessage}>
+      </Header>
       <div className={!message.error ? styles.message : styles.error}>
         <p>{message.text}</p>
       </div>

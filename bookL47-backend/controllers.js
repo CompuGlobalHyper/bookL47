@@ -97,6 +97,18 @@ const controllers = {
         return res.status(200).json({message: 'successful registration'})
     },
 
+    async logoutGet(req, res) {
+        res.clearCookie("access_token", {
+            httpOnly: true,
+            sameSite: "none",
+            secure: true,
+            path: '/',
+        });
+        console.log('logging you out..')
+        res.sendStatus(200)
+
+    },
+
 
 
 

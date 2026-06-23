@@ -42,6 +42,8 @@ router.post('/login',
 
 router.post('/register', controllers.registerPost)
 
+router.get('/logout', controllers.logoutGet)
+
 //routes to populate db and gain google auth
 router.get('/auth/google', controllers.googleAuthGet)
 router.get('/auth/google/callback', controllers.googleAuthCallbackGet)
