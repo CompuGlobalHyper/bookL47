@@ -74,14 +74,14 @@ export default function GuestHome({ setMessage, setUser }) {
       {!viewLogin 
       ? <div className={styles.content}>
           <div className={styles.textContainer}>
-            <h1>Welcome to BookL47</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, quos?</p>
+            <h1 className={`text`}>Welcome to BookL47</h1>
+            <p className={`text`}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, quos?</p>
           </div>
-          <div>Image goes here</div>
+          <div className={`text`}>Image goes here</div>
           <div>
-            <div onClick={() => setViewLogin(true)} className={styles.registerLink}>Sign in</div>
-            <div>First time? <span onClick={() =>  setViewRegister(true)}
-              className={styles.registerLink}>
+            <div onClick={() => setViewLogin(true)} className={`${styles.registerLink} text`}>Sign in</div>
+            <div className={`text`}>First time? <span onClick={() =>  setViewRegister(true)}
+              className={`${styles.registerLink} text`}>
                 Create an account!
               </span>
             </div>
@@ -95,7 +95,7 @@ export default function GuestHome({ setMessage, setUser }) {
         } className={styles.backLink}>Back</p>
           <div className={styles.loginContainer}>
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
-              <div className={styles.field}>
+              <div className={`${styles.field} text`}>
                 <input
                 id="email"
                 name="email"

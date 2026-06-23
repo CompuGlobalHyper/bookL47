@@ -43,7 +43,7 @@ export default function Book(user) {
               </li>
               )
             })
-        : <div>It looks like your cart is empty</div> }
+        : <div className={`text thin`}>It looks like your cart is empty</div> }
       </ul>
     </div>
   )

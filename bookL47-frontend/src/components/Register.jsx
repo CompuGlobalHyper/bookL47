@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles/Register.module.css'
 
 export default function Register({viewRegister, setViewRegister, setViewLogin, setMessage}) {
+    const [allowRegister, setAllowRegister] = useState(true)
     const API = import.meta.env.VITE_API_URL
     const [formData, setFormData] = useState({
         firstName: "",
@@ -61,6 +62,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
         console.log(currentFields)
         if (currentFields.some((val) => val === '')) return
         try {
+            setAllowRegister(false)
             const res = await fetch(`${API}/register`, {
                 method:"POST",
                 headers: {
@@ -89,7 +91,13 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
             })
             console.log(error)
         }
+        setAllowRegister(true)
         setViewRegister(false)
+        setTimeout(() => {
+            setMessage((prev) => {
+                return ({...prev, text: "", error: false})
+            })
+        }, 5000)
     }
     const validatePassword = (value) => {
         switch (true) {
@@ -167,18 +175,18 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
         onCancel={handleCancel}
         autoFocus>
         <div className={styles.registerContainer}>
-            <div className={`${styles.closeButton} bold`}>
+            <div className={`${styles.closeButton} bold text`}>
                 <span onClick={() => {
                 setViewRegister(false)}}>
                     Close
                 </span>
             </div>
             <div className={styles.header}>
-                <h1>Create a free account today and start booking!</h1>
-                <p>Already have an account? <span className={styles.link} onClick={() => handleClick()}>Sign in!</span></p>
+                <h1 className={`text`}>Create a free account today and start booking!</h1>
+                <p className={`text`}>Already have an account? <span className={`${styles.link} text`} onClick={() => handleClick()}>Sign in!</span></p>
             </div>
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
-                <div className={styles.field}>
+                <div className={`${styles.field} text`}>
                     <input
                     id="firstName"
                     name="firstName"
@@ -191,9 +199,9 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     />
                     <label htmlFor="firstName">First Name</label>
                 </div>
-                {errors.firstName && (<p className={`${styles.error} bold small`}> {errors.firstName}</p>)}
+                {errors.firstName && (<p className={`${styles.error} bold small text`}> {errors.firstName}</p>)}
 
-                <div className={styles.field}>
+                <div className={`${styles.field} text`}>
                     <input
                     id="lastName"
                     name="lastName"
@@ -208,7 +216,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                 </div>
                 {errors.lastName && (<p className={`${styles.error} bold small`}> {errors.lastName}</p>)}
 
-                <div className={styles.field}>
+                <div className={`${styles.field} text`}>
                     <input
                     id="email"
                     name="email"
@@ -223,7 +231,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                 </div>
                 {errors.email && (<p className={`${styles.error} bold small`}> {errors.email}</p>)}
 
-                <div className={styles.field}>
+                <div className={`${styles.field} text`}>
                     <input
                     id="password"
                     name="password"
@@ -242,7 +250,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     </div>
                 </div>
                 {errors.password && (<p className={`${styles.error} bold small`}> {errors.password}</p>)}
-                <div className={styles.field}>
+                <div className={`${styles.field} text`}>
                     <input
                     id="confirm"
                     name="confirm"
@@ -255,9 +263,11 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     />
                     <label htmlFor="confirm">Confirm Password</label>
                 </div>
-                {errors.confirm && (<p className={`${styles.error} bold small`}> {errors.confirm}</p>)}
-                <div className={styles.buttonContainer}><button type="submit" className={styles.button}>Register</button></div>
-                
+                {errors.confirm && (<p className={`${styles.error} bold small text`}> {errors.confirm}</p>)}
+                { allowRegister 
+                ? <div className={styles.buttonContainer}><button type="submit" className={`${styles.button} text`}>Register</button></div>
+                : <div className={`text`}><span>Registering your account...</span></div>
+                }
             </form>
         </div>
     </dialog>

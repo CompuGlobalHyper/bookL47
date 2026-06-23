@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { CartContext } from '../contexts/CartContext'
 import CartItem from '../components/CartItem'
+import styles from './styles/Cart.module.css'
 
 export default function Cart() {
   const { cart, clearCart } = useContext(CartContext)
@@ -10,7 +11,6 @@ export default function Cart() {
   
   return (
     <div>
-      <div onClick={() => clearCart()}>Reset cart</div>
       <ul>
       { cart.length > 0 ? 
           cart.map((item) => {
@@ -25,8 +25,9 @@ export default function Cart() {
             </li>
             )
           })
-      : <div>It looks like your cart is empty</div> }
-      </ul> 
+      : <div className={`text large`}>It looks like your cart is empty..</div> }
+      </ul>
+      <div onClick={() => clearCart()} className={`${styles.button} bold text`}><span>Clear cart</span></div> 
     </div>
   )
 }

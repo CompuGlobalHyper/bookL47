@@ -1,0 +1,17 @@
+.button {
+    display: flex;
+    justify-content: center;
+    width: 150px;
+    cursor: pointer;
+    margin-top: 20px;
+    padding: 5px 5px;
+    border: 2px solid var(--border-color);;
+    color: var(--brand-text-color);
+    background-color: var(--surface-color);
+    border-radius: 8px;
+}
+
+.button:active {
+    background-color: var(--brand-color);
+    color: var(--brand-text-color)
+}
