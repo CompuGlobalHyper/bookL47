@@ -38,7 +38,7 @@ export default function CartItem({ abridged, item, active, setActive }) {
       <div className={styles.container}>
         <div className={`${styles.date} text bold medium`}>{formatDate(item.date)}</div>
         <div className={`${styles.time} text bold`}>{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
-        <div className={`${styles.room} text bold`}>{`Room ${item.room}`}</div>
+        <div className={`${styles.room} text bold`}>{item.location}</div>
         { !abridged && <div
           
           onClick={ () =>

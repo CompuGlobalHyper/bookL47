@@ -5,34 +5,20 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from "@fullcalendar/interaction";
 import './styles/fullCalendarStyles.css'
 import styles from "./styles/Calendar.module.css"
-import Rooms from './Rooms';
-import Timeslots from './Timeslots';
 
 const fullView = "dayGridMonth"
 const mobileView = 'timeGridDay'
-const firstDate = new Date();
-firstDate.setDate(firstDate.getDate() + 2)
-
-function findDateObject(list, date) {
-    return list.find((item) => item.date === date)
-}
-
-// {room: 'Room 6, filledSlots: [{start: x, end, x}]}
-function findSlotObject(list, room) {
-    if (list.find((item) => item.name === `Room ${room}`)) {
-        return list.find((item) => item.name === `Room ${room}`)
-    } else {
-        let roomValue = `Room ${room}` 
-        return {room: roomValue, filledTimes: []}
-    }
-}
 
 
-export default function Calendar({ events, loading, user }) {
-  const [selectedDate, setSelectedDate] = useState(firstDate)
-  const [dateObject, setDateObject] = useState({})
-  const [selectedRoom, setSelectedRoom] = useState(4)
-  const [slots, setSlots] = useState({})
+export default function Calendar({
+    firstDate,
+    selectedDate, 
+    setSelectedDate, 
+    dateObject, 
+    setDateObject,
+    events, 
+    loading, 
+    user }) {
   const dayCalendarRef = useRef(null)
 
   const handleClick = (cell) => {
@@ -46,34 +32,10 @@ export default function Calendar({ events, loading, user }) {
     }
     console.log(cell)
     setSelectedDate(cell.dateStr)
-
   }
-  useEffect(() => {
-    if(Object.keys(dateObject).length === 0) return
-    console.log(dateObject)
-    setSlots(findSlotObject(dateObject.rooms, selectedRoom))
-  }, [selectedRoom])
-
-  useEffect(() => {
-    function setInitial() {
-        let firstDateStr = firstDate.toISOString().split('T')[0]
-        let firstDateObject = findDateObject(events, firstDateStr)
-        let firstSlotObject = findSlotObject(firstDateObject.rooms, 4)
-        console.log(firstSlotObject)
-        console.log(firstDateObject)
-        setDateObject(firstDateObject)
-        setSlots(firstSlotObject)
-    }
-    if(!loading) {
-        setInitial()
-    }
-  }, [loading])
   
   useEffect(() => {
     if (!dayCalendarRef.current) return;
-    let tempDateObject = events.find((obj) => obj.date === selectedDate)
-    setSlots(findSlotObject(tempDateObject.rooms, selectedRoom))
-    setDateObject(tempDateObject)
     const api = dayCalendarRef.current.getApi();
     api.gotoDate(selectedDate);
     }, [selectedDate]);
@@ -133,18 +95,6 @@ export default function Calendar({ events, loading, user }) {
                     return []
                 }}
                 />
-            </div>
-            <div className={styles.side}>
-                <Rooms
-                selectedRoom={selectedRoom}
-                setSelectedRoom={setSelectedRoom} 
-                ></Rooms>
-                <Timeslots 
-                selectedRoom={selectedRoom} 
-                selectedDate={selectedDate}
-                slots={slots}
-                user={user}
-                ></Timeslots>
             </div>
             </> }
             

@@ -26,6 +26,7 @@ function App() {
       const data = await res.json()
       console.log(data)
       if (data.auth === true) {
+        console.log(data)
         setUser(data)
       } else {
         setUser({role: "guest"})

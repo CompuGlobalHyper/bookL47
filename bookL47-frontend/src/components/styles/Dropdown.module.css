@@ -1,4 +1,5 @@
 .container {
+    position: relative;
     background-color: var(--surface-color);
     width: max-content;
 
@@ -29,7 +30,17 @@
 
 }
 
+.dropdownContainer {
+    width: 100%;
+    position: relative;
+    background-color: var(--surface-color);
+}
 .dropdown {
+    width: 100%;
+    position: absolute;
+    z-index: 2;
+    background-color: var(--surface-color);
+    
 }
 
 .item {
@@ -42,6 +53,22 @@
 }
 
 .item:active {
+    background-color: var(--brand-color);
+    color: var(--brand-text-color);
+}
+
+.item.unavailable {
+    padding: 4px 6px;
+    background-color: var(--surface-elevated-color);
+    color: var(--text-secondary-color);
+}
+
+.item.unavailable:hover {
+    cursor: pointer;
+    background-color: var();
+}
+
+.item.unavailable:active {
     background-color: var(--brand-color);
     color: var(--brand-text-color);
 }

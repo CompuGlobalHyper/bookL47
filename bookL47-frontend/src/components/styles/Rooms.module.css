@@ -1,24 +1,10 @@
 .container {
     display: flex;
-    flex-direction: column;
-    
+    justify-content: space-between;
+    align-items: center;
 }
-.list {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-.item {
-    cursor: pointer;
-    margin-bottom: 20px;
-    padding: 5px 5px;
-    border: 2px solid var(--border-color);
-    background-color: var(--surface-elevated-color);
-    border-radius: 8px;
-}
+        
 
-.activeItem {
-    color: var(--brand-text-color);
-    background-color: var(--brand-color);
+.description {
+    margin: 5px 0 0 0;
 }

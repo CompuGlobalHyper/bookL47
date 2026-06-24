@@ -3,53 +3,11 @@
     flex-direction: column;
     width: 100%;
 }
+
 .container {
-    margin: auto 0;
-    width: clamp(250px, 100%, 500px);
-    padding: 15px 10px;
-    border: 2px solid var(--border-color);
-    background-color: var(--surface-color);
-    border-radius: 8px;
-}
-.list {
-    list-style-type: none;
-}
-
-.item {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    cursor: pointer;
-    margin-top: 20px;
-    padding: 5px 5px;
-    background-color: var(--surface-elevated-color);
-    border: 2px solid var(--border-color);;
-    border-radius: 8px;
 }
 
-.unavailableItem {
-    color: var(--text-secondary-color);
-    background-color: var(--surface-color);
 
-}
-.isActive {
-    color: var(--brand-text-color);
-    border: 2px solid var(--brand-color);
-}
-.button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin-top: 20px;
-    padding: 5px 5px;
-    border: 2px solid var(--border-color);;
-    color: var(--brand-text-color);
-    background-color: var(--brand-color);
-    border-radius: 8px;
-}
-
-.button:active {
-    background-color: var(--brand-color);
-    color: var(--brand-text-color)
-}

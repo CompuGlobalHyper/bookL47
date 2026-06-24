@@ -1,5 +1,51 @@
+@media screen and (min-width: 700px) {
+    .main {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+    }
+    .side {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+    .calendar {
+        max-width: 500px;
+    }
+    .sideMenus {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+
 .inCart {
     margin-top: 20px;
     padding-top: 10px;
     border-top: 0.5px solid var(--border-color);
+}
+.sideMenus {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.submitButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 20px;
+    padding: 5px 5px;
+    border: 2px solid var(--border-color);;
+    color: var(--brand-text-color);
+    background-color: var(--brand-color);
+    border-radius: 8px;
+}
+
+.submitButton:active {
+    background-color: var(--brand-color);
+    color: var(--brand-text-color)
 }

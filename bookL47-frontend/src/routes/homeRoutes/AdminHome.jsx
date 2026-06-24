@@ -7,7 +7,6 @@ export default function AdminHome() {
     <div>
       <div>Links:</div>
       <Link to='/book'>Book</Link>
-      <Dropdown></Dropdown>
     </div>
   )
 }

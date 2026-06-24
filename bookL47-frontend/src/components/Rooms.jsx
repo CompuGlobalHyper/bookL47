@@ -1,48 +1,26 @@
 import React, { useState } from 'react'
 import styles from './styles/Rooms.module.css'
+import Dropdown from './Dropdown';
 
 export default function Rooms({ selectedRoom, setSelectedRoom }) {
 
-    const smallRooms = [
-        { id: 1, name: "Room 1", isActive: false },
-        { id: 2, name: "Room 2", isActive: false },
-        { id: 3, name: "Room 3", isActive: false },
-        { id: 4, name: "Room 4", isActive: false }
-    ];
-    const bigRooms = [
-        { id: 5, name: "Room 5", isActive: false },
-        { id: 6, name: "Room 6", isActive: false },
-        { id: 7, name: "Room 7", isActive: false }
+    const rooms = [
+        { id: 1, name: "Room 1", selected: false, available: true },
+        { id: 2, name: "Room 2", selected: false, available: true },
+        { id: 3, name: "Room 3", selected: false, available: true },
+        { id: 4, name: "Room 4", selected: false, available: true },
+        { id: 5, name: "Room 5", selected: false, available: true },
+        { id: 6, name: "Room 6", selected: false, available: true },
+        { id: 7, name: "Room 7", selected: false, available: true }
     ];
 
   return (
-    <div className={styles.container}>
-        <ul className={styles.list}>
-            { smallRooms.map((room) => {
-                room.isActive = room.id === selectedRoom
-                return (
-                    <li 
-                        key={room.id} 
-                        className={`text ${styles.item} ${room.isActive ? styles.activeItem : ''}`}
-                        onClick={() => {
-                            setSelectedRoom(room.id)
-                            }}>
-                        {room.name}
-                    </li>)
-            })}
-        </ul>
-        <ul className={styles.list}>
-            { bigRooms.map((room) => {
-                room.isActive = room.id === selectedRoom
-                return (
-                    <li 
-                        key={room.id} 
-                        className={`text ${styles.item} ${room.isActive ? styles.activeItem : ''}`}
-                        onClick={() => setSelectedRoom(room.id)}>
-                        {room.name}
-                    </li>)
-            })}
-        </ul>
+    <div className={styles.main}>
+        <div className={styles.container}>
+            <span className={`${styles.title} text bold medium`}>Rooms:</span>
+            <Dropdown list={rooms} selected={selectedRoom} setSelected={setSelectedRoom}></Dropdown>
+        </div>
+        <div className={`${styles.description}`}><em>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Numquam fugit nostrum optio distinctio assumenda veritatis dolor esse ut. Odio, consequuntur.</em></div>
     </div>
   )
 }
