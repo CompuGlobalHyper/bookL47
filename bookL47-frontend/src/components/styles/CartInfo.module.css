@@ -1,0 +1,49 @@
+.backlineTab {
+
+}
+
+.inputContainer {
+    margin: 10px 0 0 0;
+
+}
+
+.checkboxContainer {
+
+}
+.checkboxContainer input {
+    margin: 10px 0 10px 0;
+}
+.checkboxContainer label {
+    padding: 0 0 0 10px
+}
+
+.infoBox {
+    margin: 10px 0 0 0 ;
+
+}
+
+.infoBox span {
+}
+
+.infoBox:focus {
+    
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    gap: clamp(10px, 5dvw, 100px)
+}
+
+.closeButton {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 5px 5px;
+    width: clamp(25px, 15dvw, 200px);
+    color: var(--brand-text-color);
+    background-color: var(--surface-elevated-color);
+
+}

@@ -1,3 +1,72 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.cartHeader {
+    display: flex;
+    justify-content: center;
+    gap: clamp( 20px, 20dvw, 250px);
+    padding-bottom: 20px;
+    width: clamp(120px, 75dvw, 800px);
+    border-bottom: 0.5px solid var(--border-color);
+}
+
+.open {
+    font-weight: 700;
+    border-bottom: 2px solid var(--brand-color);
+}
+
+.bookingInfo {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.list {
+    margin-top: 20px;
+}
+
+.applyAll {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    padding: 5px 5px;
+    color: var(--brand-text-color);
+    background-color: var(--surface-elevated-color);
+    background-color: var(--brand-color);
+    color: var(--brand-text-color);
+}
+
+.brandButton {
+    display: flex;
+    justify-content: center;
+    width: 150px;
+    cursor: pointer;
+    margin-top: 20px;
+    padding: 5px 5px;
+    border: 2px solid var(--border-color);;
+    color: var(--brand-text-color);
+    background-color: var(--brand-color);
+    border-radius: 8px;
+
+}
+
+.bottomButtons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
 .button {
     display: flex;
     justify-content: center;

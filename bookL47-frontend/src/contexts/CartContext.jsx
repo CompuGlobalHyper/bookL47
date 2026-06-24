@@ -45,8 +45,8 @@ export function CartProvider({ children }) {
       })
 
     }
-    function applyToAllCartItems(sourceID) {
-      const source = cart.find(item => item.id === sourceID)
+    function applyToAllCartItems(sourceID, exampleItem = false) {
+      const source = cart.find(item => item.id === sourceID) || exampleItem
 
       setCart((prev) => {
         return prev.map(item => {
