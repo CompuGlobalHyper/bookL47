@@ -51,10 +51,11 @@ export default function GuestHome({ setMessage, setUser }) {
       setFormData((prev) => {
         return {...prev, email: '', password: ''}
       })
-      setMessage({
-        text: "Invalid email/password",
-        error: true
-      })
+      setTimeout(() => {
+            setMessage((prev) => {
+                return ({...prev, text: "Invalid email or password", error: true})
+            })
+        }, 5000)
       console.log(error)
     }
   }

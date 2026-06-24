@@ -1,0 +1,51 @@
+.container {
+    background-color: var(--surface-color);
+    width: max-content;
+
+}
+
+.display {
+    position: relative;
+    padding: 4px 6px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+.invisibleText {
+    color: transparent;
+    pointer-events: none;
+}
+
+.selected {
+    padding: 4px 6px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.button {
+    cursor: pointer;
+
+}
+
+.dropdown {
+}
+
+.item {
+    padding: 4px 6px;
+}
+
+.item:hover {
+    cursor: pointer;
+    background-color: var(--surface-elevated-color);
+}
+
+.item:active {
+    background-color: var(--brand-color);
+    color: var(--brand-text-color);
+}
+
+.hidden {
+    display: none;
+}
