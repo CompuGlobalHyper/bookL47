@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles/Register.module.css'
+import setBannerMessage from '../functions/bannerMessage';
 
 export default function Register({viewRegister, setViewRegister, setViewLogin, setMessage}) {
     const [allowRegister, setAllowRegister] = useState(true)
@@ -75,9 +76,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     password: formData.password,
                 })
             })
-            setMessage((prev) => {
-                return ({...prev, text: "Account created successfully!", error: false})
-            })
+            setBannerMessage(setMessage, "Account created successfully!", false, 5 )
             setFormData((prev) => {
                 return Object.keys(prev).reduce((acc, key) => {
                     acc[key] = ''
@@ -85,18 +84,11 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                 }, {})
             });
         } catch (error) {
-            setMessage((prev) => {
-                return ({...prev, text: "Error: see console", error: true})
-            })
+            setBannerMessage(setMessage, `Error: ${error}` ) , true, 3
             console.log(error)
         }
         setAllowRegister(true)
         setViewRegister(false)
-        setTimeout(() => {
-            setMessage((prev) => {
-                return ({...prev, text: "", error: false})
-            })
-        }, 5000)
     }
     const validatePassword = (value) => {
         switch (true) {

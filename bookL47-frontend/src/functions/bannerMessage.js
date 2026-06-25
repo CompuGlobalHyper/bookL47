@@ -1,10 +1,10 @@
-export default function setBannerMessage(text, error, stateFunction, time) {
-    stateFunction((prev) => {
+export default function setBannerMessage(callback, text, error, secs) {
+    callback((prev) => {
         return ({...prev, text: text, error: error})
     })
     setTimeout(() => {
-        stateFunction((prev) => {
-            return ({...prev, text: text, error: error})
+        callback((prev) => {
+            return ({...prev, text: "", error: false})
         })
-    }, time)
+    }, secs * 1000)
 }

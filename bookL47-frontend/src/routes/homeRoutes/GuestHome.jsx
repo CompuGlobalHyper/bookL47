@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles/GuestHome.module.css'
 import Register from '../../components/Register'
+import setBannerMessage from '../../functions/bannerMessage'
 
 export default function GuestHome({ setMessage, setUser }) {
   const [viewLogin, setViewLogin] = useState(false)
@@ -43,19 +44,13 @@ export default function GuestHome({ setMessage, setUser }) {
           password: formData.password
         })
       })
-
       const data = await res.json()
-      console.log(data)
       setUser(data)
     } catch(error) {
       setFormData((prev) => {
         return {...prev, email: '', password: ''}
       })
-      setTimeout(() => {
-            setMessage((prev) => {
-                return ({...prev, text: "Invalid email or password", error: true})
-            })
-        }, 5000)
+      setBannerMessage(setMessage, "Invalid email or password", true, 5)
       console.log(error)
     }
   }

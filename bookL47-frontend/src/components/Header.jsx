@@ -3,8 +3,9 @@ import { useState } from 'react'
 import styles from "./styles/Header.module.css"
 import { Link, useOutletContext } from 'react-router'
 import { CartContext } from '../contexts/CartContext'
+import setBannerMessage from '../functions/bannerMessage'
 
-export default function Header( { setUser, user }) {
+export default function Header( { setUser, user, setMessage }) {
     const API = import.meta.env.VITE_API_URL
 
     const { cart } = useContext(CartContext)
@@ -58,7 +59,7 @@ export default function Header( { setUser, user }) {
         method: "GET",
         credentials: 'include'
       });
-      console.log(res.status)
+      setBannerMessage(setMessage, "Successfully signed out", false, 5)
     } catch (error) {
       console.log(error)
     }
