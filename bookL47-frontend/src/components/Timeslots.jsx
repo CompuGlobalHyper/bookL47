@@ -4,6 +4,8 @@ import { CartContext } from '../contexts/CartContext'
 import Dropdown from './Dropdown'
 
 export default function Timeslots({ 
+    dropdown,
+    setDropdown,
     selectedSlot,
     setSelectedSlot,
     availableSlots, 
@@ -29,8 +31,14 @@ export default function Timeslots({
   return (
     <div className={styles.main}>
         <div className={styles.container}>
-            <div className={`${styles.title} text bold medium`}>Available slots:</div>
-            <Dropdown list={availableSlots} selected={selectedSlot} setSelected={setSelectedSlot}></Dropdown>
+            <div className={`${styles.title} text bold medium`}>Slots:</div>
+            <Dropdown 
+            list={availableSlots} 
+            selected={selectedSlot} 
+            setSelected={setSelectedSlot}
+            dropdown={dropdown}
+            setDropdown={setDropdown}
+            id={2}></Dropdown>
         </div>
     </div>
     

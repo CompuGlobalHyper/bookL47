@@ -37,6 +37,15 @@ export default function Book() {
   const [selectedRoom, setSelectedRoom] = useState({})
   const [selectedSlot, setSelectedSlot] = useState({})
   const [bookedSlots, setBookedSlots] = useState([])
+  const [availableRooms, setAvailableRooms] = useState([
+    { id: 1, name: "Room 1", selected: false, available: true },
+    { id: 2, name: "Room 2", selected: false, available: true },
+    { id: 3, name: "Room 3", selected: false, available: true },
+    { id: 4, name: "Room 4", selected: false, available: true },
+    { id: 5, name: "Room 5", selected: false, available: true },
+    { id: 6, name: "Room 6", selected: false, available: true },
+    { id: 7, name: "Room 7", selected: false, available: true }
+  ])
   const [availableSlots, setAvailableSlots] = useState([
           {
               id: 1,
@@ -71,7 +80,18 @@ export default function Book() {
               inCart: false
           },
       ])
-  const [close, setClose] = useState(true)
+  const [dropdown, setDropdown] = useState([
+    {
+      id: 1,
+      name: 'rooms',
+      open: false
+    },
+    {
+      id: 2,
+      name: 'times',
+      open: false
+    }
+  ])
   useEffect(() => {
       async function setInitial() {
         const res = await fetch(`${API}/calendar`, {
@@ -197,10 +217,15 @@ export default function Book() {
             <div className={`${styles.note}`}><em>Please note: All bookings must be made 48 hours in advance.</em></div>
             <div className={styles.sideMenus}>
                   <Rooms
+                  availableRooms={availableRooms}
+                  dropdown={dropdown}
+                  setDropdown={setDropdown}
                   selectedRoom={selectedRoom}
                   setSelectedRoom={setSelectedRoom} 
                   ></Rooms>
                   <Timeslots
+                  dropdown={dropdown}
+                  setDropdown={setDropdown}
                   selectedSlot={selectedSlot}
                   setSelectedSlot={setSelectedSlot}
                   availableSlots={availableSlots}
