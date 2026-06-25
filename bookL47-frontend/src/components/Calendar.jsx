@@ -42,8 +42,6 @@ export default function Calendar({
 
     return ( 
         <div className={styles.main}>
-            {loading ? <div>Loading...</div> : 
-            <>
             <div className={`${styles.dayView} text`}>
                 <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
@@ -95,9 +93,7 @@ export default function Calendar({
                     return []
                 }}
                 />
-            </div>
-            </> }
-            
+            </div>   
         </div> 
   );
 }

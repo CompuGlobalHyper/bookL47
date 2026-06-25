@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react'
-import { CartContext } from '../contexts/CartContext'
-import CartItem from '../components/CartItem'
+import { CartContext } from '../../contexts/CartContext'
+import CartItem from '../../components/CartItem'
 import styles from './styles/Cart.module.css'
-import CartInfo from '../components/CartInfo'
+import CartInfo from '../../components/CartInfo'
 
 const example = { 
                     id: crypto.randomUUID(),

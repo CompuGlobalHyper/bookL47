@@ -4,14 +4,15 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import { CartProvider } from './contexts/CartContext.jsx';
 import './index.css'
 import App from './App.jsx'
-import ErrorPage from './routes/ErrorPage.jsx';
+import ErrorPage from './routes/general/ErrorPage.jsx';
 import Home from './routes/homeRoutes/Home.jsx';
-import About from './routes/About.jsx';
-import Join from './routes/Join.jsx';
-import Conduct from './routes/Conduct.jsx';
-import Book from './routes/Book.jsx';
-import Cart from './routes/Cart.jsx';
-import NotFound from './routes/NotFound.jsx';
+import About from './routes/general/About.jsx';
+import Join from './routes/general/Join.jsx';
+import Conduct from './routes/general/Conduct.jsx';
+import Book from './routes/bookRoutes/Book.jsx';
+import Cart from './routes/bookRoutes/Cart.jsx';
+import NotFound from './routes/general/NotFound.jsx';
+import requireUser from './loaders/requireUser.js';
 
 
 
@@ -24,10 +25,13 @@ const router = createBrowserRouter([
       { path: "/about", element: <About />},
       { path: "/join", element: <Join />},
       { path: "/code-of-conduct", element: <Conduct />},
-      { path: "/book", element: <Book />},
-      { path: '/cart', element: <Cart />},
-      { path: "*", element: <NotFound />}
-
+      { path: "*", element: <NotFound />},
+      { loader: requireUser,
+        children: [
+          { path: "/book", element: <Book />},
+          { path: '/cart', element: <Cart />}
+        ]
+      }
     ],
   }
 ])

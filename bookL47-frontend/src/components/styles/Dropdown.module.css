@@ -59,8 +59,7 @@
 
 .item.unavailable {
     padding: 4px 6px;
-    background-color: var(--surface-elevated-color);
-    color: var(--text-secondary-color);
+    text-decoration: line-through;
 }
 
 .item.unavailable:hover {

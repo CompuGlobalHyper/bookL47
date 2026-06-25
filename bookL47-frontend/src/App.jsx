@@ -3,6 +3,7 @@ import { Outlet } from 'react-router'
 import styles from './App.module.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import getUser from './functions/getUser'
 
 function App() {
   const [user, setUser] = useState({
@@ -16,31 +17,20 @@ function App() {
 
   useEffect(() => {
     const loadData = async () => {
-      const API = import.meta.env.VITE_API_URL
-      try {
-        const res = await fetch(`${API}/api/me`, {
-        method: "GET",
-        credentials: "include"
-        }
-      )
-      const data = await res.json()
-      console.log(data)
-      if (data.auth === true) {
-        console.log(data)
-        setUser(data)
-      } else {
-        setUser({role: "guest"})
-      }
-      } catch(error) {
-        console.log(error)
-      }
+      setUser(await getUser())
     }
     loadData()
+    setTimeout(() => {
+      setLoading(false)
+    }, 1000)
+    
   }, [])
 
   return (
     <div className={styles.body}>
-      {user.role === 'admin' ? <div className={`${styles.adminMessage} text bold medium`}><span>You are in admin mode</span></div> : <div></div>}
+      { loading ? <div className={`medium text`}>Loading...</div> 
+      : 
+      <> {user.role === 'admin' ? <div className={`${styles.adminMessage} text bold medium`}><span>You are in admin mode</span></div> : <div></div>}
       <Header 
         user={user} 
         setUser={setUser}
@@ -49,10 +39,12 @@ function App() {
       <div className={!message.error ? styles.message : styles.error}>
         <p>{message.text}</p>
       </div>
-      <div className={styles.main}>
-        <Outlet context={{ user, setUser, loading, setLoading, setMessage }}/>
+       <div className={styles.main}>
+          <Outlet context={{ user, setUser, loading, setLoading, setMessage }}/>
       </div>
-      <div className={styles.footer}><Footer/></div>  
+      <div className={styles.footer}><Footer/></div> 
+      </>
+      } 
     </div>
   )
 }

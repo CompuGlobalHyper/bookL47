@@ -1,7 +1,6 @@
 /* Target the current day cell in FullCalendar */
 .fc .fc-day-today {
   position: relative;
-  background-color: var(--bg-color) !important;
 }
 
 /* Use a pseudo-element to build an overlay border */
@@ -35,6 +34,13 @@
 /* Arrow and today buttons*/
 .fc-button {
   background-color: var(--surface-elevated-color);
+}
+.fc-prev-button, .fc-next-button {
+    background-color: var(--brand-color) !important;
+    border: 1px solid var(--bg-color) !important;
+}
+.fc-icon-chevron-left, .fc-icon-chevron-right {
+
 }
 /* Today button */
 .fc-button.fc-today-button {

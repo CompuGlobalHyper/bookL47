@@ -11,45 +11,45 @@ export default function Header( { setUser, user }) {
 
     const [viewMenu, setViewMenu] = useState(false)
     const navLinks = {
-  guest: [
-    { name: "Home", link: "/" },
-    { name: "About", link: "/about" },
-    { name: "Join Local47", link: "/join" },
-    { name: "Code of Conduct", link: "/code-of-conduct" },
-  ],
+      guest: [
+        { name: "Home", link: "/" },
+        { name: "About", link: "/about" },
+        { name: "Join Local47", link: "/join" },
+        { name: "Code of Conduct", link: "/code-of-conduct" },
+      ],
 
-  nonmember: [
-    { name: "Home", link: "/" },
-    { name: "Join Local47", link: "/join" },
-    { name: "Book", link: "/book" },
-    { name: "About", link: "/about" },
-    { name: "Code of Conduct", link: "/code-of-conduct" },
-    { name: "Logout", link: "/" },
-  ],
+      nonMember: [
+        { name: "Home", link: "/" },
+        { name: "Join Local47", link: "/join" },
+        { name: "Book", link: "/book" },
+        { name: "About", link: "/about" },
+        { name: "Code of Conduct", link: "/code-of-conduct" },
+        { name: "Logout", link: "/" },
+      ],
 
-  member: [
-    { name: "Home", link: "/" },
-    { name: "Book", link: "/book" },
-    { name: "Profile", link: "/profile" },
-    { name: "About", link: "/about" },
-    { name: "Code of Conduct", link: "/code-of-conduct" },
-    { name: "Logout", link: "/" },
-  ],
+      member: [
+        { name: "Home", link: "/" },
+        { name: "Book", link: "/book" },
+        { name: "Profile", link: "/profile" },
+        { name: "About", link: "/about" },
+        { name: "Code of Conduct", link: "/code-of-conduct" },
+        { name: "Logout", link: "/" },
+      ],
 
-  crew: [
-    { name: "Home", link: "/" },
-    { name: "Events", link: "/events" },
-    { name: "Shifts", link: "/shifts" },
-    { name: "Logout", link: "/" },
-  ],
+      crew: [
+        { name: "Home", link: "/" },
+        { name: "Events", link: "/events" },
+        { name: "Shifts", link: "/shifts" },
+        { name: "Logout", link: "/" },
+      ],
 
-  admin: [
-    { name: "Home", link: "/" },
-    { name: "Admin Panel", link: "/admin" },
-    { name: "Events", link: "/events" },
-    { name: "Shifts", link: "/shifts" },
-    { name: "Logout", link: "/" },
-  ],
+      admin: [
+        { name: "Home", link: "/" },
+        { name: "Admin Panel", link: "/admin" },
+        { name: "Events", link: "/events" },
+        { name: "Shifts", link: "/shifts" },
+        { name: "Logout", link: "/" },
+      ],
     };
 
   const handleLogout = async () => {

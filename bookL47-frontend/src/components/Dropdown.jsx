@@ -4,16 +4,22 @@ import { useClickOutside } from '../functions/clickOutside'
 
 export default function Dropdown({ list, selected, setSelected, id, dropdown, setDropdown }) {
     const dropdownRef = useRef(null);
-    useClickOutside(dropdownRef, () => 
-        setDropdown((prev) => 
-            prev.map((menu) => {
-                return {...menu, open: false }
-            })
-        ))
+    // useClickOutside(dropdownRef, () => {
+    //     if (!dropdown.some((menu) => menu.open)) {
+    //          return;
+    //     }
+    //     setDropdown((prev) => 
+    //         prev.map((menu) => {
+    //             return {...menu, open: false }
+    //         })
+    //     )})
+    
     const open =
     dropdown?.find(menu => menu.id === id)?.open ?? false;
 
+
     const handleClick = () => {
+        console.log('hello')
         setDropdown((prev) => 
             prev.map((menu) => 
                 menu.id === id 
@@ -41,7 +47,9 @@ export default function Dropdown({ list, selected, setSelected, id, dropdown, se
                 return (
                     <li key={item.id} 
                     className={`${styles.item} ${!item.available ? styles.unavailable : ''}`}
+                    onMouseDown={() => console.log("DOWN")}
                     onClick={() => {
+                        console.log("CLICK")
                         console.log(item)
                         if (!item.available) {
                             return

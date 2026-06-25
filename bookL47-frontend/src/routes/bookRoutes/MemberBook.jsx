@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { useState, useEffect } from 'react'
-import Calendar from '../components/Calendar'
-import { CartContext } from '../contexts/CartContext'
+import Calendar from '../../components/Calendar'
+import { CartContext } from '../../contexts/CartContext'
 import styles from './styles/Book.module.css'
-import CartItem from '../components/CartItem'
-import Rooms from '../components/Rooms'
-import Timeslots from '../components/Timeslots'
-import CartInfo from '../components/CartInfo'
+import CartItem from '../../components/CartItem'
+import Rooms from '../../components/Rooms'
+import Timeslots from '../../components/Timeslots'
+import CartInfo from '../../components/CartInfo'
 import { useOutletContext } from 'react-router'
 
 
@@ -25,6 +25,9 @@ function findSlotObject(list, room) {
 
 export default function Book() {
   const { user, setMessage} = useOutletContext()
+
+
+
   const { cart, addToCart, deleteCartItem } = useContext(CartContext)
   const API = import.meta.env.VITE_API_URL
   const firstDate = new Date();
@@ -155,7 +158,6 @@ export default function Book() {
         })
     }, [bookedSlots, cart]);
 
-
     function handleClick() {
       const { firstName, lastName, email } = user
         if (selectedRoom.available && selectedSlot.available) {
@@ -199,47 +201,48 @@ export default function Book() {
     
     return (
       <div className={styles.body}>
-        <div className={styles.main}>
-          <div className={`${styles.calendar}`}>
-            <Calendar 
-            events={events} 
-            loading={loading} 
-            user={user}
-            selectedRoom={selectedRoom}
-            firstDate={firstDate}
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            dateObject={dateObject}
-            setDateObject={setDateObject}>
-            </Calendar>
-          </div>
-          <div className={`${styles.side}`}>
-            <div className={`${styles.note}`}><em>Please note: All bookings must be made 48 hours in advance.</em></div>
-            <div className={styles.sideMenus}>
-                  <Rooms
-                  availableRooms={availableRooms}
-                  dropdown={dropdown}
-                  setDropdown={setDropdown}
-                  selectedRoom={selectedRoom}
-                  setSelectedRoom={setSelectedRoom} 
-                  ></Rooms>
-                  <Timeslots
-                  dropdown={dropdown}
-                  setDropdown={setDropdown}
-                  selectedSlot={selectedSlot}
-                  setSelectedSlot={setSelectedSlot}
-                  availableSlots={availableSlots}
-                  setAvailableSlots={setAvailableSlots}
-                  bookedSlots={bookedSlots}
-                  user={user}
-                  ></Timeslots>
+        {loading ? <div className={`text medium`}>Loading...</div> 
+        : <div className={styles.main}>
+            <div className={`${styles.calendar}`}>
+              <div className={`${styles.note}`}><em>Note: All bookings must be made <span className='bold'>48 hours</span> in advance.</em></div>
+              <Calendar 
+              events={events} 
+              loading={loading} 
+              user={user}
+              selectedRoom={selectedRoom}
+              firstDate={firstDate}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              dateObject={dateObject}
+              setDateObject={setDateObject}>
+              </Calendar>
             </div>
-            <CartInfo></CartInfo>
-            <div className={`${styles.submitButtonContainer}`}>
-              <div className={`${styles.submitButton} text medium bold`} onClick={handleClick}><span>Add booking</span></div>
+            <div className={`${styles.side}`}>
+              <div className={styles.sideMenus}>
+                    <Rooms
+                    availableRooms={availableRooms}
+                    dropdown={dropdown}
+                    setDropdown={setDropdown}
+                    selectedRoom={selectedRoom}
+                    setSelectedRoom={setSelectedRoom} 
+                    ></Rooms>
+                    <Timeslots
+                    dropdown={dropdown}
+                    setDropdown={setDropdown}
+                    selectedSlot={selectedSlot}
+                    setSelectedSlot={setSelectedSlot}
+                    availableSlots={availableSlots}
+                    setAvailableSlots={setAvailableSlots}
+                    bookedSlots={bookedSlots}
+                    user={user}
+                    ></Timeslots>
+              </div>
+              <CartInfo></CartInfo>
+              <div className={`${styles.submitButtonContainer}`}>
+                <div className={`${styles.submitButton} text medium bold`} onClick={handleClick}><span>Add booking</span></div>
+              </div>
             </div>
-          </div>
-        </div>
+        </div> } 
         <div className={`${styles.inCart} medium text`}>Cart:</div>
         <ul>
           { cart.length > 0 ? 

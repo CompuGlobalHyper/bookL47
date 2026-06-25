@@ -93,7 +93,7 @@ export default function GuestHome({ setMessage, setUser }) {
         <p onClick={() => {
           setViewLogin(false)
         }
-        } className={styles.backLink}>Back</p>
+        } className={`${styles.backLink} medium text`}>Back</p>
           <div className={styles.loginContainer}>
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
               <div className={`${styles.field} text`}>
@@ -108,7 +108,7 @@ export default function GuestHome({ setMessage, setUser }) {
                 />
                 <label htmlFor="email">miles@jazz.com</label>
               </div>
-              <div className={styles.field}>
+              <div className={`${styles.field} text`}>
                 <input
                 id="password"
                 name="password"
@@ -125,12 +125,12 @@ export default function GuestHome({ setMessage, setUser }) {
                 > {passwordType === "password" ? "Show" : "Hide"}
                 </div>
               </div>
-              <div className={styles.buttonContainer}><button type="submit" className={styles.button}>Login</button></div>
+              <div className={styles.buttonContainer}><button type="submit" className={`${styles.button} text`}>Login</button></div>
             </form>
 
           <div onClick={() => {
             setViewRegister(true)
-          }} className={styles.registerLink}>Create an account</div>
+          }} className={`${styles.registerLink} text`}>Create an account</div>
           </div>
         </div>
       }

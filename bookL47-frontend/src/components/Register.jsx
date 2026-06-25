@@ -75,9 +75,8 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     password: formData.password,
                 })
             })
-            console.log(formData)
             setMessage((prev) => {
-                return ({...prev, text: "Account created successfully", error: false})
+                return ({...prev, text: "Account created successfully!", error: false})
             })
             setFormData((prev) => {
                 return Object.keys(prev).reduce((acc, key) => {

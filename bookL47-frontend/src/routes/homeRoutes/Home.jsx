@@ -7,8 +7,6 @@ import MemberHome from './MemberHome.jsx'
 import CrewHome from './CrewHome.jsx'
 import AdminHome from './AdminHome.jsx'
 
-
-
 export default function Home() {
 
   const { user, setUser, setLoading, setMessage } = useOutletContext()
@@ -16,26 +14,12 @@ export default function Home() {
   useEffect(() => {
   }, [user])
 
-  switch (user.role) {
-    case "guest":
-      return <GuestHome 
-      setMessage={setMessage} 
-      setUser={setUser}/>;
-
-    case "nonMember":
-      return <NonMemberHome 
-      setMessage={setMessage}/>;
-
-    case "member":
-      return <MemberHome 
-      setMessage={setMessage}/>;
-
-    case "crew":
-      return <CrewHome 
-      setMessage={setMessage}/>;
-
-    case "admin":
-      return <AdminHome 
-      setMessage={setMessage}/>;
-  } 
+  const homePages = {
+  guest: <GuestHome setMessage={setMessage} setUser={setUser} />,
+  nonMember: <NonMemberHome setMessage={setMessage} />,
+  member: <MemberHome setMessage={setMessage} />,
+  crew: <CrewHome setMessage={setMessage} />,
+  admin: <AdminHome setMessage={setMessage} />,
+  };
+  return homePages[user.role] ?? <p>Invalid user role.</p>
 }

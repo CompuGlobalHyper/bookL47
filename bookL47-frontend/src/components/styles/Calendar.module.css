@@ -14,6 +14,8 @@
 }
 
 .currentDate {
+    background-color: var(--surface-color) !important;
+    color: rgb(0, 0, 0, 0.3);
 }
 
 .activeDate {
@@ -21,7 +23,8 @@
 }
 
 .notAllowedDate {
-    background-color: var(--bg-color);
+    background-color: var(--surface-color);
+    color: rgb(0, 0, 0, 0.3);
 }
 
 .monthView {
@@ -31,6 +34,8 @@
 
 .dayView {
 }
+
+
 
 
 @media screen and (min-width: 700px) {
