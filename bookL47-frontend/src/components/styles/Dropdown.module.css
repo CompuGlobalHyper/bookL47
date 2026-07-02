@@ -64,7 +64,6 @@
 
 .item.unavailable:hover {
     cursor: pointer;
-    background-color: var();
 }
 
 .item.unavailable:active {

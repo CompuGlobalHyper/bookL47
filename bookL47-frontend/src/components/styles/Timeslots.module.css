@@ -8,6 +8,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: opacity 0.5s ease, display 0.5s ease allow-discrete;
+
+}
+
+.hidden {
+    display: 0;
+    opacity: 0;
+    pointer-events: none;
 }
 
 

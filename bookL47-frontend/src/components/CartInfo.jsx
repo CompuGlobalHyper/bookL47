@@ -38,8 +38,8 @@ export default function CartInfo({item, active, setActive}) {
                 <input 
                 type="checkbox" 
                 name={equipment.name} 
-                id={`${equipment.id}:${item?.id}`} 
-                onChange={(e) => updateCartItemEquipment(e.target.checked, item.id, equipment.name)}
+                id={`${equipment.id}:${equipment?.id}`} 
+                onChange={(e) => updateCartItemEquipment(e.target.checked, equipment.id, equipment.name)}
                 checked={item?.equipmentRequest.includes(equipment.name)}/>
                 <label htmlFor={equipment.id}>{equipment.name}</label>
               </div>

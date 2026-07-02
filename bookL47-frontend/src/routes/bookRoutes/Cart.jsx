@@ -17,7 +17,6 @@ export default function Cart() {
   const [viewCart, setViewCart] = useState(true)
   const { deleteCartItem, updateCartItemEquipment, updateCartItemDescription, applyToAllCartItems } = useContext(CartContext)
 
-  console.log(example)
   
   return (
     <div className={styles.container}>

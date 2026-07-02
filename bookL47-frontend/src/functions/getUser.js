@@ -7,9 +7,12 @@ export default async function getUser() {
         }
         )
         const user = await res.json()
+        console.log(user)
     if (user.auth === true) {
+        console.log("get user succeeded")
         return user
     } else {
+        console.log("get user failed")
         return {role: "guest"}
     }
     } catch(error) {

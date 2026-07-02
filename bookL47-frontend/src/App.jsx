@@ -6,9 +6,7 @@ import Footer from './components/Footer'
 import getUser from './functions/getUser'
 
 function App() {
-  const [user, setUser] = useState({
-    role: 'guest'
-  })
+  const [user, setUser] = useState({})
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState({
     text: '',

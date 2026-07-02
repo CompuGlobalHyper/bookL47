@@ -19,7 +19,6 @@ export default function Dropdown({ list, selected, setSelected, id, dropdown, se
 
 
     const handleClick = () => {
-        console.log('hello')
         setDropdown((prev) => 
             prev.map((menu) => 
                 menu.id === id 
@@ -47,10 +46,7 @@ export default function Dropdown({ list, selected, setSelected, id, dropdown, se
                 return (
                     <li key={item.id} 
                     className={`${styles.item} ${!item.available ? styles.unavailable : ''}`}
-                    onMouseDown={() => console.log("DOWN")}
                     onClick={() => {
-                        console.log("CLICK")
-                        console.log(item)
                         if (!item.available) {
                             return
                         }

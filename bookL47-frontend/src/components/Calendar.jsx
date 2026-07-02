@@ -16,6 +16,7 @@ export default function Calendar({
     setSelectedDate, 
     dateObject, 
     setDateObject,
+    validRange,
     events, 
     loading, 
     user }) {
@@ -47,6 +48,7 @@ export default function Calendar({
                 plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
                 initialView={mobileView}
                 initialDate={selectedDate}
+                validRange={validRange}
                 events={events}
                 weekends={false}
                 titleFormat={{weekday: "long", month: "long", day: "numeric"}}
@@ -68,6 +70,7 @@ export default function Calendar({
                 initialView={fullView}
                 height={'auto'}
                 events={[]}
+                validRange={validRange}
                 dateClick={handleClick}
                 weekends={false}
                 dayCellClassNames={(cell) => {
