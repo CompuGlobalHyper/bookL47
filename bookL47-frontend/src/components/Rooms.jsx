@@ -16,7 +16,7 @@ export default function Rooms({ availableRooms, selectedRoom, setSelectedRoom, d
             dropdown={dropdown}
             setDropdown={setDropdown}></Dropdown>
         </div>
-        <div className={`${styles.description}`}><em>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Numquam fugit nostrum optio distinctio assumenda veritatis dolor esse ut. Odio, consequuntur.</em></div>
+        <div className={`${styles.description}`}><em>{selectedRoom.description}</em></div>
     </div>
   )
 }

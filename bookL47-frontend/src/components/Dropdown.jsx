@@ -32,7 +32,7 @@ export default function Dropdown({ list, selected, setSelected, id, dropdown, se
 
   return (
     <div className={styles.container}>
-        <div className={`${styles.display} text`} onClick={() => handleClick()}>
+        <div className={`${styles.display} text bold`} onClick={() => handleClick()}>
             <span className={`${styles.invisibleText}`}>This is placeholder text</span>
             <span className={`${styles.selected}`}>{selected.name}</span>
             <div

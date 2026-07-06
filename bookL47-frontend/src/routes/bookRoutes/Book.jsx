@@ -43,15 +43,27 @@ export default function Book() {
   const [selectedRoom, setSelectedRoom] = useState({})
   const [selectedSlot, setSelectedSlot] = useState({})
   const [bookedSlots, setBookedSlots] = useState([])
+  const roomSmallDesc =
+  "A professional rehearsal room for up to 8 musicians. Features a Yamaha upright piano and DW Design Series drum kit, making it ideal for solo artists, duos, and small bands.";
+
+  const roomMediumDesc =
+  "Designed for groups of up to 15 musicians, this room includes a Yamaha upright piano and DW Design Series drum kit. Perfect for band rehearsals, ensemble practice, and performance preparation.";
+
+  const roomLargeDesc =
+  "A rehearsal studio for up to 20 musicians with a Yamaha C3 grand piano and DW drum kit. Suitable for jazz bands, larger ensembles, and professional music rehearsals.";
+
+  const roomXLDesc =
+  "The largest rehearsal room accommodates up to 40 musicians and includes a Kawai grand piano and DW Jazz Series drum kit. It is also connected to a recording booth, making it ideal for orchestras, big bands, large ensembles, and professional recording sessions.";
+
   const [availableRooms, setAvailableRooms] = useState([
-    { id: 1, name: "Room 1", selected: false, available: true },
-    { id: 2, name: "Room 2", selected: false, available: true },
-    { id: 3, name: "Room 3", selected: false, available: true },
-    { id: 4, name: "Room 4", selected: false, available: true },
-    { id: 5, name: "Room 5", selected: false, available: true },
-    { id: 6, name: "Room 6", selected: false, available: true },
-    { id: 7, name: "Room 7", selected: false, available: true }
-  ])
+    { id: 1, name: "Room 1", selected: false, available: true, description: roomSmallDesc },
+    { id: 2, name: "Room 2", selected: false, available: true, description: roomSmallDesc },
+    { id: 3, name: "Room 3", selected: false, available: true, description: roomMediumDesc },
+    { id: 4, name: "Room 4", selected: false, available: true, description: roomMediumDesc },
+    { id: 5, name: "Room 5", selected: false, available: true, description: roomLargeDesc },
+    { id: 6, name: "Room 6", selected: false, available: true, description: roomLargeDesc },
+    { id: 7, name: "Room 7", selected: false, available: true, description: roomXLDesc }
+  ]);
   const [availableSlots, setAvailableSlots] = useState([
           {
               id: 1,
