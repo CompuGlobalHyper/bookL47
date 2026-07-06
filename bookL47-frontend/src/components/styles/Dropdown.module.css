@@ -36,6 +36,8 @@
     background-color: var(--surface-color);
 }
 .dropdown {
+    max-height: 240px;
+    overflow-y: scroll;
     width: 100%;
     position: absolute;
     z-index: 2;

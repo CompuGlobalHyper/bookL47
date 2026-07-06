@@ -39,16 +39,22 @@ export default function CartItem({ abridged, item, active, setActive }) {
         <div className={`${styles.date} text bold medium`}>{formatDate(item.date)}</div>
         <div className={`${styles.time} text bold`}>{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
         <div className={`${styles.room} text bold`}>{item.location}</div>
-        { !abridged && <div
-          
-          onClick={ () =>
-            active === item.id 
-            ? setActive(null) 
-            : setActive(item.id)} >
+        { !abridged && <div>
               { active === item.id 
-              ? <CartInfo item={item} active={active} setActive={setActive}></CartInfo> 
+              ? <>
+              <span className={`text bold`} 
+              onClick={() => setActive(null)}>
+                    - Close details</span>
+              <CartInfo item={item} active={active} setActive={setActive}></CartInfo> 
               
-              : <span className={`${styles.option} text`}>'View options'</span>}</div>
+              </>
+              
+              : <span className={`text bold`} 
+              onClick={ () => 
+                active === item.id 
+                  ? setActive(null) 
+                  : setActive(item.id)}>+ View details</span>}
+              </div>
         }
         {}
         <div 

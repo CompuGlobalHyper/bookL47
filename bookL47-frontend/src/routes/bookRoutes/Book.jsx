@@ -19,6 +19,7 @@ function findDateObject(list, date) {
 function findSlotObject(list, room) {
     if (list.find((item) => item.name === room)) {
         const correctRoom = list.find((item) => item.name === room)
+        console.log(correctRoom)
         return correctRoom.filledTimes
     } else {
         return []
@@ -147,11 +148,11 @@ export default function Book() {
       }, [selectedDate]);
     // If booked slots, update available slots.
     useEffect(() => {
+        console.log(bookedSlots)
         const bookedSlotSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
         console.log(bookedSlotSet)
         const bookedStartSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot, 30, 30, true)));
         const bookedEndSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
-        console.log(bookedEndSet)
         const cartSet = new Set(
             cart
             .filter(item =>
@@ -211,7 +212,6 @@ export default function Book() {
     }, [selectedStart])
 
     function checkSubmit() {
-      console.log('hi')
       if (Object.keys(selectedRoom).length === 0) {
         setMessage((prev) => {
             return ({...prev, text: "Please select a room.", error: true})

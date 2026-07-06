@@ -18,4 +18,15 @@
     pointer-events: none;
 }
 
+.startEnd {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.timeContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
 

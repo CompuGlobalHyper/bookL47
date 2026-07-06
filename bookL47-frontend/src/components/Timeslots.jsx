@@ -35,31 +35,33 @@ export default function Timeslots({
 
   return (
     <div className={styles.main}>
-        <div className={`${styles.container}  ${Object.keys(selectedRoom).length === 0 && styles.hidden}`}>
+        <div className={`${Object.keys(selectedRoom).length === 0 && styles.hidden}`}>
             {user.role === "nonMember" 
-            ? <div>
-                <div className={`text bold medium`}>Start:</div>
-                <Dropdown 
-                    list={availableStarts} 
-                    selected={selectedStart} 
-                    setSelected={setSelectedStart}
-                    dropdown={dropdown}
-                    setDropdown={setDropdown}
-                    id={2}>
-                </Dropdown>
-                <div className={`text bold medium`}>End:</div>
-                <Dropdown 
-                    list={availableEnds} 
-                    selected={selectedEnd} 
-                    setSelected={setSelectedEnd}
-                    dropdown={dropdown}
-                    setDropdown={setDropdown}
-                    id={3}>
-                </Dropdown>
-
-
+            ? <div className={`${styles.startEnd}`}>
+                <div className={`${styles.timeContainer}`}>
+                    <div className={`${styles.title} text bold medium`}>Start:</div>
+                    <Dropdown 
+                        list={availableStarts} 
+                        selected={selectedStart} 
+                        setSelected={setSelectedStart}
+                        dropdown={dropdown}
+                        setDropdown={setDropdown}
+                        id={2}>
+                    </Dropdown>
+                </div>
+                <div className={`${styles.timeContainer}`}>
+                    <div className={`${styles.title} text bold medium`}>End:</div>
+                    <Dropdown 
+                        list={availableEnds} 
+                        selected={selectedEnd} 
+                        setSelected={setSelectedEnd}
+                        dropdown={dropdown}
+                        setDropdown={setDropdown}
+                        id={3}>
+                    </Dropdown>
+                </div>
             </div>
-            :  <div>
+            :  <div className={`${styles.container}`}>
                     <div className={`${styles.title} text bold medium`}>Slots:</div>
                     <Dropdown 
                     list={availableSlots} 
