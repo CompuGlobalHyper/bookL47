@@ -97,6 +97,98 @@ const controllers = {
         return res.status(200).json({message: 'successful registration'})
     },
 
+    async cartGet(req, res) {
+        if (!req.user) {
+            return res.status(401).json({ message: 'not logged in' })
+        }
+        const user = req.user[0]
+        const supabase = supabaseClient()
+        const { data, error } = await supabase
+        .from('cart')
+        .select('*')
+        .eq("user_id", user.id)
+        if (error) {
+            console.log(error)
+            res.status(500).json({message: "Database error"})
+        }
+        res.status(200).json(data)
+    },
+    async cartPost(req, res) {
+        if (!req.user) {
+            return res.status(401).json({ message: 'not logged in' })
+        }
+        const booking = req.body.booking
+        console.log(booking)
+        const user = req.user[0]
+        console.log(user)
+        const supabase = supabaseClient()
+        const { data, error } = await supabase
+        .from('cart')
+        .insert({...booking, user_id: user.id})
+        if (error) console.log(error)
+        res.json(data)
+
+    },
+    async cartDelete(req, res) {
+        const id = req.body.id
+        const supabase = supabaseClient()
+        const { data, error } = await supabase
+        .from('cart')
+        .delete()
+        .eq("id", id)
+        if (error) {
+            console.log(error)
+            return res.status(500).json({message: "Database error"})
+        }
+        return res.status(200).json({message: "Successful delete"})
+        
+    },
+    async cartPut(req, res) {
+        const supabase = supabaseClient()
+        const id = req.body.id
+        const newItem = req.body.newItem
+        console.log(newItem)
+        if (req.body.checked === undefined) {
+            const { data, error } = await supabase
+                .from('cart')
+                .update({description: newItem})
+                .eq("id", id)
+            if (error) {
+                console.log(error)
+                return res.status(500).json({message: "Database error"})
+            }
+            return res.status(200).json(data)
+        }
+        const { data: equipmentData, error: equipmentError } = await supabase
+            .from('cart')
+            .select('equipment_request')
+            .eq("id", id)
+        if (equipmentError) {
+            console.log(equipmentError)
+            return res.status(500).json({message: "Database error"})
+        }
+        console.log(equipmentData)
+        let equipmentCopy = equipmentData[0].equipment_request.map(item => item)
+        if (req.body.checked) {
+            equipmentCopy.push(newItem)
+        } else {
+            equipmentCopy = equipmentCopy.filter((item) => item !== newItem)
+        }
+        const { data: updateData, error: updateError } = await supabase
+            .from('cart')
+            .update({equipment_request: equipmentCopy})
+            .eq("id", id)
+            .select('*')
+        if (updateError) {
+            console.log(updateError)
+            res.status(500).json({message: "Database error"})
+        }
+        res.status(200)
+    },
+
+    async checkoutGet(req, res) {
+
+    },
     async logoutGet(req, res) {
         res.clearCookie("access_token", {
             httpOnly: true,

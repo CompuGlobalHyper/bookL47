@@ -10,7 +10,19 @@ import CartInfo from '../../components/CartInfo'
 import { useOutletContext } from 'react-router'
 import generateBookedArray from '../../functions/generateBookedArray'
 import generateHourSlots from '../../functions/generateHourSlots'
+import generateHourlyPrice from '../../functions/generateHourlyPrice'
 
+  const roomSmallDesc =
+  "A professional rehearsal room for up to 8 musicians. Features a Yamaha upright piano and DW Design Series drum kit, making it ideal for solo artists, duos, and small bands.";
+
+  const roomMediumDesc =
+  "Designed for groups of up to 15 musicians, this room includes a Yamaha upright piano and DW Design Series drum kit. Perfect for band rehearsals, ensemble practice, and performance preparation.";
+
+  const roomLargeDesc =
+  "A rehearsal studio for up to 20 musicians with a Yamaha C3 grand piano and DW drum kit. Suitable for jazz bands, larger ensembles, and professional music rehearsals.";
+
+  const roomXLDesc =
+  "The largest rehearsal room accommodates up to 40 musicians and includes a Kawai grand piano and DW Jazz Series drum kit. It is also connected to a recording booth, making it ideal for orchestras, big bands, large ensembles, and professional recording sessions.";
 
 function findDateObject(list, date) {
     return list.find((item) => item.date === date)
@@ -19,7 +31,6 @@ function findDateObject(list, date) {
 function findSlotObject(list, room) {
     if (list.find((item) => item.name === room)) {
         const correctRoom = list.find((item) => item.name === room)
-        console.log(correctRoom)
         return correctRoom.filledTimes
     } else {
         return []
@@ -43,26 +54,16 @@ export default function Book() {
   const [selectedRoom, setSelectedRoom] = useState({})
   const [selectedSlot, setSelectedSlot] = useState({})
   const [bookedSlots, setBookedSlots] = useState([])
-  const roomSmallDesc =
-  "A professional rehearsal room for up to 8 musicians. Features a Yamaha upright piano and DW Design Series drum kit, making it ideal for solo artists, duos, and small bands.";
 
-  const roomMediumDesc =
-  "Designed for groups of up to 15 musicians, this room includes a Yamaha upright piano and DW Design Series drum kit. Perfect for band rehearsals, ensemble practice, and performance preparation.";
-
-  const roomLargeDesc =
-  "A rehearsal studio for up to 20 musicians with a Yamaha C3 grand piano and DW drum kit. Suitable for jazz bands, larger ensembles, and professional music rehearsals.";
-
-  const roomXLDesc =
-  "The largest rehearsal room accommodates up to 40 musicians and includes a Kawai grand piano and DW Jazz Series drum kit. It is also connected to a recording booth, making it ideal for orchestras, big bands, large ensembles, and professional recording sessions.";
 
   const [availableRooms, setAvailableRooms] = useState([
-    { id: 1, name: "Room 1", selected: false, available: true, description: roomSmallDesc },
-    { id: 2, name: "Room 2", selected: false, available: true, description: roomSmallDesc },
-    { id: 3, name: "Room 3", selected: false, available: true, description: roomMediumDesc },
-    { id: 4, name: "Room 4", selected: false, available: true, description: roomMediumDesc },
-    { id: 5, name: "Room 5", selected: false, available: true, description: roomLargeDesc },
-    { id: 6, name: "Room 6", selected: false, available: true, description: roomLargeDesc },
-    { id: 7, name: "Room 7", selected: false, available: true, description: roomXLDesc }
+    { id: '16ead8cf-4af5-48d7-a8e9-e5526d48a1ea', name: "Room 1", selected: false, available: true, description: roomSmallDesc},
+    { id: 'c477d09b-224e-4877-884c-adc635c6ced3', name: "Room 2", selected: false, available: true, description: roomSmallDesc,},
+    { id: '6310adbf-d08b-4743-9899-d64fd53037fb', name: "Room 3", selected: false, available: true, description: roomMediumDesc},
+    { id: 'b9c2c04f-17d6-4e2c-92f0-f8b0aa818da5', name: "Room 4", selected: false, available: true, description: roomMediumDesc},
+    { id: '711213f6-dc1f-433b-a53d-ce9f3dd8978c', name: "Room 5", selected: false, available: true, description: roomLargeDesc},
+    { id: 'aed76ee5-8d19-4dfd-a3f1-8c955ea6e772', name: "Room 6", selected: false, available: true, description: roomLargeDesc},
+    { id: 'edb1648c-6478-425f-a15f-882fcf494ced', name: "Room 7", selected: false, available: true, description: roomXLDesc}
   ]);
   const [availableSlots, setAvailableSlots] = useState([
           {
@@ -105,6 +106,35 @@ export default function Book() {
 
   const [selectedStart, setSelectedStart] = useState({})
   const [selectedEnd, setSelectedEnd] = useState({})
+
+  const [equipment, setEquipment] = useState([
+    {
+      name: "PA System and Microphone",
+      id: "paAndMic",
+      selected: false
+    },
+    {
+      name: "Bass Amp",
+      id: "bassAmp",
+      selected: false
+    },
+    {
+      name: "Guitar Amp",
+      id: "guitarAmp",
+      selected: false
+    },
+    {
+      name: "Keyboard Amp",
+      id: "keyboardAmp",
+      selected: false
+    },
+    {
+      name: "Vibes",
+      id: "vibes",
+      selected: false
+    },
+  ])
+  const [description, setDescription] = useState('')
 
   const [dropdown, setDropdown] = useState([
     {
@@ -155,23 +185,23 @@ export default function Book() {
         if (loading) return
         let tempDateObject = events.find((obj) => obj.date === selectedDate)
         setBookedSlots(findSlotObject(tempDateObject.rooms, selectedRoom))
-        console.log(bookedSlots)
         setDateObject(tempDateObject)
       }, [selectedDate]);
     // If booked slots, update available slots.
     useEffect(() => {
-        console.log(bookedSlots)
+        
         const bookedSlotSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
-        console.log(bookedSlotSet)
         const bookedStartSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot, 30, 30, true)));
+        
         const bookedEndSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
-        const cartSet = new Set(
-            cart
-            .filter(item =>
-                item.date === selectedDate 
-                && item.location === selectedRoom.name
-            )
-            .flatMap(slot => generateBookedArray(slot)));
+      
+        const cartSet = new Set()
+            // cart
+            // .filter(item =>
+            //     item.date === selectedDate 
+            //     && item.location === selectedRoom.name
+            // )
+            // .flatMap(slot => generateBookedArray(slot))) || new Set();
         setAvailableSlots((prev) => {
             return prev
             .map((slot) => {
@@ -279,6 +309,10 @@ export default function Book() {
       const { firstName, lastName, email } = user
       let start
       let end
+      let price
+      let chosenEquipment = equipment
+      .filter(item => item.selected)
+      .map(item => item.name)
       if (user.role === "member") {
         start = selectedSlot.start
         end = selectedSlot.end
@@ -293,16 +327,21 @@ export default function Book() {
               id: crypto.randomUUID(),
               first_name: firstName || "Phin",
               last_name: lastName || "Crisp",
+              created_at: new Date(), 
               email: email || "phineas.crisp@afm47.org",
               date: selectedDate,
               location: selectedRoom.name,
+              location_id: selectedRoom.id,
               start,
               end,
-              equipmentRequest: [],
-              description: ''
+              equipment_request: chosenEquipment,
+              description: description
           }
           console.log(booking)
           addToCart(booking)
+          setSelectedSlot({})
+          setSelectedStart({})
+          setSelectedEnd({})
       }      
     }
     
@@ -366,7 +405,12 @@ export default function Book() {
                     ></Timeslots>}
                     
               </div>
-              <CartInfo></CartInfo>
+              <CartInfo 
+              equipment={equipment}
+              setEquipment={setEquipment}
+              description={description}
+              setDescription={setDescription}
+              ></CartInfo>
               <div className={`${styles.submitButtonContainer}`}>
                 <div className={`${styles.submitButton} text medium bold`} onClick={handleClick}><span>Add booking</span></div>
               </div>

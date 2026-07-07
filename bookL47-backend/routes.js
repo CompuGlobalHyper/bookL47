@@ -44,6 +44,14 @@ router.post('/register', controllers.registerPost)
 
 router.get('/logout', controllers.logoutGet)
 
+router.get('/cart', authUser, controllers.cartGet)
+router.post('/cart', authUser, controllers.cartPost)
+router.delete('/cart', authUser, controllers.cartDelete)
+router.put('/cart', authUser, controllers.cartPut)
+
+router.get('/checkout', authUser, controllers.checkoutGet)
+
+
 //routes to populate db and gain google auth
 router.get('/auth/google', controllers.googleAuthGet)
 router.get('/auth/google/callback', controllers.googleAuthCallbackGet)

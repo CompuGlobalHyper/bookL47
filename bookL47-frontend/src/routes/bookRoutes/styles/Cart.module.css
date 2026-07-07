@@ -84,3 +84,19 @@
     background-color: var(--brand-color);
     color: var(--brand-text-color)
 }
+
+.priceContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.totalText {
+    padding: 0 100px 10px 0 ;
+    margin-right: auto;
+    border-bottom: 0.5px solid var(--border-color);
+}
+
+.priceTotal {
+    padding-top: 20px;
+    margin-left: auto;
+}

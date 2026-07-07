@@ -11,6 +11,7 @@ import Join from './routes/general/Join.jsx';
 import Conduct from './routes/general/Conduct.jsx';
 import Book from './routes/bookRoutes/Book.jsx';
 import Cart from './routes/bookRoutes/Cart.jsx';
+import Checkout from './routes/bookRoutes/Checkout.jsx';
 import NotFound from './routes/general/NotFound.jsx';
 import requireUser from './loaders/requireUser.js';
 
@@ -29,7 +30,8 @@ const router = createBrowserRouter([
       { loader: requireUser,
         children: [
           { path: "/book", element: <Book />},
-          { path: '/cart', element: <Cart />}
+          { path: '/cart', element: <Cart />},
+          { path: '/checkout', element: <Checkout/>}
         ]
       }
     ],

@@ -1,49 +1,89 @@
 import React, { createContext, useEffect, useState } from 'react'
 
+const API = import.meta.env.VITE_API_URL
+
 export const CartContext = createContext()
 export function CartProvider({ children }) {
-    const [cart, setCart] = useState(() => {
-      const saved = localStorage.getItem("cart")
-      return saved ? JSON.parse(saved) : []
-    })
+    const [cart, setCart] = useState([])
+    async function getCart() {
+      console.log('fetching cart info..')
+      const res = await fetch(`${API}/cart`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include"
+      })
+      const data = await res.json()
+      console.log(data)
+      return data
 
+    }
     useEffect(() => {
-      localStorage.setItem("cart", JSON.stringify(cart))
-
-    }, [cart])
+      async function init() {
+        const cart = await getCart()
+        setCart(cart)
+      }
+      init()
+    }, [])
 
     function sortCart(cart) {
       return cart.toSorted((a, b) => new Date(`${a.date}T${a.start}`) - new Date(`${b.date}T${b.start}`))
     }
-    function addToCart(booking) {
-      setCart(prev => sortCart([...prev, booking]))
+    async function addToCart(booking) {
+      const res = await fetch(`${API}/cart`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({booking: booking})
+      })
+      let cart = await getCart()
+      sortCart(cart)
+      setCart(cart)
     }
-    function deleteCartItem(id) {
+    async function deleteCartItem(id) {
+      const res = await fetch(`${API}/cart`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({id})
+      })
       setCart(prev => sortCart(prev.filter((item) => item.id !== id)))
     }
-    function updateCartItemEquipment(checked, id, equipmentName) {
-      setCart((prev) => {
-        return prev.map((item) => {
-          if (item.id !== id) return item
-          return {
-            ...item, equipmentRequest: checked 
-            ? [...item.equipmentRequest, equipmentName]
-            : item.equipmentRequest.filter(d => d !== equipmentName)
+    async function  updateCartItem(checked = undefined, id, newItem) {
+      setCart(prevCart => 
+        prevCart.map(item => {
+          if (item.id === id) {
+            if (checked === undefined) {
+              return {...item, description: newItem}
+            }
+            if (checked) {
+              return {...item, equipment_request: item.equipment_request.includes(newItem)
+                                                ? item.equipment_request
+                                                : [...item.equipment_request, newItem]}
+            }
+            if (!checked)
+              return {...item, equipment_request: item.equipment_request.filter(string => string !== newItem)}
+          return item
           }
         })
+      );
+      const res = await fetch(`${API}/cart`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({checked, id, newItem})
       })
-
-    }
-    function updateCartItemDescription(id, newDescription) {
-      setCart((prev) => {
-        return prev.map((item) => {
-          if (item.id !== id) return item
-          return {
-            ...item, description: newDescription
-          }
-        })
-      })
-
+      if (!res.ok) {
+      console.error("Failed updating cart");
+      return;
+}
     }
     function applyToAllCartItems(sourceID, exampleItem = false) {
       const source = cart.find(item => item.id === sourceID) || exampleItem
@@ -59,8 +99,7 @@ export function CartProvider({ children }) {
 
     }
     function clearCart() {
-      localStorage.removeItem("cart")
-      setCart([])
+      return
     }
 
   return (
@@ -71,8 +110,7 @@ export function CartProvider({ children }) {
     addToCart, 
     clearCart, 
     deleteCartItem, 
-    updateCartItemEquipment, 
-    updateCartItemDescription,
+    updateCartItem,
     applyToAllCartItems
    }}>
     {children}

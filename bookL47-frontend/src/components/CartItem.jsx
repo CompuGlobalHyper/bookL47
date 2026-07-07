@@ -6,9 +6,9 @@ import CartInfo from './CartInfo'
 
 
 
-export default function CartItem({ abridged, item, active, setActive }) {
+export default function CartItem({ abridged, item, active, setActive, equipment, setEquipment }) {
 
-  const { deleteCartItem, updateCartItemEquipment, updateCartItemDescription, applyToAllCartItems } = useContext(CartContext)
+  const { deleteCartItem, updateCartItem, applyToAllCartItems } = useContext(CartContext)
 
   function formatDate(dateString) {
     const date = new Date(`${dateString}T12:00:00Z`)
@@ -45,7 +45,7 @@ export default function CartItem({ abridged, item, active, setActive }) {
               <span className={`text bold`} 
               onClick={() => setActive(null)}>
                     - Close details</span>
-              <CartInfo item={item} active={active} setActive={setActive}></CartInfo> 
+              <CartInfo item={item} active={active} setActive={setActive} equipment={equipment}></CartInfo> 
               
               </>
               
