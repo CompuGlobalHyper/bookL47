@@ -40,8 +40,8 @@ export function CartProvider({ children }) {
         body: JSON.stringify({booking: booking})
       })
       let cart = await getCart()
-      sortCart(cart)
-      setCart(cart)
+      let sortedCart = sortCart(cart)
+      setCart(sortedCart)
     }
     async function deleteCartItem(id) {
       const res = await fetch(`${API}/cart`, {

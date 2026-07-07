@@ -1,4 +1,4 @@
-export default function generateBookedArray({ start , end }, buffer = 30, interval = 30, isStart = false) {
+export default function generateBookedArray({ start , end }, buffer = 30, interval = 30) {
     
     const getMinutes = (timeString) => {
         const [h, m] = timeString.split(":").map(Number)
@@ -16,18 +16,10 @@ export default function generateBookedArray({ start , end }, buffer = 30, interv
 
     let times = []
 
-    if (isStart) {
-        for (let i = startMinutes - 60; i <= endMinutes; i += interval) {
-            times.push(getString(i))
-        }
+    for (let i = startMinutes - 30; i <= endMinutes + 30; i += interval) {
+        times.push(getString(i))
     }
-    if (!isStart) {
-        for (let i = startMinutes + 30; i <= endMinutes; i += interval) {
-            times.push(getString(i))
-        }
-    }
-
     
-
+    
     return times
 }

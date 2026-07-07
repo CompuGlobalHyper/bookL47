@@ -192,16 +192,16 @@ export default function Book() {
         
         const bookedSlotSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
         const bookedStartSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot, 30, 30, true)));
-        
+        console.log(bookedStartSet)
         const bookedEndSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
       
-        const cartSet = new Set()
-            // cart
-            // .filter(item =>
-            //     item.date === selectedDate 
-            //     && item.location === selectedRoom.name
-            // )
-            // .flatMap(slot => generateBookedArray(slot))) || new Set();
+        const cartSet = new Set(
+            cart
+            .filter(item =>
+                item.date === selectedDate 
+                && item.location === selectedRoom.name
+            )
+            .flatMap(slot => generateBookedArray(slot))) || new Set();
         setAvailableSlots((prev) => {
             return prev
             .map((slot) => {
