@@ -27,7 +27,7 @@ export default function Dropdown({ list, selected, setSelected, id, dropdown, se
     )}
 
     useEffect(() => {
-    }, [selected, list])
+    }, [])
 
 
   return (
@@ -42,7 +42,7 @@ export default function Dropdown({ list, selected, setSelected, id, dropdown, se
             </div>
         <div className={`${styles.dropdownContainer}`}>
             <ul ref={dropdownRef} className={`${styles.dropdown} ${!open ? styles.hidden : ''} text`}>
-            { list?.map((item) => {
+            { list && list.map((item) => {
                 return (
                     <li key={item.id} 
                     className={`${styles.item} ${!item.available ? styles.unavailable : ''}`}

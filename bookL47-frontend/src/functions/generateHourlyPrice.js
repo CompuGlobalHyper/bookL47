@@ -2,7 +2,7 @@ export default function generateHourlyPrice(start, end) {
 
     function getMinutes(time) {
         const [ h, m ] = time.split(":")
-        const result = Number(h)* 60 + Number(m)
+        const result = Number(h) * 60 + Number(m)
         return result
     }
     const startInt = getMinutes(start)
@@ -14,6 +14,5 @@ export default function generateHourlyPrice(start, end) {
     console.log(totalTime)
     const totalPrice = totalTime * 60
 
-    return totalPrice
-    
+    return totalPrice   
 }

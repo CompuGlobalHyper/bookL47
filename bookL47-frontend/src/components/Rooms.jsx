@@ -1,20 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './styles/Rooms.module.css'
 import Dropdown from './Dropdown';
 
 export default function Rooms({ availableRooms, selectedRoom, setSelectedRoom, dropdown, setDropdown }) {
 
+  useEffect(() => {
+  }, [availableRooms])
+
   return (
     <div className={styles.main}>
         <div className={styles.container}>
             <span className={`${styles.title} text bold medium`}>Rooms:</span>
-            <Dropdown 
+            {availableRooms.length > 0 
+            && <Dropdown 
             list={availableRooms} 
             selected={selectedRoom} 
             setSelected={setSelectedRoom}
             id={1}
             dropdown={dropdown}
-            setDropdown={setDropdown}></Dropdown>
+            setDropdown={setDropdown}></Dropdown>}
+            
         </div>
         <div className={`${styles.description}`}><em>{selectedRoom.description}</em></div>
     </div>

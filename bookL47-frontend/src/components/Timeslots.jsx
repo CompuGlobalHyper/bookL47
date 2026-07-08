@@ -49,7 +49,7 @@ export default function Timeslots({
                         id={2}>
                     </Dropdown>
                 </div>
-                <div className={`${styles.timeContainer}`}>
+                <div className={`${styles.timeContainer} ${Object.keys(selectedStart).length > 0 ? "" : styles.hiddenEnd}`}>
                     <div className={`${styles.title} text bold medium`}>End:</div>
                     <Dropdown 
                         list={availableEnds} 

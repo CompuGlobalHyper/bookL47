@@ -5,9 +5,9 @@ const ROOM_TIERS = {
 };
 
 const ROOM_BASE_PRICES = {
-  small: 25,
-  medium: 30,
-  large: 35
+  small: 30,
+  medium: 35,
+  large: 40
 };
 
 const getRoomPrices = (roomId) => {
@@ -24,3 +24,22 @@ const getRoomPrices = (roomId) => {
     life: regular - 5
   };
 };
+
+function generateHours(start, end) {
+
+    function getMinutes(time) {
+        const [ h, m ] = time.split(":")
+        const result = Number(h) * 60 + Number(m)
+        return result
+    }
+    const startInt = getMinutes(start)
+    const endInt = getMinutes(end)
+    console.log(startInt)
+    console.log(endInt)
+
+    const totalTime = (endInt - startInt) / 60
+    console.log(totalTime)
+    return totalTime  
+}
+
+module.exports = {generateHours}

@@ -12,18 +12,8 @@ import generateBookedArray from '../../functions/generateBookedArray'
 import generateHourSlots from '../../functions/generateHourSlots'
 import generateHourlyPrice from '../../functions/generateHourlyPrice'
 import setBannerMessage from '../../functions/bannerMessage'
+import generateRoomList from '../../functions/generateRoomList'
 
-  const roomSmallDesc =
-  "A professional rehearsal room for up to 8 musicians. Features a Yamaha upright piano and DW Design Series drum kit, making it ideal for solo artists, duos, and small bands.";
-
-  const roomMediumDesc =
-  "Designed for groups of up to 15 musicians, this room includes a Yamaha upright piano and DW Design Series drum kit. Perfect for band rehearsals, ensemble practice, and performance preparation.";
-
-  const roomLargeDesc =
-  "A rehearsal studio for up to 20 musicians with a Yamaha C3 grand piano and DW drum kit. Suitable for jazz bands, larger ensembles, and professional music rehearsals.";
-
-  const roomXLDesc =
-  "The largest rehearsal room accommodates up to 40 musicians and includes a Kawai grand piano and DW Jazz Series drum kit. It is also connected to a recording booth, making it ideal for orchestras, big bands, large ensembles, and professional recording sessions.";
 
 function findDateObject(list, date) {
     return list.find((item) => item.date === date)
@@ -57,15 +47,7 @@ export default function Book() {
   const [bookedSlots, setBookedSlots] = useState([])
 
 
-  const [availableRooms, setAvailableRooms] = useState([
-    { id: '16ead8cf-4af5-48d7-a8e9-e5526d48a1ea', name: "Room 1", selected: false, available: true, description: roomSmallDesc},
-    { id: 'c477d09b-224e-4877-884c-adc635c6ced3', name: "Room 2", selected: false, available: true, description: roomSmallDesc,},
-    { id: '6310adbf-d08b-4743-9899-d64fd53037fb', name: "Room 3", selected: false, available: true, description: roomMediumDesc},
-    { id: 'b9c2c04f-17d6-4e2c-92f0-f8b0aa818da5', name: "Room 4", selected: false, available: true, description: roomMediumDesc},
-    { id: '711213f6-dc1f-433b-a53d-ce9f3dd8978c', name: "Room 5", selected: false, available: true, description: roomLargeDesc},
-    { id: 'aed76ee5-8d19-4dfd-a3f1-8c955ea6e772', name: "Room 6", selected: false, available: true, description: roomLargeDesc},
-    { id: 'edb1648c-6478-425f-a15f-882fcf494ced', name: "Room 7", selected: false, available: true, description: roomXLDesc}
-  ]);
+  const [availableRooms, setAvailableRooms] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([
           {
               id: 1,
@@ -156,13 +138,15 @@ export default function Book() {
   ])
   useEffect(() => {
       async function setInitial() {
-        const res = await fetch(`${API}/calendar`, {
+        const calendarRes = await fetch(`${API}/calendar`, {
             method: 'GET',
             credentials: "include"
         })
-        const data = await res.json()
+        const data = await calendarRes.json()
         console.log('retrieving data...')
         setEvents(data)
+        const rooms = await generateRoomList()
+        setAvailableRooms(rooms)
         setLoading(false)
       }
       setInitial()
@@ -243,29 +227,27 @@ export default function Book() {
               available: !isInSlot && !isInCart
             }
           })
-          .filter(time => !time.avaiable)
         })
     }, [bookedSlots, cart]);
     useEffect(() => {
       setSelectedEnd({})
-      
-      let closestEndTime = Number(selectedStart.time?.split(':')[0]) || 10
-      
+      let closestEndTime = Number(selectedStart.time?.split(':')[0]) + 1
       if (selectedStart.time?.split(':')[1] === '30') {
         closestEndTime += 0.5
       }
-      if (closestEndTime >= 10) {
-        closestEndTime += 1
-      }
-      if (closestEndTime < 10) {
-        closestEndTime += 13
-      }
-      
       setAvailableEnds((prev) => {
           return prev
-          .filter(time => Number(time.time.split(':')[0]) >= closestEndTime)
+          .map((time) => {
+            let currentEndTime = Number(time.time.split(':')[0])
+            if (time.time.split(':')[1] === '30') {
+              currentEndTime += 0.5
+            }
+            return {
+              ...time,
+              available: currentEndTime >= closestEndTime
+            }
+          })
         })
-
     }, [selectedStart])
 
     function checkSubmit() {
@@ -280,7 +262,7 @@ export default function Book() {
         }, 5000)
         return false
       }
-      if (user.role === "member") {
+      if (user.role === "member" || user.role === "life") {
         if (Object.keys(selectedSlot).length === 0) {
           setMessage((prev) => {
             return ({...prev, text: "Please select a time.", error: true})
@@ -330,7 +312,7 @@ export default function Book() {
       let chosenEquipment = equipment
       .filter(item => item.selected)
       .map(item => item.name)
-      if (user.role === "member") {
+      if (user.role === "member" || user.role === "life") {
         start = selectedSlot.start
         end = selectedSlot.end
       } else {
@@ -396,7 +378,7 @@ export default function Book() {
                     selectedRoom={selectedRoom}
                     setSelectedRoom={setSelectedRoom} 
                     ></Rooms>
-                    {user.role !== "member" 
+                    {user.role !== "member" || user.role !== "life"
                     ? <Timeslots
                     dropdown={dropdown}
                     setDropdown={setDropdown}

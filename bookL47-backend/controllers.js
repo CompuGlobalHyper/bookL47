@@ -4,6 +4,7 @@ const { createClient } = require('@supabase/supabase-js')
 const jwt = require('jsonwebtoken')
 const { register } = require('node:module')
 const bcrypt = require('bcryptjs')
+const { generateHours } = require('./prices.js')
 
 function supabaseClient () {
     return createClient(
@@ -114,17 +115,30 @@ const controllers = {
         res.status(200).json(data)
     },
     async cartPost(req, res) {
+        const supabase = supabaseClient()
         if (!req.user) {
             return res.status(401).json({ message: 'not logged in' })
         }
+
         const booking = req.body.booking
-        console.log(booking)
+        const hours = generateHours(booking.start, booking.end)
+        let hourly_rate
+        let price
         const user = req.user[0]
-        console.log(user)
-        const supabase = supabaseClient()
+        if (user.role === 'member') {
+            const {data: priceData, error: priceError} = await supabase
+            .from('location')
+            .select('price')
+            .eq('id', booking.location_id)
+            if (priceError) {
+                return console.log(priceError)
+            }
+            console.log(data)
+        }
+
         const { data, error } = await supabase
         .from('cart')
-        .insert({...booking, user_id: user.id})
+        .insert({...booking, user_id: user.id, hours, })
         if (error) console.log(error)
         res.json(data)
 
@@ -187,6 +201,10 @@ const controllers = {
     },
 
     async checkoutGet(req, res) {
+
+    },
+
+    async checkoutPost(req, res) {
 
     },
     async logoutGet(req, res) {
@@ -302,7 +320,7 @@ const controllers = {
         })
         //create list of all rooms
         const { data: roomData, error: roomError } = await supabase
-        .from('room')
+        .from('location')
         .select('name')
         
         const bookingData = next180.map((date) => {
@@ -348,7 +366,17 @@ const controllers = {
             return { name: item.answers["3"].prettyFormat, date: item.answers["6"].answer.date}
         })
         res.json(sortedContent);
+    },
+    //get room data
+    async roomsGet(req, res) {
+        const supabase = supabaseClient()
+        const { data, error } = await supabase
+        .from('location')
+        .select('*')
+        if (error) return console.log(error)
+        return res.status(200).json(data)
     }
+        
 }
 
 module.exports = controllers

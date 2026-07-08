@@ -50,12 +50,14 @@ router.delete('/cart', authUser, controllers.cartDelete)
 router.put('/cart', authUser, controllers.cartPut)
 
 router.get('/checkout', authUser, controllers.checkoutGet)
+router.post('/checkout', authUser, controllers.checkoutPost)
 
 
 //routes to populate db and gain google auth
 router.get('/auth/google', controllers.googleAuthGet)
 router.get('/auth/google/callback', controllers.googleAuthCallbackGet)
 router.get('/calendar', authUser, controllers.calendarGet)
+router.get('/rooms', authUser, controllers.roomsGet)
 router.get('/jotform', controllers.jotformGet)
 
 module.exports = router

@@ -36,7 +36,14 @@ export default function Header( { setUser, user, setMessage }) {
         { name: "Code of Conduct", link: "/code-of-conduct" },
         { name: "Logout", link: "/" },
       ],
-
+      life: [
+        { name: "Home", link: "/" },
+        { name: "Book", link: "/book" },
+        { name: "Profile", link: "/profile" },
+        { name: "About", link: "/about" },
+        { name: "Code of Conduct", link: "/code-of-conduct" },
+        { name: "Logout", link: "/" },
+      ],
       crew: [
         { name: "Home", link: "/" },
         { name: "Events", link: "/events" },
