@@ -15,7 +15,6 @@ export function CartProvider({ children }) {
         credentials: "include"
       })
       const data = await res.json()
-      console.log(data)
       return data
 
     }
@@ -85,19 +84,18 @@ export function CartProvider({ children }) {
       return;
 }
     }
-    function applyToAllCartItems(sourceID, exampleItem = false) {
-      const source = cart.find(item => item.id === sourceID) || exampleItem
+    // function applyToAllCartItems(sourceID, exampleItem = false) {
+    //   const source = cart.find(item => item.id === sourceID) || exampleItem
 
-      setCart((prev) => {
-        return prev.map(item => {
-          return {
-            ...item, 
-            equipmentRequest: source.equipmentRequest,
-            description: source.description}
-        })
-      })
-
-    }
+    //   setCart((prev) => {
+    //     return prev.map(item => {
+    //       return {
+    //         ...item, 
+    //         equipmentRequest: source.equipmentRequest,
+    //         description: source.description}
+    //     })
+    //   })
+    // }
     function clearCart() {
       return
     }
@@ -110,8 +108,7 @@ export function CartProvider({ children }) {
     addToCart, 
     clearCart, 
     deleteCartItem, 
-    updateCartItem,
-    applyToAllCartItems
+    updateCartItem
    }}>
     {children}
    </CartContext.Provider>

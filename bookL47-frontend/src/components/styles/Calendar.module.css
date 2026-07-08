@@ -4,6 +4,7 @@
     justify-content: center;
     flex-wrap: wrap;
     gap:40px;
+    font-family: "DM Sans", sans-serif;
 }
 
 @media screen and (max-width: 900px) {
@@ -15,7 +16,7 @@
 
 .currentDate {
     background-color: var(--surface-color) !important;
-    color: rgb(0, 0, 0, 0.3);
+    color: var(--text-color)
 }
 
 .activeDate {
@@ -24,7 +25,7 @@
 
 .notAllowedDate {
     background-color: var(--surface-color);
-    color: rgb(0, 0, 0, 0.3);
+    color: var(--text-color)
 }
 
 .monthView {

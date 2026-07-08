@@ -44,8 +44,6 @@ export default function Cart() {
   const [active, setActive] = useState(null)
   const [viewCart, setViewCart] = useState(true)
   const { deleteCartItem, updateCartItemEquipment, updateCartItemDescription, applyToAllCartItems } = useContext(CartContext)
-
-  console.log(equipment)
   
   return (
     <div className={styles.container}>
@@ -55,11 +53,11 @@ export default function Cart() {
           className={`${viewCart && styles.open} ${styles.header} text`}
           onClick={() => setViewCart(true)}
           >View Cart</div>
-          <div 
+          {/* <div 
           className={`${!viewCart && styles.open} ${styles.header} text`}
-          onClick={() => setViewCart(false)}>Add Backline</div>
+          onClick={() => setViewCart(false)}>Add Backline</div> */}
         </div>
-        {!viewCart 
+        {/* {!viewCart 
         && <div className={`${styles.bookingInfo}`}>
             <CartInfo item={exampleItem} active={exampleItem.id} setActive={setActive} equipment={equipment} setEquipment={setEquipment}></CartInfo>
             <div className={`${styles.applyAll} text bold`}
@@ -67,7 +65,7 @@ export default function Cart() {
                     ><span>Apply to all bookings</span>
             </div>
           </div>
-        }
+        } */}
         { viewCart 
         && <ul className={styles.list}>
           { cart.length > 0 ? 

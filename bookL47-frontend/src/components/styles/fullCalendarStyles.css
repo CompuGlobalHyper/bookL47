@@ -18,6 +18,7 @@
 
 /* month view */
 .fc-dayGridMonth-view {
+  border: 0px solid red !important;
   background-color: var(--surface-elevated-color);
   user-select: none;
 }
@@ -47,6 +48,36 @@
   display: none;
 }
 .fc-button.fc-today-button:hover {
+}
+
+/* disabled days */
+.fc-day-disabled {
+  background-color: var(--surface-color) !important
+  ;
+}
+
+/* grid */
+.fc-theme-standard td {
+  border: 1px solid var(--text-color) !important;
+}
+
+.fc-theme-standard th {
+  border-top: 1px solid var(--text-color) !important;
+  border-left: 1px solid var(--text-color) !important;
+  border-right: 1px solid var(--text-color) !important;
+}
+
+.fc-scrollgrid {
+  border: 0px solid red !important
+}
+
+th {
+  border: 0px solid red !important;
+}
+
+tbody {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 700;
 }
 
 

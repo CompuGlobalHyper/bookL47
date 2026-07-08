@@ -15,7 +15,6 @@ export default function CartInfo({equipment, setEquipment, description, setDescr
       })
     })
   }
-  console.log(equipment)
   const { deleteCartItem, updateCartItem, applyToAllCartItems } = useContext(CartContext)
   return (
     item

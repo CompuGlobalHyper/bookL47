@@ -11,6 +11,7 @@ import { useOutletContext } from 'react-router'
 import generateBookedArray from '../../functions/generateBookedArray'
 import generateHourSlots from '../../functions/generateHourSlots'
 import generateHourlyPrice from '../../functions/generateHourlyPrice'
+import setBannerMessage from '../../functions/bannerMessage'
 
   const roomSmallDesc =
   "A professional rehearsal room for up to 8 musicians. Features a Yamaha upright piano and DW Design Series drum kit, making it ideal for solo artists, duos, and small bands.";
@@ -184,16 +185,22 @@ export default function Book() {
     useEffect(() => {
         if (loading) return
         let tempDateObject = events.find((obj) => obj.date === selectedDate)
-        setBookedSlots(findSlotObject(tempDateObject.rooms, selectedRoom))
+        console.log("loading new time conflicts")
+        setBookedSlots(findSlotObject(tempDateObject.rooms, selectedRoom.name))
         setDateObject(tempDateObject)
+        setDropdown((prev) => {
+          return prev.map((item) => {
+            return {...item, open: false}
+          })
+        })
+        setSelectedSlot({})
+        setSelectedStart({})
+        setSelectedEnd({})
       }, [selectedDate]);
     // If booked slots, update available slots.
-    useEffect(() => {
-        
+    useEffect(() => {   
         const bookedSlotSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
-        const bookedStartSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot, 30, 30, true)));
-        console.log(bookedStartSet)
-        const bookedEndSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
+        const bookedHourSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
       
         const cartSet = new Set(
             cart
@@ -217,30 +224,33 @@ export default function Book() {
         })
         setAvailableStarts((prev) => {
           return prev
-          .map((start) => {
-            const isInSlot = bookedStartSet.has(start.time)
-            const isInCart = cartSet.has(start.time);
+          .map((time) => {
+            const isInSlot = bookedHourSet.has(time.time)
+            const isInCart = cartSet.has(time.time);
             return {
-              ...start,
+              ...time,
               available: !isInSlot && !isInCart
             }
           })
         })
         setAvailableEnds((prev) => {
           return prev
-          .map((start) => {
-            const isInSlot = bookedEndSet.has(start.time)
-            const isInCart = cartSet.has(start.time);
+          .map((time) => {
+            const isInSlot = bookedHourSet.has(time.time)
+            const isInCart = cartSet.has(time.time);
             return {
-              ...start,
+              ...time,
               available: !isInSlot && !isInCart
             }
           })
+          .filter(time => !time.avaiable)
         })
     }, [bookedSlots, cart]);
     useEffect(() => {
       setSelectedEnd({})
+      
       let closestEndTime = Number(selectedStart.time?.split(':')[0]) || 10
+      
       if (selectedStart.time?.split(':')[1] === '30') {
         closestEndTime += 0.5
       }
@@ -250,7 +260,12 @@ export default function Book() {
       if (closestEndTime < 10) {
         closestEndTime += 13
       }
-      setAvailableEnds(generateHourSlots(closestEndTime, 21))
+      
+      setAvailableEnds((prev) => {
+          return prev
+          .filter(time => Number(time.time.split(':')[0]) >= closestEndTime)
+        })
+
     }, [selectedStart])
 
     function checkSubmit() {
@@ -305,7 +320,9 @@ export default function Book() {
     }
     
     function handleClick() {
-      if (!checkSubmit()) return
+      if (!checkSubmit()) {
+        return
+      }
       const { firstName, lastName, email } = user
       let start
       let end
@@ -339,6 +356,7 @@ export default function Book() {
           }
           console.log(booking)
           addToCart(booking)
+          setBannerMessage(setMessage, "Added booking to cart!", false, 5)
           setSelectedSlot({})
           setSelectedStart({})
           setSelectedEnd({})
@@ -378,7 +396,7 @@ export default function Book() {
                     selectedRoom={selectedRoom}
                     setSelectedRoom={setSelectedRoom} 
                     ></Rooms>
-                    {user.role === "nonMember" 
+                    {user.role !== "member" 
                     ? <Timeslots
                     dropdown={dropdown}
                     setDropdown={setDropdown}
