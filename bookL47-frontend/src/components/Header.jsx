@@ -15,13 +15,13 @@ export default function Header( { setUser, user, setMessage }) {
       guest: [
         { name: "Home", link: "/" },
         { name: "About", link: "/about" },
-        { name: "Join Local47", link: "/join" },
+        { name: "Join Local 47", link: "/join" },
         { name: "Code of Conduct", link: "/code-of-conduct" },
       ],
 
       nonMember: [
         { name: "Home", link: "/" },
-        { name: "Join Local47", link: "/join" },
+        { name: "Join Local 47", link: "/join" },
         { name: "Book", link: "/book" },
         { name: "About", link: "/about" },
         { name: "Code of Conduct", link: "/code-of-conduct" },
@@ -81,7 +81,7 @@ export default function Header( { setUser, user, setMessage }) {
             ? <></> 
             : <Link 
                 to='/cart'
-                className={`${styles.cart} text`}
+                className={`${styles.cart} text bold`}
                 onClick={() => setViewMenu(false)}>Cart ({cart.length})</Link>}
             <div 
                 className={`${styles.hamburger} text`}

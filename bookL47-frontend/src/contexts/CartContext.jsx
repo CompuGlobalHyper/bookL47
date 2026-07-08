@@ -15,6 +15,7 @@ export function CartProvider({ children }) {
         credentials: "include"
       })
       const data = await res.json()
+      sortCart(data)
       return data
 
     }
@@ -104,7 +105,8 @@ export function CartProvider({ children }) {
    <CartContext.Provider 
    value={{
     cart, 
-    setCart, 
+    setCart,
+    getCart, 
     addToCart, 
     clearCart, 
     deleteCartItem, 

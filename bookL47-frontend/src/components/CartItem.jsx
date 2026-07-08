@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import styles from './styles/CartItem.module.css'
 import { CartContext } from '../contexts/CartContext';
 import CartInfo from './CartInfo'
-
+import { formatDate, formatTime } from '../functions/formatter.js'
 
 
 
@@ -10,28 +10,7 @@ export default function CartItem({ abridged, item, active, setActive, equipment,
 
   const { deleteCartItem, updateCartItem, applyToAllCartItems } = useContext(CartContext)
 
-  function formatDate(dateString) {
-    const date = new Date(`${dateString}T12:00:00Z`)
-
-    const formatter = new Intl.DateTimeFormat('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: 'America/Los_Angeles',
-    });
-    
-    return formatter.format(date)
-  }
-  function formatTime(timeString = '12:30:00') {
-    const [ hours, minutes ] = timeString.split(':')
-    const hour = Number(hours)
-    const period = hour >= 12 ? 'pm' : 'am'
-    const displayHour = hour % 12 || 12
-
-    return `${displayHour}${minutes !== '00' ? ":" + minutes : ""}${period}`
-
-  }
+  
   return (
     
     <div className={styles.main}>

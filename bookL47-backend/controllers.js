@@ -122,27 +122,34 @@ const controllers = {
 
         const booking = req.body.booking
         const hours = generateHours(booking.start, booking.end)
-        let hourly_rate
+        let hourly_rate = null
         let price
         const user = req.user[0]
-        if (user.role === 'member') {
-            const {data: priceData, error: priceError} = await supabase
+        if (user.role === 'member' || user.role === 'life') {
+            const { data: priceData, error: priceError } = await supabase
             .from('location')
             .select('price')
             .eq('id', booking.location_id)
             if (priceError) {
                 return console.log(priceError)
             }
-            console.log(data)
+            if (user.role === life) {
+                price = priceData[0].price - 5
+            } else {
+                price = priceData[0].price
+            }         
         }
-
+        if (user.role === 'nonMember') {
+            hourly_rate = 65
+            price = hourly_rate * hours
+        }
         const { data, error } = await supabase
         .from('cart')
-        .insert({...booking, user_id: user.id, hours, })
+        .insert({...booking, user_id: user.id, hours, price, hourly_rate})
         if (error) console.log(error)
         res.json(data)
-
     },
+    
     async cartDelete(req, res) {
         const id = req.body.id
         const supabase = supabaseClient()

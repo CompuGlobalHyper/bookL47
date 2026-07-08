@@ -100,12 +100,12 @@ a {
   );
   /* Backgrounds */
   --bg-color: light-dark(
-    rgb(248, 250, 252),
+    rgb(230, 235, 240),
     rgb(14, 18, 24)
   );
 
   --surface-color: light-dark(
-    rgb(223, 223, 223),
+    rgb(255, 253, 253),
     rgb(28, 34, 42)
   );
 
@@ -194,11 +194,11 @@ textarea {
 }
 
 .small {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .regular {
-  font-size: 14px;
+  font-size: 16px;
 
 }
 .medium {

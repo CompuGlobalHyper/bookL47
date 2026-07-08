@@ -4,6 +4,7 @@ import { CartContext } from '../../contexts/CartContext'
 import CartItem from '../../components/CartItem'
 import styles from './styles/Cart.module.css'
 import CartInfo from '../../components/CartInfo'
+import { createTotal } from '../../functions/formatter.js'
 
 const example = { 
                     id: crypto.randomUUID(),
@@ -89,8 +90,7 @@ export default function Cart() {
       </div>
       {cart.length > 0 && <div className={`${styles.priceContainer}`}>
         <div className={`${styles.totalText} text medium`}>Est. Total</div>
-        <div className={`${styles.priceTotal} text medium bold`}>{`$${cart.reduce((acc, item) => {
-          return acc + item.price}, 0)}.00`}</div>
+        <div className={`${styles.priceTotal} text medium bold`}>{`$${createTotal(cart)}`}</div>
       </div>}
       <div className={styles.bottomButtons}>
         {cart.length > 0 && <Link className={`${styles.brandButton} bold text`} to={'/checkout'}><span>Checkout</span></Link>}
