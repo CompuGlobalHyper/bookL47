@@ -70,7 +70,7 @@ export default function GuestHome({ setMessage, setUser }) {
       {!viewLogin 
       ? <div className={styles.content}>
           <div className={styles.textContainer}>
-            <h1 className={`text`}>Welcome to BookL47</h1>
+            <h1 className={`text`}>Welcome to Book L47</h1>
             <p className={`text`}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, quos?</p>
           </div>
           <div className={`text`}>Image goes here</div>

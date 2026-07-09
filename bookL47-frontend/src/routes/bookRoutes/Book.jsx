@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { useState, useEffect } from 'react'
 import Calendar from '../../components/Calendar'
 import { CartContext } from '../../contexts/CartContext'
+import { UserContext } from '../../contexts/UserContext'
 import styles from './styles/Book.module.css'
 import CartItem from '../../components/CartItem'
 import Rooms from '../../components/Rooms'
@@ -29,11 +30,12 @@ function findSlotObject(list, room) {
 }
 
 export default function Book() {
-  const { user, setMessage} = useOutletContext()
+  const { setMessage} = useOutletContext()
+  const { user, loading: userLoading } = useContext(UserContext)
 
 
 
-  const { cart, addToCart, deleteCartItem } = useContext(CartContext)
+  const { cart, loading: cartLoading, addToCart, deleteCartItem } = useContext(CartContext)
   const API = import.meta.env.VITE_API_URL
   const firstDate = new Date();
   firstDate.setDate(firstDate.getDate() + 2)
@@ -147,10 +149,11 @@ export default function Book() {
         setEvents(data)
         const rooms = await generateRoomList()
         setAvailableRooms(rooms)
+        if (cartLoading) return
         setLoading(false)
       }
       setInitial()
-  }, [])
+  }, [cartLoading])
     useEffect(() => {
       if (events.length === 0) return
       let firstDateStr = firstDate.toISOString().split('T')[0]
@@ -344,11 +347,16 @@ export default function Book() {
           setSelectedEnd({})
       }      
     }
+
+    if (loading) {
+      return (
+        <Loading></Loading>
+      )
+    }
     
     return (
       <div className={styles.body}>
-        {loading ? <div className={`text medium`}>Loading...</div> 
-        : <div className={styles.main}>
+        <div className={styles.main}>
             <div className={`${styles.calendar}`}>
               <div className={`${styles.note}`}><em>Note: All bookings must be made <span className='bold'>48 hours</span> in advance.</em></div>
               <Calendar 
@@ -415,7 +423,7 @@ export default function Book() {
                 <div className={`${styles.submitButton} text medium bold`} onClick={handleClick}><span>Add booking</span></div>
               </div>
             </div>
-        </div> } 
+        </div>
         <div className={`${styles.inCart} medium text`}>Cart:</div>
         <ul>
           { cart.length > 0 ?

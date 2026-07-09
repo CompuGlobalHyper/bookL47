@@ -1,10 +1,26 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { UserContext } from './UserContext'
+import { createContext } from 'react'
 
 const API = import.meta.env.VITE_API_URL
 
 export const CartContext = createContext()
 export function CartProvider({ children }) {
+    const { user, loading: userLoading } = useContext(UserContext)
     const [cart, setCart] = useState([])
+    const [loading, setLoading] = useState(true)
+    
+    useEffect(() => {
+      async function init() {
+        console.log('User Provider')
+        if (user.role === "guest" || userLoading) return
+        const cart = await getCart()
+        setCart(cart)
+        setLoading(false)
+      }
+      init()
+    }, [userLoading])
+
     async function getCart() {
       console.log('fetching cart info..')
       const res = await fetch(`${API}/cart`, {
@@ -19,14 +35,6 @@ export function CartProvider({ children }) {
       return data
 
     }
-    useEffect(() => {
-      async function init() {
-        const cart = await getCart()
-        setCart(cart)
-      }
-      init()
-    }, [])
-
     function sortCart(cart) {
       return cart.toSorted((a, b) => new Date(`${a.date}T${a.start}`) - new Date(`${b.date}T${b.start}`))
     }
@@ -104,7 +112,8 @@ export function CartProvider({ children }) {
   return (
    <CartContext.Provider 
    value={{
-    cart, 
+    cart,
+    loading, 
     setCart,
     getCart, 
     addToCart, 

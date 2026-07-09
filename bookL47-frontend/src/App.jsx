@@ -1,34 +1,32 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Outlet } from 'react-router'
 import styles from './App.module.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import getUser from './functions/getUser'
+import { UserContext } from './contexts/UserContext'
+import Loading from './components/Loading'
 
 function App() {
-  const [user, setUser] = useState({})
-  const [loading, setLoading] = useState(true)
+  const {user, setUser, loading: userLoading} = useContext(UserContext)
   const [message, setMessage] = useState({
     text: '',
     error: false
   })
 
   useEffect(() => {
-    const loadData = async () => {
-      setUser(await getUser())
-    }
-    loadData()
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000)
-    
-  }, [])
+    console.log('user loading on App.jsx')
+  }, [userLoading])
 
+  if (userLoading) {
+    console.log('abort')
+    return (
+      <Loading></Loading>
+    )
+  }
   return (
     <div className={styles.body}>
-      { loading ? <div className={`medium text`}>Loading...</div> 
-      : 
-      <> {user.role === 'admin' ? <div className={`${styles.adminMessage} text bold medium`}><span>You are in admin mode</span></div> : <div></div>}
+      <> {user?.role === 'admin' ? <div className={`${styles.adminMessage} text bold medium`}><span>You are in admin mode</span></div> : <div></div>}
       <Header 
         user={user} 
         setUser={setUser}
@@ -38,11 +36,11 @@ function App() {
         <p>{message.text}</p>
       </div>
        <div className={styles.main}>
-          <Outlet context={{ user, setUser, loading, setLoading, setMessage }}/>
+          <Outlet context={{ setMessage }}/>
       </div>
       <div className={styles.footer}><Footer/></div> 
       </>
-      } 
+       
     </div>
   )
 }
