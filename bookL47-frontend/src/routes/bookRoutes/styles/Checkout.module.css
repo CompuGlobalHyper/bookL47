@@ -53,6 +53,13 @@
     width: 500px;
     min-height: 500px;
 }
+
+.price {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    align-items: center;
+}
 .payButton {
     display: flex;
     justify-content: center;

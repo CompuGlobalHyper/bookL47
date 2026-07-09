@@ -12,14 +12,13 @@ export function CartProvider({ children }) {
     
     useEffect(() => {
       async function init() {
-        console.log('User Provider')
         if (user.role === "guest" || userLoading) return
-        const cart = await getCart()
-        setCart(cart)
+        const sortedCart = await getCart()
+        setCart(sortedCart)
         setLoading(false)
       }
       init()
-    }, [userLoading])
+    }, [userLoading, user])
 
     async function getCart() {
       console.log('fetching cart info..')
@@ -31,9 +30,7 @@ export function CartProvider({ children }) {
         credentials: "include"
       })
       const data = await res.json()
-      sortCart(data)
-      return data
-
+      return sortCart(data)
     }
     function sortCart(cart) {
       return cart.toSorted((a, b) => new Date(`${a.date}T${a.start}`) - new Date(`${b.date}T${b.start}`))
@@ -47,9 +44,15 @@ export function CartProvider({ children }) {
         credentials: "include",
         body: JSON.stringify({booking: booking})
       })
-      let cart = await getCart()
-      let sortedCart = sortCart(cart)
-      setCart(sortedCart)
+      if (res.status === 200) {
+        let sortedCart = await getCart()
+        console.log(sortedCart)
+        setCart(sortedCart)
+        return true
+      } else {
+        return false
+      }
+      
     }
     async function deleteCartItem(id) {
       const res = await fetch(`${API}/cart`, {

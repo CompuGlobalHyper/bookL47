@@ -15,11 +15,9 @@ function App() {
   })
 
   useEffect(() => {
-    console.log('user loading on App.jsx')
   }, [userLoading])
 
   if (userLoading) {
-    console.log('abort')
     return (
       <Loading></Loading>
     )
@@ -28,8 +26,6 @@ function App() {
     <div className={styles.body}>
       <> {user?.role === 'admin' ? <div className={`${styles.adminMessage} text bold medium`}><span>You are in admin mode</span></div> : <div></div>}
       <Header 
-        user={user} 
-        setUser={setUser}
         setMessage={setMessage}>
       </Header>
       <div className={!message.error ? styles.message : styles.error}>

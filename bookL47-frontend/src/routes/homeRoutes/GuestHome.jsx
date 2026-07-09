@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styles from './styles/GuestHome.module.css'
 import Register from '../../components/Register'
 import setBannerMessage from '../../functions/bannerMessage'
+import { UserContext } from '../../contexts/UserContext'
 
-export default function GuestHome({ setMessage, setUser }) {
+export default function GuestHome({ setMessage }) {
+  const { setUser } = useContext(UserContext)
   const [viewLogin, setViewLogin] = useState(false)
   const [viewRegister, setViewRegister] = useState(false)
   const [formData, setFormData] = useState({
@@ -101,7 +103,7 @@ export default function GuestHome({ setMessage, setUser }) {
                 placeholder=' '
                 required
                 />
-                <label htmlFor="email">miles@jazz.com</label>
+                <label htmlFor="email">example@afm47.org</label>
               </div>
               <div className={`${styles.field} text`}>
                 <input

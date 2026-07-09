@@ -9,12 +9,11 @@ export function UserProvider({ children }) {
 
     useEffect(() => {
         async function init() {
-            console.log('User Provider loading')
-            const user = await getUser()
-            if (user.role === 'guest') {
+            const data = await getUser()
+            if (data.role === 'guest') {
                 console.log("Logging user as guest")
             }
-            setUser(user)
+            setUser(data)
             setLoading(false)
         }
         init()

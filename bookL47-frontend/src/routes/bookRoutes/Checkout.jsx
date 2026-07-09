@@ -3,6 +3,7 @@ import { useOutletContext } from 'react-router'
 import styles from './styles/Checkout.module.css'
 import { CartContext } from '../../contexts/CartContext'
 import { formatDate, formatTime, createTotal, createFee } from '../../functions/formatter.js'
+import { UserContext } from '../../contexts/UserContext.jsx'
 
 
 const appId = import.meta.env.VITE_SANDBOX_SQUARE_APP_ID
@@ -12,7 +13,8 @@ const API = import.meta.env.VITE_API_URL
 
 
 export default function Checkout() {
-    const { user, setMessage} = useOutletContext()
+    const { setMessage } = useOutletContext()
+    const { user } = useContext(UserContext)
     const { cart, getCart, setCart, deleteCartItem } = useContext(CartContext)
     const cardRef = useRef(null);
     const initializedRef = useRef(false);
@@ -74,7 +76,9 @@ export default function Checkout() {
                                     <div className={`${styles.date} text bold`}>{formatDate(item.date)}</div>
                                     <div className={`${styles.time} text small`}>{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
                                 </div>
-                                <div className={`${styles.price} text`}>{`$${item.price}`}</div>
+                                {user.role === 'member' || user.role === 'life'
+                                ? <div className={`${styles.price} text`}>{`$${item.price}`}</div>
+                                : <div className={`${styles.price} text`}><em className='small'>{`${item.hours} hr x $${item.hourly_rate} per hr`}</em>{`= $${item.price}`}</div>}
                             </div>
                         </li>
                     )
@@ -82,17 +86,17 @@ export default function Checkout() {
             </ul>
             <div className={`${styles.subTotal}`}>
                 <span className='text regular bold'>Subtotal:</span>
-                <div className={`${styles.priceTotal} text regular bold`}>{`$${createTotal(cart)}`}
+                <div className={`${styles.priceTotal} text regular bold`}>{`$ ${createTotal(cart)}`}
                 </div>
             </div>
             <div className={`${styles.processingFee}`}>
-                <span className='text regular'>Processing Fee:</span>
-                <div className={`${styles.feeTotal} text regular`}>{`$${createFee(createTotal(cart), 0.033, 0.30)}`}
+                <span className='text regular'>Processing Fee <em>(3.3% + $0.30)</em>:</span>
+                <div className={`${styles.feeTotal} text regular`}>{`$ ${createFee(createTotal(cart), 0.033, 0.30)}`}
                 </div>
             </div>
             <div className={`${styles.totalDue}`}>
                 <span className='text medium bold'>Total due:</span>
-                <div className={`${styles.total} text medium bold`}>{`$${createTotal(cart) + Number(createFee(createTotal(cart), 0.033, 0.30))}`}
+                <div className={`${styles.total} text medium bold`}>{`$ ${createTotal(cart) + Number(createFee(createTotal(cart), 0.033, 0.30))}`}
                 </div>
             </div>
 

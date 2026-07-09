@@ -14,6 +14,7 @@ import generateHourSlots from '../../functions/generateHourSlots'
 import generateHourlyPrice from '../../functions/generateHourlyPrice'
 import setBannerMessage from '../../functions/bannerMessage'
 import generateRoomList from '../../functions/generateRoomList'
+import Loading from '../../components/Loading'
 
 
 function findDateObject(list, date) {
@@ -340,8 +341,12 @@ export default function Book() {
               description: description
           }
           console.log(booking)
-          addToCart(booking)
-          setBannerMessage(setMessage, "Added booking to cart!", false, 5)
+          const success = addToCart(booking)
+          if (success) {
+            setBannerMessage(setMessage, "Added booking to cart!", false, 5)
+          } else {
+            setBannerMessage(setMessage, "Something went wrong, please try again.", true, 5)
+          }
           setSelectedSlot({})
           setSelectedStart({})
           setSelectedEnd({})

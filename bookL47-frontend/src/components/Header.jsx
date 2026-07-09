@@ -4,10 +4,11 @@ import styles from "./styles/Header.module.css"
 import { Link, useOutletContext } from 'react-router'
 import { CartContext } from '../contexts/CartContext'
 import setBannerMessage from '../functions/bannerMessage'
+import { UserContext } from '../contexts/UserContext'
 
-export default function Header( { setUser, user, setMessage }) {
+export default function Header( { setMessage }) {
     const API = import.meta.env.VITE_API_URL
-
+    const { user, setUser } = useContext(UserContext)
     const { cart } = useContext(CartContext)
 
     const [viewMenu, setViewMenu] = useState(false)
@@ -66,9 +67,12 @@ export default function Header( { setUser, user, setMessage }) {
         method: "GET",
         credentials: 'include'
       });
+      const data = await res.json()
+      setUser(data)
       setBannerMessage(setMessage, "Successfully signed out", false, 5)
     } catch (error) {
       console.log(error)
+      console.log('Failed to log out')
     }
   }
 
@@ -99,7 +103,7 @@ export default function Header( { setUser, user, setMessage }) {
                             onClick={() => {
                                 if (link.name === 'Logout') {
                                   handleLogout()
-                                  setUser({role: guest})
+                                  setUser({ role: guest })
                                 }
                                 setViewMenu(false)
                             }}>{link.name}</Link>

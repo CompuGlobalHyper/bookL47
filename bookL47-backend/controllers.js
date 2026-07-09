@@ -131,9 +131,10 @@ const controllers = {
             .select('price')
             .eq('id', booking.location_id)
             if (priceError) {
-                return console.log(priceError)
+                console.log(priceError)
+                return res.status(500).json({ message: "There was a pricing error" })
             }
-            if (user.role === life) {
+            if (user.role === 'life') {
                 price = priceData[0].price - 5
             } else {
                 price = priceData[0].price
@@ -146,8 +147,11 @@ const controllers = {
         const { data, error } = await supabase
         .from('cart')
         .insert({...booking, user_id: user.id, hours, price, hourly_rate})
-        if (error) console.log(error)
-        res.json(data)
+        if (error) {
+            console.log(error)
+            return res.status(500).json({ message: "There was a database error" })
+        }
+        res.status(200).json(data)
     },
     
     async cartDelete(req, res) {
@@ -222,7 +226,7 @@ const controllers = {
             path: '/',
         });
         console.log('logging you out..')
-        res.sendStatus(200)
+        return res.status(200).json({ role: guest })
 
     },
 
