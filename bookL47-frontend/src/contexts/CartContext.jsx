@@ -12,7 +12,9 @@ export function CartProvider({ children }) {
     
     useEffect(() => {
       async function init() {
-        if (user.role === "guest" || userLoading) return
+        if (user.role === "guest" || userLoading) {
+          return setLoading(false)
+        }
         const sortedCart = await getCart()
         setCart(sortedCart)
         setLoading(false)
