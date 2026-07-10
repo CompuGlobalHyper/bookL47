@@ -1,10 +1,11 @@
 const { google } = require('googleapis')
 const Jotform = require('jotform').default
 const { createClient } = require('@supabase/supabase-js')
+const squareClient = require("./square");
 const jwt = require('jsonwebtoken')
 const { register } = require('node:module')
 const bcrypt = require('bcryptjs')
-const { generateHours } = require('./prices.js')
+const { generateHours, getTotal, createFee } = require('./prices.js')
 
 function supabaseClient () {
     return createClient(
@@ -39,7 +40,6 @@ const controllers = {
             return res.status(200).json({ auth: false })
         }
     },
-
     async loginPost(req, res) {
         //get id from req.user
         const user = req.user
@@ -97,7 +97,6 @@ const controllers = {
         }
         return res.status(200).json({message: 'successful registration'})
     },
-
     async cartGet(req, res) {
         if (!req.user) {
             return res.status(401).json({ message: 'not logged in' })
@@ -153,7 +152,6 @@ const controllers = {
         }
         res.status(200).json(data)
     },
-    
     async cartDelete(req, res) {
         const id = req.body.id
         const supabase = supabaseClient()
@@ -210,12 +208,78 @@ const controllers = {
         }
         res.status(200)
     },
-
     async checkoutGet(req, res) {
-
     },
-
     async checkoutPost(req, res) {
+    },
+    async paymentPost(req, res) {
+        const { sourceId, locationId, idempotencyKey } = req.body
+        if (!req.user) {
+            return res.status(401).json({ message: 'not logged in' })
+        }
+        const user = req.user[0]
+        
+
+        try {
+            const supabase = supabaseClient()
+            const { data: cartData, error: cartError } = await supabase
+            .from('cart')
+            .select('*')
+            .eq("user_id", user.id)
+            if (cartError) {
+                    throw cartError;
+            }
+            console.log(cartData)
+            const subtotal = Number(getTotal(cartData))
+            const fee = Number(createFee(subtotal))
+            const amount = Math.round((subtotal + fee) * 100)
+            const { data: bookingData, error: bookingError } = await supabase
+                .from('booking')
+                .insert(cartData.map((booking) => ({
+                    ...booking,
+                    status: 'pending'
+                })))
+                .select('*')
+            if (bookingError) {
+                throw bookingError;
+            }
+
+            console.log('reached backend payment step')
+            const payment = await squareClient.payments.create({
+                sourceId,
+                idempotencyKey,
+                locationId,
+                amountMoney: {
+                    amount: BigInt(amount),
+                    currency: "USD"
+                }
+            });
+            const bookingIds = bookingData.map(b => b.id)
+            const { error: updateError } = await supabase
+                .from("booking")
+                .update({
+                    status: "paid",
+                    payment_id: payment.payment.id
+                })
+                .in("id", bookingIds);
+            if (updateError) {
+                throw updateError;
+            }
+            const { data: deleteData, error: deleteError } = await supabase
+            .from('cart')
+            .delete()
+            .eq("user_id", user.id)
+            if (deleteError) {
+                throw deleteError;
+            }
+
+            return res.json({ success: true, paymentId: payment.payment.id});
+        } catch(error) {
+            console.log(error);
+            res.status(400).json({
+                error: error.message
+            });
+        }
 
     },
     async logoutGet(req, res) {

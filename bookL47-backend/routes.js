@@ -52,6 +52,8 @@ router.put('/cart', authUser, controllers.cartPut)
 router.get('/checkout', authUser, controllers.checkoutGet)
 router.post('/checkout', authUser, controllers.checkoutPost)
 
+router.post('/payment', authUser, controllers.paymentPost)
+
 
 //routes to populate db and gain google auth
 router.get('/auth/google', controllers.googleAuthGet)

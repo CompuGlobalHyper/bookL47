@@ -42,4 +42,14 @@ function generateHours(start, end) {
     return totalTime  
 }
 
-module.exports = {generateHours}
+function getTotal(cart) {
+  return cart.reduce((acc, item) => {
+    return acc + item.price
+  }, 0)
+}
+
+function createFee(price) {
+  return (price * 0.029 + 0.30).toFixed(2);
+}
+
+module.exports = {generateHours, getTotal, createFee}
