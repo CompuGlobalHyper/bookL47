@@ -32,20 +32,13 @@
 }
 
 
-.submitButton {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin-top: 20px;
-    padding: 5px 5px;
-    border: 2px solid var(--border-color);;
-    color: var(--brand-text-color);
-    background-color: var(--brand-color);
-    border-radius: 8px;
+.submitButton{
+    margin: auto;
+    max-width: 200px;
 }
 
-.submitButton:active {
-    background-color: var(--brand-color);
-    color: var(--brand-text-color)
+.checkoutButton {
+    margin: auto;
+    max-width: 300px;
 }
+

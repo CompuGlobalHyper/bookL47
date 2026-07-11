@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { use, useContext } from 'react'
 import { useState, useEffect } from 'react'
 import Calendar from '../../components/Calendar'
 import { CartContext } from '../../contexts/CartContext'
@@ -15,6 +15,7 @@ import generateHourlyPrice from '../../functions/generateHourlyPrice'
 import setBannerMessage from '../../functions/bannerMessage'
 import generateRoomList from '../../functions/generateRoomList'
 import Loading from '../../components/Loading'
+import { Link } from 'react-router'
 
 
 function findDateObject(list, date) {
@@ -139,6 +140,8 @@ export default function Book() {
       open: false
     }
   ])
+
+  const [viewCart, setViewCart] = useState(false)
   useEffect(() => {
       async function setInitial() {
         const calendarRes = await fetch(`${API}/calendar`, {
@@ -173,7 +176,6 @@ export default function Book() {
     useEffect(() => {
         if (loading) return
         let tempDateObject = events.find((obj) => obj.date === selectedDate)
-        console.log("loading new time conflicts")
         setBookedSlots(findSlotObject(tempDateObject.rooms, selectedRoom.name))
         setDateObject(tempDateObject)
         setDropdown((prev) => {
@@ -186,17 +188,15 @@ export default function Book() {
         setSelectedEnd({})
       }, [selectedDate]);
     // If booked slots, update available slots.
-    useEffect(() => {   
+    useEffect(() => { 
         const bookedSlotSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
-        const bookedHourSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
-      
         const cartSet = new Set(
             cart
             .filter(item =>
                 item.date === selectedDate 
                 && item.location === selectedRoom.name
             )
-            .flatMap(slot => generateBookedArray(slot))) || new Set();
+            .flatMap(slot => generateBookedArray(slot)));
         setAvailableSlots((prev) => {
             return prev
             .map((slot) => {
@@ -213,7 +213,7 @@ export default function Book() {
         setAvailableStarts((prev) => {
           return prev
           .map((time) => {
-            const isInSlot = bookedHourSet.has(time.time)
+            const isInSlot = bookedSlotSet.has(time.time)
             const isInCart = cartSet.has(time.time);
             return {
               ...time,
@@ -224,32 +224,55 @@ export default function Book() {
         setAvailableEnds((prev) => {
           return prev
           .map((time) => {
-            const isInSlot = bookedHourSet.has(time.time)
-            const isInCart = cartSet.has(time.time);
-            return {
-              ...time,
-              available: !isInSlot && !isInCart
-            }
+            
           })
         })
     }, [bookedSlots, cart]);
     useEffect(() => {
       setSelectedEnd({})
+      setAvailableEnds(generateHourSlots(11, 21))
+      //booked slots that allow for back to back ends
+      const bookedEndSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot, 0)));
+      const cartEndSet = new Set(
+            cart
+            .filter(item =>
+                item.date === selectedDate 
+                && item.location === selectedRoom.name
+            )
+            .flatMap(slot => generateBookedArray(slot, 0)))
+      //the minimum one hour time slot
       let closestEndTime = Number(selectedStart.time?.split(':')[0]) + 1
       if (selectedStart.time?.split(':')[1] === '30') {
         closestEndTime += 0.5
       }
+
       setAvailableEnds((prev) => {
+        let foundMiddleBooking = false
           return prev
           .map((time) => {
             let currentEndTime = Number(time.time.split(':')[0])
             if (time.time.split(':')[1] === '30') {
               currentEndTime += 0.5
             }
-            return {
-              ...time,
-              available: currentEndTime >= closestEndTime
+            //if the ending time is before the soonest allowable end, mark it unavailable
+            if (currentEndTime < closestEndTime) {
+              return {
+                ...time,
+                available: false
+              }
             }
+            //if the ending time is within the range of existing cart or bookings, mark it unavailable
+            const isInSlot = bookedEndSet.has(time.time)
+            const isInCart = cartEndSet.has(time.time);
+            if (isInSlot || isInCart) {
+              foundMiddleBooking = true
+              return {
+                ...time,
+                available: !isInSlot && !isInCart
+              }
+            }
+            //if foundMiddleBooking return false, else return true
+            return {...time, available: !foundMiddleBooking}
           })
         })
     }, [selectedStart])
@@ -425,27 +448,37 @@ export default function Book() {
               setDescription={setDescription}
               ></CartInfo>
               <div className={`${styles.submitButtonContainer}`}>
-                <div className={`${styles.submitButton} text medium bold`} onClick={handleClick}><span>Add booking</span></div>
+                <div className={`${styles.submitButton} button text medium`} onClick={handleClick}><span>Add booking</span></div>
               </div>
             </div>
         </div>
-        <div className={`${styles.inCart} medium text`}>Cart:</div>
-        <ul>
-          { cart.length > 0 ?
-              cart.map((item) => {
-                return (
-                <li key={item.id}>
-                  <CartItem
-                    abridged={true}
-                    item={item} 
-                    active={false} 
-                    setActive={(() => {})}>
-                  </CartItem>
-                </li>
-                )
-              })
+        
+        {viewCart 
+        ? <div className={`${styles.inCart} medium text link`} onClick={() => setViewCart(false)}>Close Cart</div>
+        : <div className={`${styles.inCart} medium text link`} onClick={() => setViewCart(true)}>View Cart ({cart.length})<span></span></div>}
+        {viewCart 
+        ? <ul>
+          { cart.length > 0 
+          ?   
+          <div>
+            {cart.map((item) => {
+            return (
+            <li key={item.id}>
+              <CartItem
+                abridged={true}
+                item={item} 
+                active={false} 
+                setActive={(() => {})}>
+              </CartItem>
+            </li>
+            )
+          })}
+          <Link to={'/cart'}><div className={`${styles.checkoutButton} button medium text`}>Continue to checkout</div></Link>
+          </div>
           : <div className={`text thin`}>Your cart is empty.</div> }
         </ul>
+        : <></>}
+        
       </div>
     )
 }

@@ -6,7 +6,7 @@
 }
 
 .main {
-    
+    padding: 0 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,7 +25,7 @@
 
 .cart {
     cursor: pointer;
-    margin: 0 20px 0 auto;
+    margin-left: auto;
     color: var(--brand-text-color);
 }
 
@@ -77,6 +77,7 @@
         display: none;
     }
     .list {
+        padding: 0 20px;
         z-index: 1;
         position: absolute;
         width: 100%;
@@ -124,4 +125,6 @@
     .open .item:nth-child(4) { transition-delay: 225ms; }
     .open .item:nth-child(5) { transition-delay: 250ms; }
     .open .item:nth-child(6) { transition-delay: 275ms; }
+    .open .item:nth-child(7) { transition-delay: 300ms; }
+    .open .item:nth-child(8) { transition-delay: 325ms; }
 }

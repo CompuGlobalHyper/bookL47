@@ -90,7 +90,7 @@ export default function Cart() {
       </div>
       {cart.length > 0 && <div className={`${styles.priceContainer}`}>
         <div className={`${styles.totalText} text medium`}>Est. Total</div>
-        <div className={`${styles.priceTotal} text medium bold`}>{`$${createTotal(cart)}`}</div>
+        <div className={`${styles.priceTotal} text medium bold`}>{`$${(createTotal(cart)).toFixed(2)}`}</div>
       </div>}
       <div className={styles.bottomButtons}>
         {cart.length > 0 && <Link className={`${styles.brandButton} bold text`} to={'/checkout'}><span>Checkout</span></Link>}

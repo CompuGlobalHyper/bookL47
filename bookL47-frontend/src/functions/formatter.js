@@ -27,6 +27,6 @@ export function formatDate(dateString) {
     }, 0)
   }
 
-  export function createFee(price, percentage, flat) {
-  return (price * percentage + flat).toFixed(2);
+  export function createFee(price) {
+  return (price * 0.029 + 0.30).toFixed(2);
 }

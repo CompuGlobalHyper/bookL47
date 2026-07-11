@@ -18,7 +18,7 @@
     padding-bottom: 5px;
     color: var(--text-secondary-color);
     border-bottom: 0.5px solid var(--border-color);
-    margin: 0 50px 15px 0;
+    margin: 0 50px 10px 0;
 
 }
 
@@ -101,8 +101,8 @@
     display: flex;
     justify-content: center;
     cursor: pointer;
-    margin: 20px auto;
-    padding: 5px 10px;
+    margin: 5px 10px 5px auto;
+    padding: 5px 5px;
     width: clamp(25px, 25dvw, 200px);
     color: var(--brand-text-color);
     background-color: var(--reject-color);

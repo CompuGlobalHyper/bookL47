@@ -13,53 +13,59 @@ export default function Header( { setMessage }) {
 
     const [viewMenu, setViewMenu] = useState(false)
     const navLinks = {
-      guest: [
-        { name: "Home", link: "/" },
-        { name: "About", link: "/about" },
-        { name: "Join Local 47", link: "/join" },
-        { name: "Code of Conduct", link: "/code-of-conduct" },
-      ],
+  guest: [
+    { name: "Home", link: "/" },
+    { name: "Book a Room", link: "/rooms" },
+    { name: "Join Local 47", link: "/join" },
+    { name: "About", link: "/about" },
+    { name: "Code of Conduct", link: "/code-of-conduct" },
+    { name: "Login", link: "/login" },
+  ],
 
-      nonMember: [
-        { name: "Home", link: "/" },
-        { name: "Join Local 47", link: "/join" },
-        { name: "Book", link: "/book" },
-        { name: "About", link: "/about" },
-        { name: "Code of Conduct", link: "/code-of-conduct" },
-        { name: "Logout", link: "/" },
-      ],
+  nonMember: [
+    { name: "Home", link: "/" },,
+    { name: "Book a Room", link: "/book" },
+    { name: "Join Local 47", link: "/join" },
+    { name: "My Bookings", link: "/bookings" },
+    { name: "Profile", link: "/profile" },
+    { name: "Code of Conduct", link: "/code-of-conduct" },
+    { name: "Logout", link: "/" },
+  ],
 
-      member: [
-        { name: "Home", link: "/" },
-        { name: "Book", link: "/book" },
-        { name: "Profile", link: "/profile" },
-        { name: "About", link: "/about" },
-        { name: "Code of Conduct", link: "/code-of-conduct" },
-        { name: "Logout", link: "/" },
-      ],
-      life: [
-        { name: "Home", link: "/" },
-        { name: "Book", link: "/book" },
-        { name: "Profile", link: "/profile" },
-        { name: "About", link: "/about" },
-        { name: "Code of Conduct", link: "/code-of-conduct" },
-        { name: "Logout", link: "/" },
-      ],
-      crew: [
-        { name: "Home", link: "/" },
-        { name: "Events", link: "/events" },
-        { name: "Shifts", link: "/shifts" },
-        { name: "Logout", link: "/" },
-      ],
+  member: [
+    { name: "Home", link: "/" },
+    { name: "Book a Room", link: "/book" },
+    { name: "My Bookings", link: "/bookings" },,
+    { name: "Profile", link: "/profile" },
+    { name: "Logout", link: "/" },
+  ],
 
-      admin: [
-        { name: "Home", link: "/" },
-        { name: "Admin Panel", link: "/admin" },
-        { name: "Events", link: "/events" },
-        { name: "Shifts", link: "/shifts" },
-        { name: "Logout", link: "/" },
-      ],
-    };
+  life: [
+    { name: "Home", link: "/" },
+    { name: "Book a Room", link: "/book" },
+    { name: "My Bookings", link: "/bookings" },,
+    { name: "Profile", link: "/profile" },
+    { name: "Logout", link: "/" },
+  ],
+
+  crew: [
+    { name: "Home", link: "/" },
+    { name: "Events", link: "/events" },
+    { name: "Shifts", link: "/shifts" },
+    { name: "Profile", link: "/profile" },
+    { name: "Logout", link: "/" },
+  ],
+
+  admin: [
+    { name: "Home", link: "/" },
+    { name: "Admin Panel", link: "/admin" },
+    { name: "Manage Bookings", link: "/admin/bookings" },
+    { name: "Rooms", link: "/admin/rooms" },
+    { name: "Events", link: "/events" },
+    { name: "Shifts", link: "/shifts" },
+    { name: "Logout", link: "/" },
+  ],
+};
 
   const handleLogout = async () => {
     try {

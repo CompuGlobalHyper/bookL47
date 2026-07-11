@@ -185,6 +185,31 @@ textarea {
   color: var(--text-color);
 }
 
+.button {
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: var(--brand-text-color);
+  background-color: var(--brand-color);
+  border-radius: 2px;
+}
+
+.button:active {
+    background-color: var(--brand-color);
+    color: var(--brand-text-color)
+}
+
+.link {
+  cursor: pointer;
+}
+
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px
+}
+
 .secondaryText {
   color: var(--text-secondary-color);
 }

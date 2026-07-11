@@ -16,10 +16,10 @@ export default function generateBookedArray({ start , end }, buffer = 30, interv
 
     let times = []
 
-    for (let i = startMinutes - 30; i <= endMinutes; i += interval) {
+    for (let i = startMinutes - buffer; i <= endMinutes; i += interval) {
         times.push(getString(i))
     }
     
-    
+    console.log(times)
     return times
 }

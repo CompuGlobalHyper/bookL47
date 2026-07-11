@@ -44,16 +44,15 @@ export default function Dropdown({ list, selected, setSelected, id, dropdown, se
             <ul ref={dropdownRef} className={`${styles.dropdown} ${!open ? styles.hidden : ''} text`}>
             { list && list.map((item) => {
                 return (
-                    <li key={item.id} 
-                    className={`${styles.item} ${!item.available ? styles.unavailable : ''}`}
+                    <li key={item?.id} 
+                    className={`${styles.item} button ${!item?.available ? styles.unavailable : ''}`}
                     onClick={() => {
                         if (!item.available) {
                             return
                         }
-                        console.log(item)
                         setSelected(item)
                         handleClick()
-                    }}>{item.name}</li>
+                    }}>{item?.name}</li>
                 )
             })}
             </ul>
