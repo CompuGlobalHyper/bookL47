@@ -27,8 +27,9 @@
   width: 100%;
   font-size: 16px;
   padding: 14px 20px 10px 20px;
-  border-radius: 8px;
+  border-radius: 2px;
   box-sizing: border-box;
+  border: none;
   background-color: var(--surface-elevated-color);
 }
 
@@ -76,25 +77,11 @@
 
 .button {
     width: clamp(25px, 25dvw, 200px);
-    border: 2px solid var(--brand-text-color);
-    border-radius: 8px;
-    background-color: var(--brand-color);
-    box-shadow: 5px 5px 10px var(--shadow-color);
-    color: var(--brand-text-color);
-    cursor: pointer;
+    border: none;
 }
 
 .button:hover {
     background-color: var(--brand-hover-color);
 
-}
-.registerLink, .backLink {
-    color: var(--text-color);
-    cursor: pointer;
-}
-
-.registerLink:hover,
-.backLink:hover {
-    color: var(--brand-color);
 }
 

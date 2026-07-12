@@ -7,7 +7,9 @@ import ErrorPage from './routes/general/ErrorPage.jsx';
 import Home from './routes/homeRoutes/Home.jsx';
 import About from './routes/general/About.jsx';
 import Join from './routes/general/Join.jsx';
+import RoomInfo from './routes/general/RoomInfo.jsx';
 import Conduct from './routes/general/Conduct.jsx';
+import Contact from './routes/general/Contact.jsx'
 import Book from './routes/bookRoutes/Book.jsx';
 import Cart from './routes/bookRoutes/Cart.jsx';
 import Checkout from './routes/bookRoutes/Checkout.jsx';
@@ -25,8 +27,10 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/about", element: <About />},
-      { path: "/join", element: <Join />},
+      { path: "/join-L47", element: <Join />},
       { path: "/code-of-conduct", element: <Conduct />},
+      { path: "/contact-us", element: <Contact />},
+      { path: "/rooms", element: <RoomInfo />},
       { path: "*", element: <NotFound />},
       { loader: requireUser,
         children: [

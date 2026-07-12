@@ -206,8 +206,13 @@ textarea {
 }
 
 .link:hover {
+  color: var(--brand-hover-color);
   text-decoration: underline;
   text-underline-offset: 6px
+}
+
+.blue {
+  color: var(--brand-color);
 }
 
 .secondaryText {

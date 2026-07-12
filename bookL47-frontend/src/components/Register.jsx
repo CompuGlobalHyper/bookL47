@@ -166,7 +166,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
         onCancel={handleCancel}
         autoFocus>
         <div className={styles.registerContainer}>
-            <div className={`${styles.closeButton} bold text`}>
+            <div className={`${styles.closeButton} link text`}>
                 <span onClick={() => {
                 setViewRegister(false)}}>
                     Close
@@ -174,7 +174,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
             </div>
             <div className={styles.header}>
                 <h1 className={`text`}>Create a free account today and start booking!</h1>
-                <p className={`text`}>Already have an account? <span className={`${styles.link} text`} onClick={() => handleClick()}>Sign in!</span></p>
+                <p className={`text`}>Already have an account? <span className={`${styles.link} text link blue`} onClick={() => handleClick()}>Sign in!</span></p>
             </div>
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
                 <div className={`${styles.field} text`}>
@@ -235,6 +235,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     />
                     <label htmlFor="password">Password</label>
                     <div
+                    className={styles.showHide}
                     type="button"
                     onClick={togglePassword}
                     > {passwordType === "password" ? "Show" : "Hide"}
@@ -256,7 +257,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                 </div>
                 {errors.confirm && (<p className={`${styles.error} bold small text`}> {errors.confirm}</p>)}
                 { allowRegister 
-                ? <div className={styles.buttonContainer}><button type="submit" className={`${styles.button} text`}>Register</button></div>
+                ? <div className={styles.buttonContainer}><button type="submit" className={`${styles.button} text button bold`}><span>Register</span></button></div>
                 : <div className={`text`}><span>Registering your account...</span></div>
                 }
             </form>

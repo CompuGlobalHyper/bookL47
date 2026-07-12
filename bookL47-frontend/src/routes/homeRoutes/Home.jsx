@@ -17,6 +17,7 @@ export default function Home() {
   guest: <GuestHome setMessage={setMessage} />,
   nonMember: <NonMemberHome setMessage={setMessage} />,
   member: <MemberHome setMessage={setMessage} />,
+  life: <MemberHome setMessage={setMessage} />,
   crew: <CrewHome setMessage={setMessage} />,
   admin: <AdminHome setMessage={setMessage} />,
   };

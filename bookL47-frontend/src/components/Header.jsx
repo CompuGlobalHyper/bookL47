@@ -16,7 +16,7 @@ export default function Header( { setMessage }) {
   guest: [
     { name: "Home", link: "/" },
     { name: "Book a Room", link: "/rooms" },
-    { name: "Join Local 47", link: "/join" },
+    { name: "Join Local 47", link: "/join-L47" },
     { name: "About", link: "/about" },
     { name: "Code of Conduct", link: "/code-of-conduct" },
     { name: "Login", link: "/login" },
