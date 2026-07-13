@@ -8,12 +8,14 @@ import { formatDate, formatTime } from '../functions/formatter.js'
 
 export default function CartItem({ abridged, item, active, setActive, equipment, setEquipment }) {
 
-  const { deleteCartItem, updateCartItem, applyToAllCartItems } = useContext(CartContext)
+  const { deleteCartItem, updateCartItem, applyToAllCartItems, loading: cartLoading } = useContext(CartContext)
 
   
   return (
     
     <div className={styles.main}>
+      {!cartLoading 
+      &&
       <div className={styles.container}>
         <div className={`${styles.date} text bold regular`}>{formatDate(item.date)}</div>
         <div className={`${styles.time} text bold regular`}>{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
@@ -40,8 +42,7 @@ export default function CartItem({ abridged, item, active, setActive, equipment,
         onClick={() => deleteCartItem(item.id)}
         className={`${styles.delete} text regular bold`}><span>Delete</span></div>
       </div>
-        
-      
+      }
     </div>
   )
 }

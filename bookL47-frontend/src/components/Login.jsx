@@ -90,7 +90,7 @@ export default function Login({ formData, setFormData, setViewRegister, viewRegi
                   <div className={`${styles.buttonContainer}`}><button type="submit" className={`${styles.button} button text medium`}><span>Sign In</span></button></div>
                 </form>
     
-              <div  className={`${styles.registerLink} text`}> Don't have an account? <span onClick={() => {
+              <div  className={`${styles.registerLink} text`}> Don't have an account? <span className={`link blue`}onClick={() => {
                 setViewRegister(true)
               }}>Create one!</span></div>
               </div>

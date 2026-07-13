@@ -1,10 +1,11 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { CartContext } from '../../contexts/CartContext'
 import CartItem from '../../components/CartItem'
 import styles from './styles/Cart.module.css'
 import CartInfo from '../../components/CartInfo'
 import { createTotal } from '../../functions/formatter.js'
+import Loading from '../../components/Loading.jsx'
 
 const example = { 
                     id: crypto.randomUUID(),
@@ -13,7 +14,7 @@ const example = {
                 }
 
 export default function Cart() {
-  const { cart, clearCart } = useContext(CartContext)
+  const { cart, clearCart, loading: cartLoading } = useContext(CartContext)
   const [equipment, setEquipment] = useState([
       {
         name: "PA System and Microphone",
@@ -36,43 +37,34 @@ export default function Cart() {
         selected: false
       },
       {
-        name: "Vibes",
+        name: "Vibraphone",
         id: "vibes",
         selected: false
       },
     ])
   const [ exampleItem, setExampleItem ] = useState(example)
   const [active, setActive] = useState(null)
-  const [viewCart, setViewCart] = useState(true)
   const { deleteCartItem, updateCartItemEquipment, updateCartItemDescription, applyToAllCartItems } = useContext(CartContext)
+
+  useEffect(() => {
+
+  }, [cart])
   
   return (
     <div className={styles.container}>
       <div className={styles.main}>
         <div className={styles.cartHeader}>
           <div 
-          className={`${viewCart && styles.open} ${styles.header} text`}
-          onClick={() => setViewCart(true)}
-          >View Cart</div>
-          {/* <div 
-          className={`${!viewCart && styles.open} ${styles.header} text`}
-          onClick={() => setViewCart(false)}>Add Backline</div> */}
+          className={`${styles.open} ${styles.header} text`}
+          >Your Cart</div>
         </div>
-        {/* {!viewCart 
-        && <div className={`${styles.bookingInfo}`}>
-            <CartInfo item={exampleItem} active={exampleItem.id} setActive={setActive} equipment={equipment} setEquipment={setEquipment}></CartInfo>
-            <div className={`${styles.applyAll} text bold`}
-                    onClick={() => applyToAllCartItems(exampleItem.id)}
-                    ><span>Apply to all bookings</span>
-            </div>
-          </div>
-        } */}
-        { viewCart 
-        && <ul className={styles.list}>
+        {!cartLoading
+        ? <>
+          <ul className={styles.list}>
           { cart.length > 0 ? 
               cart.map((item) => {
                 return (
-                <li key={item.id}>
+                <li key={item?.id}>
                   <CartItem
                     abridged={false}
                     item={item} 
@@ -85,16 +77,17 @@ export default function Cart() {
                 )
               })
           : <div className={`text large`}>It looks like your cart is empty..</div> }
-        </ul>
-        }
+        </ul></>
+        : <Loading></Loading>}
+        
+        
       </div>
-      {cart.length > 0 && <div className={`${styles.priceContainer}`}>
+      {cart.length > 0 && !cartLoading && <div className={`${styles.priceContainer}`}>
         <div className={`${styles.totalText} text medium`}>Est. Total</div>
         <div className={`${styles.priceTotal} text medium bold`}>{`$${(createTotal(cart)).toFixed(2)}`}</div>
       </div>}
       <div className={styles.bottomButtons}>
-        {cart.length > 0 && <Link className={`${styles.brandButton} bold text`} to={'/checkout'}><span>Checkout</span></Link>}
-        <div onClick={() => clearCart()} className={`${styles.button} bold text`}><span>Clear cart</span></div>
+        {cart.length > 0 && <Link className={`${styles.brandButton} button text medium`} to={'/checkout'}><span>Checkout</span></Link>}
       </div>
       
     </div>

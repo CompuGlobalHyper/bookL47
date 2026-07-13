@@ -218,7 +218,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     placeholder=' '
                     required
                     />
-                    <label htmlFor="email">miles@jazz.com</label>
+                    <label htmlFor="email">example@afm47.org</label>
                 </div>
                 {errors.email && (<p className={`${styles.error} bold small`}> {errors.email}</p>)}
 

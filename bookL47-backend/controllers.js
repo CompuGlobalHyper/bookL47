@@ -97,6 +97,39 @@ const controllers = {
         }
         return res.status(200).json({message: 'successful registration'})
     },
+    async bookingsGet(req, res) {
+        if (!req.user) {
+            return res.status(401).json({ message: 'not logged in' })
+        }
+        const now = new Date().toISOString()
+        const page = Number(req.query.page) || 1;
+        const amount = Number(req.query.amount) || 5;
+        const from = (page - 1) * amount;
+        const to = from + amount - 1;
+        const user = req.user[0]
+        const supabase = supabaseClient()
+        const { data: upcomingData, error: upcomingError} = await supabase
+        .from('booking')
+        .select('*')
+        .eq("user_id", user.id)
+        .gte('ends_at', now)
+        .range(from, to)
+        if (upcomingError) {
+            console.log(upcomingError)
+            res.status(500).json({message: "Database error"})
+        }
+        const { data: pastData, error: pastError} = await supabase
+        .from('booking')
+        .select('*')
+        .eq("user_id", user.id)
+        .lt('ends_at', now)
+        .range(from, to)
+        if (pastError) {
+            console.log(pastError)
+            res.status(500).json({message: "Database error"})
+        }
+        res.status(200).json({upcoming: upcomingData, past: pastData})
+    },
     async cartGet(req, res) {
         if (!req.user) {
             return res.status(401).json({ message: 'not logged in' })
@@ -204,9 +237,9 @@ const controllers = {
             .select('*')
         if (updateError) {
             console.log(updateError)
-            res.status(500).json({message: "Database error"})
+            return res.status(500).json({message: "Database error"})
         }
-        res.status(200)
+        res.sendStatus(200)
     },
     async checkoutGet(req, res) {
     },

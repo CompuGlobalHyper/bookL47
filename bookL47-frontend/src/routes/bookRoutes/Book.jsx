@@ -17,6 +17,8 @@ import generateRoomList from '../../functions/generateRoomList'
 import Loading from '../../components/Loading'
 import { Link } from 'react-router'
 
+import { fromZonedTime } from "date-fns-tz"
+
 
 function findDateObject(list, date) {
     return list.find((item) => item.date === date)
@@ -206,6 +208,7 @@ export default function Book() {
       }, [selectedDate]);
     // If booked slots, update available slots.
     useEffect(() => { 
+      if (cartLoading) return
         const bookedSlotSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
         const cartSet = new Set(
             cart
@@ -363,6 +366,16 @@ export default function Book() {
         start = selectedStart.time
         end = selectedEnd.time
       }
+      const timezone = selectedRoom.timezone
+      const starts_at = fromZonedTime(
+        `${selectedDate}T${start}`,
+        timezone
+      ).toISOString();
+
+      const ends_at = fromZonedTime(
+        `${selectedDate}T${end}`,
+        timezone
+      ).toISOString();
       if (selectedRoom.available && selectedSlot.available
           || selectedRoom.available && selectedStart.available && selectedEnd.available
       ) {
@@ -375,6 +388,9 @@ export default function Book() {
               date: selectedDate,
               location: selectedRoom.name,
               location_id: selectedRoom.id,
+              timezone,
+              starts_at,
+              ends_at,
               start,
               end,
               equipment_request: chosenEquipment,
@@ -387,6 +403,7 @@ export default function Book() {
           } else {
             setBannerMessage(setMessage, "Something went wrong, please try again.", true, 5)
           }
+          setShowBackline(false)
           setSelectedSlot({})
           setSelectedStart({})
           setSelectedEnd({})

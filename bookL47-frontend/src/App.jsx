@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { Outlet } from 'react-router'
+import { Outlet, Link } from 'react-router'
 import styles from './App.module.css'
 import Header from './components/Header'
 import Footer from './components/Footer'

@@ -1,4 +1,4 @@
-export function formatDate(dateString) {
+export function formatDate(dateString = '2026-07-13') {
     const date = new Date(`${dateString}T12:00:00Z`)
 
     const formatter = new Intl.DateTimeFormat('en-US', {
@@ -21,9 +21,9 @@ export function formatDate(dateString) {
 
   }
 
-  export function createTotal(cart) {
+  export function createTotal(cart = []) {
     return cart.reduce((acc, item) => {
-        return acc + item.price
+        return acc + item?.price
     }, 0)
   }
 

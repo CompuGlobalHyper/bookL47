@@ -3,10 +3,12 @@
     justify-content: center;
 }
 .container {
+    display: flex;
+    flex-direction: column;
     width: clamp(50dvw, 90dvw, 500px);
     margin: 10px 0;
     padding: 10px 20px;
-    border: 2px solid var(--border-color);
+    border-radius: 2px;
     background-color: var(--surface-color);
 }
 

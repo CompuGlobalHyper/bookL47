@@ -37,28 +37,12 @@
     margin-top: 20px;
 }
 
-.applyAll {
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    padding: 5px 5px;
-    color: var(--brand-text-color);
-    background-color: var(--surface-elevated-color);
-    background-color: var(--brand-color);
-    color: var(--brand-text-color);
-}
 
 .brandButton {
-    display: flex;
-    justify-content: center;
-    width: 150px;
-    cursor: pointer;
+    padding: 13px 20px 13px 14px;
     margin-top: 20px;
-    padding: 5px 5px;
-    border: 2px solid var(--border-color);;
-    color: var(--brand-text-color);
-    background-color: var(--brand-color);
-    border-radius: 8px;
+    width: 100%;
+    justify-content: flex-start;
 
 }
 
@@ -68,21 +52,10 @@
     gap: 20px;
 }
 .button {
-    display: flex;
-    justify-content: center;
-    width: 150px;
-    cursor: pointer;
-    margin-top: 20px;
-    padding: 5px 5px;
-    border: 2px solid var(--border-color);;
-    color: var(--brand-text-color);
-    background-color: var(--surface-color);
-    border-radius: 8px;
 }
 
 .button:active {
-    background-color: var(--brand-color);
-    color: var(--brand-text-color)
+
 }
 
 .priceContainer {

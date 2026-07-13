@@ -26,7 +26,7 @@ export default function CartInfo({equipment, setEquipment, description, setDescr
                 <input 
                 type="checkbox" 
                 name={equipmentOption.name} 
-                id={`${equipmentOption.id}`} 
+                id={`${equipmentOption.id}-${item.id}`} 
                 onChange={(e) => updateCartItem(e.target.checked, item.id, equipmentOption.name)}
                 checked={item?.equipment_request?.includes(equipmentOption.name)}/>
                 <label htmlFor={equipmentOption.id}>{equipmentOption.name}</label>

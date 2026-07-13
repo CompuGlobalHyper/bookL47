@@ -12,6 +12,7 @@
     margin: 20px clamp(20px, 5dvw, 200px);
 }
 
+
 .adminMessage {
     display: flex;
     justify-content: center;

@@ -67,9 +67,10 @@ export function CartProvider({ children }) {
       })
       setCart(prev => sortCart(prev.filter((item) => item.id !== id)))
     }
-    async function  updateCartItem(checked = undefined, id, newItem) {
+    async function updateCartItem(checked = undefined, id, newItem) {
       setCart(prevCart => 
         prevCart.map(item => {
+          if (item.id !== id) return item
           if (item.id === id) {
             if (checked === undefined) {
               return {...item, description: newItem}
@@ -85,33 +86,22 @@ export function CartProvider({ children }) {
           }
         })
       );
-      const res = await fetch(`${API}/cart`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({checked, id, newItem})
-      })
-      if (!res.ok) {
-      console.error("Failed updating cart");
-      return;
-}
-    }
-    // function applyToAllCartItems(sourceID, exampleItem = false) {
-    //   const source = cart.find(item => item.id === sourceID) || exampleItem
-
-    //   setCart((prev) => {
-    //     return prev.map(item => {
-    //       return {
-    //         ...item, 
-    //         equipmentRequest: source.equipmentRequest,
-    //         description: source.description}
-    //     })
-    //   })
-    // }
-    function clearCart() {
-      return
+      try {
+        const res = await fetch(`${API}/cart`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({checked, id, newItem})
+        })
+        console.log('after fetch')
+        if (!res.ok) {
+          throw new Error("Failed updating cart");
+        } 
+      } finally {
+        return
+      }    
     }
 
   return (
@@ -122,7 +112,6 @@ export function CartProvider({ children }) {
     setCart,
     getCart, 
     addToCart, 
-    clearCart, 
     deleteCartItem, 
     updateCartItem
    }}>

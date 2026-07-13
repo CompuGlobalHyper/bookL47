@@ -133,13 +133,18 @@ a {
 
   /* Status */
   --confirm-color: light-dark(
-    rgb(22, 163, 74),
-    rgb(74, 222, 128)
+    rgb(34, 240, 154),
+    rgb(74, 222, 168)
   );
 
   --reject-color: light-dark(
-    rgb(220, 38, 38),
-    rgb(248, 113, 113)
+    rgb(255, 72, 72),
+    rgb(255, 91, 91)
+  );
+
+  --active-reject-color: light-dark(
+    rgb(199, 30, 30),
+    rgb(250, 52, 52)
   );
 
   /* Focus */
@@ -186,6 +191,7 @@ textarea {
 }
 
 .button {
+  padding: 10px 14px 10px 14px;
   user-select: none;
   display: flex;
   justify-content: center;

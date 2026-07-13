@@ -42,6 +42,8 @@ router.post('/login',
 
 router.post('/register', controllers.registerPost)
 
+router.get('/bookings', authUser, controllers.bookingsGet)
+
 router.get('/logout', controllers.logoutGet)
 
 router.get('/cart', authUser, controllers.cartGet)

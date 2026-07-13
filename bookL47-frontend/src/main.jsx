@@ -11,6 +11,7 @@ import RoomInfo from './routes/general/RoomInfo.jsx';
 import Conduct from './routes/general/Conduct.jsx';
 import Contact from './routes/general/Contact.jsx'
 import Book from './routes/bookRoutes/Book.jsx';
+import Bookings from './routes/bookRoutes/Bookings.jsx';
 import Cart from './routes/bookRoutes/Cart.jsx';
 import Checkout from './routes/bookRoutes/Checkout.jsx';
 import NotFound from './routes/general/NotFound.jsx';
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
       { loader: requireUser,
         children: [
           { path: "/book", element: <Book />},
+          { path: "/bookings", element: <Bookings />},
           { path: '/cart', element: <Cart />},
           { path: '/checkout', element: <Checkout/>}
         ]

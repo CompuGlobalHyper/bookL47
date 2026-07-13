@@ -42,15 +42,15 @@
 }
 
 .submitButton {
-    padding: 5px 0 5px 10px;
     display: flex;
     justify-content: flex-start;
     width: 100%;
 }
 
 .checkoutButton {
-    margin: auto;
-    max-width: 300px;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 400px;
 }
 
 
