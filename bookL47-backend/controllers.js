@@ -116,7 +116,7 @@ const controllers = {
         .range(from, to)
         if (upcomingError) {
             console.log(upcomingError)
-            res.status(500).json({message: "Database error"})
+            return res.status(500).json({message: "Database error"})
         }
         const { data: pastData, error: pastError} = await supabase
         .from('booking')
@@ -126,9 +126,9 @@ const controllers = {
         .range(from, to)
         if (pastError) {
             console.log(pastError)
-            res.status(500).json({message: "Database error"})
+            return res.status(500).json({message: "Database error"})
         }
-        res.status(200).json({upcoming: upcomingData, past: pastData})
+        return res.status(200).json({upcoming: upcomingData, past: pastData})
     },
     async cartGet(req, res) {
         if (!req.user) {
@@ -183,7 +183,7 @@ const controllers = {
             console.log(error)
             return res.status(500).json({ message: "There was a database error" })
         }
-        res.status(200).json(data)
+        return res.status(200).json(data)
     },
     async cartDelete(req, res) {
         const id = req.body.id
