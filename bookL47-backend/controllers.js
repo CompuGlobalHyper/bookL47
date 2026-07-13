@@ -290,7 +290,7 @@ const controllers = {
             path: '/',
         });
         console.log('logging you out..')
-        return res.status(200).json({ role: guest })
+        return res.status(200).json({ role: 'guest' })
 
     },
 

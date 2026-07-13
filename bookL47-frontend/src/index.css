@@ -220,22 +220,30 @@ textarea {
 }
 
 .tiny {
-  font-size: 6px;
+  font-size: clamp(6px, 1vw, 8px);
 }
 
 .small {
-  font-size: 12px;
+  font-size: clamp(12px, 1.5vw, 14px);
 }
 
 .regular {
-  font-size: 16px;
-
+  font-size: clamp(16px, 2vw, 18px);
 }
+
 .medium {
-  font-size: 20px;
+  font-size: clamp(20px, 2.5vw, 24px);
 }
 
 .large {
-  font-size: 32px;
+  font-size: clamp(32px, 4vw, 48px);
+}
 
+.hiddenOpacity {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.hiddenDisplay {
+    display: none;
 }

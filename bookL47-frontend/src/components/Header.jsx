@@ -18,14 +18,13 @@ export default function Header( { setMessage }) {
     { name: "Book a Room", link: "/rooms" },
     { name: "Join Local 47", link: "/join-L47" },
     { name: "About", link: "/about" },
-    { name: "Code of Conduct", link: "/code-of-conduct" },
-    { name: "Login", link: "/login" },
+    { name: "Code of Conduct", link: "/code-of-conduct" },,
   ],
 
   nonMember: [
     { name: "Home", link: "/" },,
     { name: "Book a Room", link: "/book" },
-    { name: "Join Local 47", link: "/join" },
+    { name: "Join Local 47", link: "/join-L47" },
     { name: "My Bookings", link: "/bookings" },
     { name: "Profile", link: "/profile" },
     { name: "Code of Conduct", link: "/code-of-conduct" },
@@ -101,7 +100,7 @@ export default function Header( { setMessage }) {
                 { viewMenu ? "Close" : "Menu"}</div>
         </div>
         <div className={`${styles.listContainer}`}>
-            <ul className={`text thin ${styles.list} ${viewMenu ? styles.open : styles.hidden}`}>
+            <ul className={`text regular ${styles.list} ${viewMenu ? styles.open : styles.hidden}`}>
                 {navLinks[user.role].map((link) => {
                     return (
                         <li key={link.name} className={styles.item}>

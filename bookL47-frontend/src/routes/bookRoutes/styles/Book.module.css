@@ -7,7 +7,9 @@
     .side {
         display: flex;
         flex-direction: column;
-        justify-content: space-evenly;
+        justify-content: flex-start;
+        margin-top: 23px;
+        width: clamp(200px, 100%, 500px);
     }
     .calendar {
         max-width: 500px;
@@ -31,14 +33,24 @@
     gap: 10px;
 }
 
+.backlineText {
+    margin: 20px 0;
+}
 
-.submitButton{
-    margin: auto;
-    max-width: 200px;
+.backlineContainer {
+
+}
+
+.submitButton {
+    padding: 5px 0 5px 10px;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
 }
 
 .checkoutButton {
     margin: auto;
     max-width: 300px;
 }
+
 

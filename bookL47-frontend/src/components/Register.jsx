@@ -173,11 +173,11 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                 </span>
             </div>
             <div className={styles.header}>
-                <h1 className={`text`}>Create a free account today and start booking!</h1>
-                <p className={`text`}>Already have an account? <span className={`${styles.link} text link blue`} onClick={() => handleClick()}>Sign in!</span></p>
+                <h1 className={`text medium`}>Create a free account!</h1>
+                <p className={`text small`}>Already have an account? <span className={`${styles.link} text link blue`} onClick={() => handleClick()}>Sign in!</span></p>
             </div>
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
-                <div className={`${styles.field} text`}>
+                <div className={`${styles.field} text medium`}>
                     <input
                     id="firstName"
                     name="firstName"
@@ -192,7 +192,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                 </div>
                 {errors.firstName && (<p className={`${styles.error} bold small text`}> {errors.firstName}</p>)}
 
-                <div className={`${styles.field} text`}>
+                <div className={`${styles.field} text medium`}>
                     <input
                     id="lastName"
                     name="lastName"
@@ -207,7 +207,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                 </div>
                 {errors.lastName && (<p className={`${styles.error} bold small`}> {errors.lastName}</p>)}
 
-                <div className={`${styles.field} text`}>
+                <div className={`${styles.field} text medium`}>
                     <input
                     id="email"
                     name="email"
@@ -222,7 +222,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                 </div>
                 {errors.email && (<p className={`${styles.error} bold small`}> {errors.email}</p>)}
 
-                <div className={`${styles.field} text`}>
+                <div className={`${styles.field} text medium`}>
                     <input
                     id="password"
                     name="password"
@@ -242,7 +242,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     </div>
                 </div>
                 {errors.password && (<p className={`${styles.error} bold small`}> {errors.password}</p>)}
-                <div className={`${styles.field} text`}>
+                <div className={`${styles.field} text medium`}>
                     <input
                     id="confirm"
                     name="confirm"
@@ -257,7 +257,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                 </div>
                 {errors.confirm && (<p className={`${styles.error} bold small text`}> {errors.confirm}</p>)}
                 { allowRegister 
-                ? <div className={styles.buttonContainer}><button type="submit" className={`${styles.button} text button bold`}><span>Register</span></button></div>
+                ? <div className={styles.buttonContainer}><button type="submit" className={`${styles.button} text button medium`}><span>Register</span></button></div>
                 : <div className={`text`}><span>Registering your account...</span></div>
                 }
             </form>

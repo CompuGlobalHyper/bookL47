@@ -31,6 +31,8 @@ function findSlotObject(list, room) {
     }
 }
 
+
+
 export default function Book() {
   const { setMessage} = useOutletContext()
   const { user, loading: userLoading } = useContext(UserContext)
@@ -116,7 +118,7 @@ export default function Book() {
       selected: false
     },
     {
-      name: "Vibes",
+      name: "Vibraphone",
       id: "vibes",
       selected: false
     },
@@ -141,7 +143,22 @@ export default function Book() {
     }
   ])
 
+  const [showBackline, setShowBackline] = useState(false)
+
   const [viewCart, setViewCart] = useState(false)
+
+  function checkAllSelected() {
+    if (Object.keys(selectedRoom).length > 0
+    && Object.keys(selectedSlot).length > 0) {
+      return true
+    }
+    if (Object.keys(selectedRoom).length > 0
+    && Object.keys(selectedStart).length > 0
+    && Object.keys(selectedEnd).length > 0) {
+      return true
+    }
+    return false
+  }
   useEffect(() => {
       async function setInitial() {
         const calendarRes = await fetch(`${API}/calendar`, {
@@ -441,14 +458,18 @@ export default function Book() {
                     ></Timeslots>}
                     
               </div>
-              <CartInfo 
-              equipment={equipment}
-              setEquipment={setEquipment}
-              description={description}
-              setDescription={setDescription}
-              ></CartInfo>
+              <div className={`${styles.backlineText} ${checkAllSelected() && !showBackline ? '' : 'hiddenDisplay'} text regular link bold`}
+              onClick={() => {setShowBackline(true)}}>Add backline?</div>
+              <div className={`${styles.backlineContainer} ${showBackline ? '' : 'hiddenDisplay'}`}>
+                <CartInfo 
+                  equipment={equipment}
+                  setEquipment={setEquipment}
+                  description={description}
+                  setDescription={setDescription}
+                ></CartInfo>
+              </div>
               <div className={`${styles.submitButtonContainer}`}>
-                <div className={`${styles.submitButton} button text medium`} onClick={handleClick}><span>Add booking</span></div>
+                <div className={`${styles.submitButton} button text medium ${checkAllSelected() ? '' : 'hiddenOpacity'}`} onClick={handleClick}><span>Add booking</span></div>
               </div>
             </div>
         </div>

@@ -11,7 +11,8 @@
 
 }
 .form {
-    width: clamp(150px, 80dvw, 400px);
+    margin-top: 20px;
+    width: clamp(150px, 80dvw, 500px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -25,12 +26,12 @@
 
 .field input {
   width: 100%;
-  font-size: 16px;
-  padding: 14px 20px 10px 20px;
+  padding: 16px 20px 10px 20px;
   border-radius: 2px;
   box-sizing: border-box;
   border: none;
   background-color: var(--surface-elevated-color);
+  height: 60px;
 }
 
 .field input:focus {
@@ -80,11 +81,12 @@
 }
 
 .button {
-    padding: 14px 20px 10px 14px;
+    padding: 16px 20px 10px 14px;
     display: flex;
     justify-content: flex-start;
-    width: clamp(25px, 100%, 400px);
+    width: clamp(25px, 100%, 500px);
     border: none;
+    margin-bottom: 20px;
 }
 
 .button:hover {

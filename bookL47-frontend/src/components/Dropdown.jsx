@@ -34,7 +34,7 @@ export default function Dropdown({ list, selected, setSelected, id, dropdown, se
     <div className={styles.container}>
         <div className={`${styles.display} text bold`} onClick={() => handleClick()}>
             <span className={`${styles.invisibleText}`}>This is placeholder text</span>
-            <span className={`${styles.selected}`}>{selected.name}</span>
+            <span className={`${styles.selected} regular`}>{selected.name}</span>
             <div
             className={`${styles.button} bold`}>
                 {open ? "-" : "+"}
@@ -45,7 +45,7 @@ export default function Dropdown({ list, selected, setSelected, id, dropdown, se
             { list && list.map((item) => {
                 return (
                     <li key={item?.id} 
-                    className={`${styles.item} button ${!item?.available ? styles.unavailable : ''}`}
+                    className={`${styles.item} ${!item?.available ? styles.unavailable : ''}`}
                     onClick={() => {
                         if (!item.available) {
                             return

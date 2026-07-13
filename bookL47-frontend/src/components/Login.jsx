@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styles from './styles/Login.module.css'
+import setBannerMessage from '../functions/bannerMessage';
+import { UserContext } from '../contexts/UserContext';
 
 export default function Login({ formData, setFormData, setViewRegister, viewRegister, setViewLogin, viewLogin, passwordType, setPasswordType, setMessage }) {
+    const { setUser } = useContext(UserContext)
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -51,10 +54,10 @@ export default function Login({ formData, setFormData, setViewRegister, viewRegi
             <p onClick={() => {
               setViewLogin(false)
             }
-            } className={`${styles.backLink} medium text link blue`}>Back</p>
+            } className={`${styles.backLink} medium text link`}>Back</p>
               <div className={styles.loginContainer}>
                 <form className={styles.form} onSubmit={handleSubmit} noValidate>
-                  <div className={`${styles.field} text`}>
+                  <div className={`${styles.field} text medium`}>
                     <input
                     id="email"
                     name="email"
@@ -66,7 +69,7 @@ export default function Login({ formData, setFormData, setViewRegister, viewRegi
                     />
                     <label htmlFor="email">example@afm47.org</label>
                   </div>
-                  <div className={`${styles.field} text`}>
+                  <div className={`${styles.field} text medium`}>
                     <input
                     id="password"
                     name="password"
@@ -84,7 +87,7 @@ export default function Login({ formData, setFormData, setViewRegister, viewRegi
                     > {passwordType === "password" ? "Show" : "Hide"}
                     </div>
                   </div>
-                  <div className={`${styles.buttonContainer}`}><button type="submit" className={`${styles.button} button text bold`}><span>Sign In</span></button></div>
+                  <div className={`${styles.buttonContainer}`}><button type="submit" className={`${styles.button} button text medium`}><span>Sign In</span></button></div>
                 </form>
     
               <div  className={`${styles.registerLink} text`}> Don't have an account? <span onClick={() => {

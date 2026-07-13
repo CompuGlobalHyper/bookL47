@@ -35,7 +35,7 @@ export default function Timeslots({
 
   return (
     <div className={styles.main}>
-        <div className={`${Object.keys(selectedRoom).length === 0 && styles.hidden}`}>
+        <div className={`${Object.keys(selectedRoom).length === 0 ? styles.hidden : ''}`}>
             {user.role === "nonMember" 
             ? <div className={`${styles.startEnd}`}>
                 <div className={`${styles.timeContainer}`}>
