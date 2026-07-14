@@ -5,6 +5,7 @@ import './index.css'
 import App from './App.jsx'
 import ErrorPage from './routes/general/ErrorPage.jsx';
 import Home from './routes/homeRoutes/Home.jsx';
+import Login from './routes/general/Login.jsx';
 import About from './routes/general/About.jsx';
 import Join from './routes/general/Join.jsx';
 import RoomInfo from './routes/general/RoomInfo.jsx';
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "/", element: <Home /> },
+      { path: "/login", element: <Login/> },
       { path: "/about", element: <About />},
       { path: "/join-L47", element: <Join />},
       { path: "/code-of-conduct", element: <Conduct />},

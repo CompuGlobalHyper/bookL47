@@ -1,9 +1,11 @@
 import React from 'react'
+import styles from './styles/Loading.module.css'
 
 export default function Loading() {
   return (
     <div>
-      <span className='text medium'>Loading...</span>
+      <div className={`text medium bold ${styles.text}`}>Loading...</div>
+      <div className={`${styles.loading}`}></div>
       
     </div>
   )

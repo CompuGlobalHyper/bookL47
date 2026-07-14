@@ -4,25 +4,29 @@ import styles from './styles/Bookings.module.css'
 import Loading from '../../components/Loading'
 import { formatDate, formatTime } from '../../functions/formatter'
 import Modal from '../../components/Modal'
+import setBannerMessage from '../../functions/bannerMessage'
+import { useOutlet, useOutletContext } from 'react-router'
 
-function getTotalPages(array, perPage = 5) {
-  return Math.ceiling(array / perPage)
+function getTotalPages(count, perPage = 5) {
+  return Math.ceil(count / perPage)
 
 }
 export default function Bookings() {
   const API = import.meta.env.VITE_API_URL
   const { user } = useContext(UserContext)
+  const { setMessage } = useOutletContext()
   const currentDate = new Date()
   const [viewPast, setViewPast] = useState(false)
-  const [page, setPage] = useState(1)
+  const [upcomingPage, setUpcomingPage] = useState(1)
+  const [pastPage, setPastPage] = useState(1)
   const [loading, setLoading] = useState(true)
   const [loadingNewData, setLoadingNewData] = useState(false)
   const [active, setActive] = useState({})
   const [showCancel, setShowCancel] = useState(false)
   
   
-  async function fetchBookings(page) {
-    const res = await fetch(`${API}/bookings?page=${page}&amount=5`, {
+  async function fetchBookings() {
+    const res = await fetch(`${API}/bookings?upcomingPage=${upcomingPage}&pastPage=${pastPage}&amount=5`, {
       method: "GET",
       credentials: "include"   
     })
@@ -36,33 +40,38 @@ export default function Bookings() {
     past: []
   })
 
-  async function handleCancel() {
+  async function load() {
+      if (loading) {
+        setLoading(true);
+      } else {
+        setLoadingNewData(true);
+      }
 
+    const bookings = await fetchBookings();
+    setBookings(bookings);
+    setLoading(false);
+    setLoadingNewData(false);
+  }
+
+  async function handleCancel(id) {
+    const res = await fetch(`${API}/cancel`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({id})
+      })
+    const { message } = await res.json()
+    load()
+    setBannerMessage(setMessage, message, false, 5)
+    setShowCancel(false)
   }
   
   useEffect(() => {
-    async function init() {
-      const bookings = await fetchBookings(1)
-      setBookings({upcoming: bookings.upcoming, past: bookings.past})
-      setLoading(false)
-    }
-    init()
-    
-  }, [])
+    load()
+  }, [upcomingPage, pastPage])
 
-  useEffect(() => {
-    async function getNewData() {
-      const bookings = await fetchBookings(page)
-      setBookings({upcoming: bookings.upcoming, past: bookings.past})
-    }
-    setLoadingNewData(true)
-    getNewData()
-    setLoadingNewData(false)
-
-  }, [page])
-  useEffect(() => {
-    setPage(1)
-  }, [viewPast])
 
   if (loading) {
     return <Loading></Loading>
@@ -71,37 +80,40 @@ export default function Bookings() {
   return (
     <div>
       <div className={`${styles.bookingsContainer}`}>
-        <div className={`${styles.title} text large`} onClick={() => setViewPast(false)}><span>Upcoming Bookings</span></div>
+        <div className={`${styles.title} text large link`} onClick={() => setViewPast(false)}><span>Upcoming Bookings</span></div>
         { !viewPast 
         ? <>
         { loadingNewData
         ? <Loading></Loading>
         : <>
-          { bookings.upcoming.length > 0 
+          { bookings.upcoming.length > 0
           ? <ul>
             {bookings.upcoming.map((item) => {
               return (
-                <li key={item.id} className={`${styles.container}`}>
-                  <div className={`${styles.date} text medium`}>{formatDate(item.date)}</div>
+                <li key={item.id} className={`${styles.container} ${item.status === 'cancelled' ? styles.disabled : ''}`}>
+                  <div className={`${styles.date} text medium`}>{formatDate(item.date)} {item.status === 'cancelled' ? <em className='text medium'>(Cancelled)</em> : ''}</div>
                   <div className={`${styles.time} text regular`}>{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
                   <div className={`${styles.room} text small`}>{item.location}</div>
-                  <span className={`text regular `} onClick={() => setActive(item)}> {active.id !== item.id ? 'Details' : ''}</span>
-                  { active.id === item.id && 
+                  <span className={`text regular ${styles.details}`} onClick={() => setActive(item)}> {active.id !== item.id ? 'Details' : ''}</span>
+                  { active.id === item.id 
+                  && <>
                     <div className={`${styles.options} text regular`}>
-                      <div className={`${styles.edit} text regular button`}>Edit</div>
-                      <div className={`${styles.cancel} text regular button`} onClick={() => setShowCancel(true)}>Cancel</div>
-                    </div>
+                        <div className={styles.equipment}><div className='text small'>{item.equipment_request.join(', ')}</div></div>
+                        <div className={`${styles.cancel} text regular button`} onClick={() => setShowCancel(true)}>Cancel</div>
+                      </div>
+                  </>
+                    
                   }
                 </li>
               )
             })}
           </ul>
-          : <div>You have no upcoming bookings</div> }
-          { bookings.upcoming.length > 5 
-            && <div className={`${styles.pageContainer}`}>
-                <div className={`${page === 1 ? 'hiddenOpacity': ''}`} onClick={() => setPage(prev => prev - 1)}>Previous</div>
-                <div>Page {page} of {getTotalPages(bookings.upcoming)}</div>
-                <div className={`${page === getTotalPages(bookings.upcoming) ? 'hiddenOpacity': ''}`} onClick={() => setPage(prev => prev + 1)}>Next</div>
+          : <div className='text'>You have no upcoming bookings</div> }
+          { bookings.upcomingCount > 5 
+            && <div className={`${styles.pageContainer} text`}>
+                <div className={`link ${upcomingPage === 1 ? styles.disabled : ''}`} onClick={() => setUpcomingPage(prev => prev - 1)}>Previous</div>
+                <div>Page {upcomingPage} of {getTotalPages(bookings.upcomingCount)}</div>
+                <div className={`link ${upcomingPage === getTotalPages(bookings.upcomingCount) ? styles.disabled : ''}`} onClick={() => setUpcomingPage(prev => prev + 1)}>Next</div>
               </div> }
         </>
         } </>
@@ -114,7 +126,7 @@ export default function Bookings() {
         { loadingNewData
         ? <Loading></Loading>
         : <>
-          { bookings.past.length > 0 
+          { bookings.past.length > 0
           ? <ul>
             {bookings.past.map((item) => {
               return (
@@ -123,11 +135,11 @@ export default function Bookings() {
             })}
           </ul>
           : <div className='text '>You have no past bookings</div> }
-          { bookings.past.length > 5 
-          && <div className={`${styles.pageContainer}`}>
-              <div className={`${page === 1 ? 'hiddenOpacity': ''}`} onClick={() => setPage(prev => prev - 1)}>Previous</div>
-              <div>Page {page} of {getTotalPages(bookings.past)}</div>
-              <div className={`${page === getTotalPages(bookings.past) ? 'hiddenOpacity': ''}`} onClick={() => setPage(prev => prev + 1)}>Next</div>
+          { bookings.pastCount > 5 
+          && <div className={`${styles.pageContainer} text`}>
+              <div className={` link ${pastPage === 1 ? styles.disabled : ''}`} onClick={() => setPastPage(prev => prev - 1)}>Previous</div>
+              <div>Page {pastpage} of {getTotalPages(bookings.pastCount)}</div>
+              <div className={` link ${pastpage === getTotalPages(bookings.pastCount) ? styles.disabled : ''}`} onClick={() => setPastPage(prev => prev + 1)}>Next</div>
             </div> }
         </>
         }
@@ -142,8 +154,8 @@ export default function Bookings() {
           <div className={`${styles.time} text regular`}>{`${formatTime(active?.start)} - ${formatTime(active?.end)}`}</div>
           <div className={`${styles.room} text small`}>{active?.location}</div>
           <div className={`${styles.modalOptions}`}>
+            <div className={`${styles.confirmCancel} button text bold`} onClick={() => handleCancel(active.id)}>Cancel</div>
             <div className={`${styles.nevermind} button text`} onClick={() => setShowCancel(false)}>Nevermind</div>
-            <div className={`${styles.cancel} button text bold`}>Cancel</div>
           </div>
           <div className={`${styles.note} text small`}><em>Note: Bookings cancelled with less than 48 hours notice will <span className='bold'>not</span> be refunded.</em></div>
           </div>

@@ -133,13 +133,13 @@ a {
 
   /* Status */
   --confirm-color: light-dark(
-    rgb(34, 240, 154),
-    rgb(74, 222, 168)
+    rgb(32, 202, 111),
+    rgb(30, 149, 106)
   );
 
   --reject-color: light-dark(
-    rgb(255, 72, 72),
-    rgb(255, 91, 91)
+    rgb(230, 72, 72),
+    rgb(182, 66, 66)
   );
 
   --active-reject-color: light-dark(

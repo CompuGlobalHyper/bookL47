@@ -33,14 +33,27 @@
 }
 
 /* Arrow and today buttons*/
+
+.fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+  margin-left: 0 !important;
+}
+
+div.fc-button-group {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 5px;
+
+}
 .fc-button {
   background-color: var(--surface-elevated-color);
 }
 .fc-prev-button, .fc-next-button {
+    border-radius: 2px !important;
     background-color: var(--brand-color) !important;
     border: 1px solid var(--bg-color) !important;
 }
 .fc-icon-chevron-left, .fc-icon-chevron-right {
+  font-weight: bold;
 
 }
 /* Today button */

@@ -162,17 +162,17 @@ export default function Checkout() {
             </ul>
             <div className={`${styles.subTotal}`}>
                 <span className='text regular bold'>Subtotal:</span>
-                <div className={`${styles.priceTotal} text regular bold`}>{subtotal}
+                <div className={`${styles.priceTotal} text regular bold`}>{`$${subtotal}`}
                 </div>
             </div>
             <div className={`${styles.processingFee}`}>
                 <span className='text regular'>Processing Fee <em>(2.9% + $0.30)</em>:</span>
-                <div className={`${styles.feeTotal} text regular`}>{fee}
+                <div className={`${styles.feeTotal} text regular`}>{`$${fee}`}
                 </div>
             </div>
             <div className={`${styles.totalDue}`}>
                 <span className='text medium bold'>Total due:</span>
-                <div className={`${styles.total} text medium bold`}>{amount}
+                <div className={`${styles.total} text medium bold`}>{`$${amount}`}
                 </div>
             </div>
 
@@ -183,7 +183,7 @@ export default function Checkout() {
             <div className='text large'>Enter payment details:</div>
             <div className={styles.checkoutContainer}>
                 <div id='card' className={`${styles.card} text`}></div>
-                <div className={`${styles.payButton} text bold ${!activePayButton ? styles.disabled : ''}`} onClick={() => handleClick()}>Secure checkout</div>
+                <div className={`${styles.payButton} text button medium ${!activePayButton ? styles.disabled : ''}`} onClick={() => handleClick()}>Secure checkout</div>
             </div>  
         </div>
         

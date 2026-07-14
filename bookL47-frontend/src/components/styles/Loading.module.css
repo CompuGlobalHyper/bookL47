@@ -1,0 +1,22 @@
+.loading {
+    width: 200px;
+    height: 8px;
+
+    background: linear-gradient(
+    90deg,
+    var(--brand-text-color) 0%,
+    var(--brand-color) 85%,
+    var(--brand-color) 100%
+  );
+  background-size: 200% 100%;
+  animation: loading 3s linear infinite;
+}
+
+@keyframes loading {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}

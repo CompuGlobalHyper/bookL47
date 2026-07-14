@@ -1,9 +1,13 @@
 .container {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
 }
         
+
+.title {
+    margin-right: auto;
+}
 
 .description {
     margin: 5px 0 0 0;

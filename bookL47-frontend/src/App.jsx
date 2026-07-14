@@ -1,13 +1,15 @@
 import { useState, useEffect, useContext } from 'react'
-import { Outlet, Link } from 'react-router'
+import { Outlet, Link, useLocation } from 'react-router'
 import styles from './App.module.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import getUser from './functions/getUser'
 import { UserContext } from './contexts/UserContext'
 import Loading from './components/Loading'
+import ScrollToTop from './components/ScrollToTop'
 
 function App() {
+  const location = useLocation();
   const {user, setUser, loading: userLoading} = useContext(UserContext)
   const [message, setMessage] = useState({
     text: '',
@@ -28,10 +30,15 @@ function App() {
       <Header 
         setMessage={setMessage}>
       </Header>
-      <div className={!message.error ? styles.message : styles.error}>
-        <p>{message.text}</p>
+      <div className={`${styles.messageContainer} text regular`}>
+        <p className={`
+          ${styles.message} 
+          ${message.text.length > 0 ? styles.visible : ''}
+          ${!message.error ? styles.notif : styles.error}
+          `}><span>{message.text}</span></p>
       </div>
-       <div className={styles.main}>
+      <ScrollToTop></ScrollToTop>
+       <div className={styles.main} key={location.pathname}>
           <Outlet context={{ setMessage }}/>
       </div>
       <div className={styles.footer}><Footer/></div> 
