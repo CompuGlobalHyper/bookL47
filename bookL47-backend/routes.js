@@ -43,6 +43,7 @@ router.post('/login',
 router.post('/register', controllers.registerPost)
 
 router.get('/bookings', authUser, controllers.bookingsGet)
+router.put('/cancel', authUser, controllers.bookingsCancel)
 
 router.get('/logout', controllers.logoutGet)
 

@@ -102,33 +102,87 @@ const controllers = {
             return res.status(401).json({ message: 'not logged in' })
         }
         const now = new Date().toISOString()
-        const page = Number(req.query.page) || 1;
+        const upcomingPage = Number(req.query.upcomingPage) || 1;
+        const pastPage = Number(req.query.pastPage) || 1;
         const amount = Number(req.query.amount) || 5;
-        const from = (page - 1) * amount;
-        const to = from + amount - 1;
+
+        const upcomingFrom = (upcomingPage - 1) * amount;
+        const upcomingTo = upcomingFrom + amount - 1;
+        const pastFrom = (pastPage - 1) * amount;
+        const pastTo = pastFrom + amount - 1;
+
         const user = req.user[0]
         const supabase = supabaseClient()
-        const { data: upcomingData, error: upcomingError} = await supabase
+        const { data: upcomingData, count: upcomingCount, error: upcomingError} = await supabase
         .from('booking')
-        .select('*')
+        .select('*', {count: 'exact'})
         .eq("user_id", user.id)
         .gte('ends_at', now)
-        .range(from, to)
+        .range(upcomingFrom, upcomingTo)
+        .order('starts_at', { ascending: true })
         if (upcomingError) {
             console.log(upcomingError)
             return res.status(500).json({message: "Database error"})
         }
-        const { data: pastData, error: pastError} = await supabase
+        const { data: pastData, count: pastCount, error: pastError} = await supabase
         .from('booking')
-        .select('*')
+        .select('*', {count: 'exact'})
         .eq("user_id", user.id)
         .lt('ends_at', now)
-        .range(from, to)
+        .range(pastFrom, pastTo )
         if (pastError) {
             console.log(pastError)
             return res.status(500).json({message: "Database error"})
         }
-        return res.status(200).json({upcoming: upcomingData, past: pastData})
+        return res.status(200).json({upcoming: upcomingData, upcomingCount, past: pastData, pastCount})
+    },
+    async bookingsCancel(req, res) {
+        const id = req.body.id
+        try {
+            const supabase = supabaseClient()
+            const { data: bookingData, error: bookingError } = await supabase
+            .from('booking')
+            .select('*')
+            .eq("id", id)
+            if (bookingError) {
+                throw(bookingError)
+            }
+            const booking = bookingData[0]
+            const now = new Date()
+            const hoursUntilBooking = ((new Date(booking.start_date) - now) / (1000 * 60 * 60))
+            if (hoursUntilBooking < 48) {
+                const { data: cancelData, error: cancelError } = await supabase
+                .from('booking')
+                .update({ status: 'cancelled' })
+                .eq("id", booking.id)
+                if (cancelError) {
+                    throw(cancelError)
+                }
+                return res.status(200).json({message: "Cancelled booking, non-refundable"})
+            }
+            const price = booking.price
+            const paymentId = booking.payment_id
+            const { refund } = await squareClient.refunds.refundPayment({
+                idempotencyKey: crypto.randomUUID(),
+                paymentId,
+                amountMoney: {
+                    amount: BigInt(price * 100),
+                    currency: "USD",
+                },
+            });
+            console.log(refund)
+            const { data: refundData, error: refundError } = await supabase
+            .from('booking')
+            .update({ status: 'cancelled', refund_id: refund.id })
+            .eq("id", booking.id)
+            if (refundError) {
+                throw(refundError)   
+            }
+            return res.status(200).json({message: "Cancelled booking, refund pending"})
+        } catch(error) {
+            console.log(error)
+            return res.status(500).json({error: error.message})
+        }
     },
     async cartGet(req, res) {
         if (!req.user) {
