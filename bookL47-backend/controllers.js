@@ -114,8 +114,7 @@ const controllers = {
     },
     async passwordForgot(req, res) {
         try {
-            const email = 'phineas.crisp@afm47.org'
-            // const email = req.body.email
+            const email = req.body.email
             const supabase = supabaseClient()
             const { data: userData, error: userError } = await supabase
             .from('user')
@@ -317,7 +316,7 @@ const controllers = {
         const pastFrom = (pastPage - 1) * amount;
         const pastTo = pastFrom + amount - 1;
 
-        const user = req.user[0]
+        const user = req.user
         const supabase = supabaseClient()
         const { data: upcomingData, count: upcomingCount, error: upcomingError} = await supabase
         .from('booking')
@@ -395,7 +394,8 @@ const controllers = {
         if (!req.user) {
             return res.status(401).json({ message: 'not logged in' })
         }
-        const user = req.user[0]
+        const user = req.user
+        console.log(user)
         const supabase = supabaseClient()
         const { data, error } = await supabase
         .from('cart')
@@ -417,7 +417,7 @@ const controllers = {
         const hours = generateHours(booking.start, booking.end)
         let hourly_rate = null
         let price
-        const user = req.user[0]
+        const user = req.user
         if (user.role === 'member' || user.role === 'life') {
             const { data: priceData, error: priceError } = await supabase
             .from('location')
@@ -512,7 +512,7 @@ const controllers = {
         if (!req.user) {
             return res.status(401).json({ message: 'not logged in' })
         }
-        const user = req.user[0]
+        const user = req.user
         
 
         try {
