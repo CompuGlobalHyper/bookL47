@@ -62,7 +62,13 @@ passport.use(new JwtStrategy(
     .from('user')
     .select('*')
     .eq("id", `${payload.id}`)
-    const user = data
+    const user = data[0]
+    if (!user) {
+      return done(null, false)
+    }
+    if (user.session_version !== payload.sessionVersion) {
+      return done(null, false)
+    }
     return user ? done(null, user) : done(null, false)
   }
 ))
@@ -80,7 +86,7 @@ passport.use(
       if (error) return console.log(error)
       const user = data[0]
        if (!user) {
-         return done(null, false, { message: "Invalid email address/password" });
+         return done(null, false, { message: "Incorrect email address/password" });
       }
       const match = await bcrypt.compare(password, user.password);
       if (!match) {

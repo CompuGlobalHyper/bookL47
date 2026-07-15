@@ -108,7 +108,7 @@ export default function Bookings() {
               )
             })}
           </ul>
-          : <div className='text'>You have no upcoming bookings</div> }
+          : <div className='text'>You have no upcoming bookings.</div> }
           { bookings.upcomingCount > 5 
             && <div className={`${styles.pageContainer} text`}>
                 <div className={`link ${upcomingPage === 1 ? styles.disabled : ''}`} onClick={() => setUpcomingPage(prev => prev - 1)}>Previous</div>
@@ -134,7 +134,7 @@ export default function Bookings() {
               )
             })}
           </ul>
-          : <div className='text '>You have no past bookings</div> }
+          : <div className='text '>You have no past bookings.</div> }
           { bookings.pastCount > 5 
           && <div className={`${styles.pageContainer} text`}>
               <div className={` link ${pastPage === 1 ? styles.disabled : ''}`} onClick={() => setPastPage(prev => prev - 1)}>Previous</div>
@@ -155,7 +155,7 @@ export default function Bookings() {
           <div className={`${styles.room} text small`}>{active?.location}</div>
           <div className={`${styles.modalOptions}`}>
             <div className={`${styles.confirmCancel} button text bold`} onClick={() => handleCancel(active.id)}>Cancel</div>
-            <div className={`${styles.nevermind} button text`} onClick={() => setShowCancel(false)}>Nevermind</div>
+            <div className={`${styles.nevermind} button text`} onClick={() => setShowCancel(false)}>Back</div>
           </div>
           <div className={`${styles.note} text small`}><em>Note: Bookings cancelled with less than 48 hours notice will <span className='bold'>not</span> be refunded.</em></div>
           </div>

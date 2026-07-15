@@ -15,7 +15,7 @@
 }
 
 .container {
-    width: clamp(50dvw, 90dvw, 500px);
+    width: clamp(300px, 90dvw, 500px);
     margin: 10px 0;
     padding: 10px 20px;
     background-color: var(--surface-color);

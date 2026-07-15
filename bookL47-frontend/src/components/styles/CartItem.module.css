@@ -1,11 +1,9 @@
 .main {
-    display: flex;
-    justify-content: center;
 }
 .container {
     display: flex;
     flex-direction: column;
-    width: clamp(50dvw, 90dvw, 500px);
+    width: clamp(30dvw, 50%, 600px);
     margin: 10px 0;
     padding: 10px 20px;
     border-radius: 2px;

@@ -7,6 +7,7 @@ import Register from '../../components/Register';
 import { UserContext } from '../../contexts/UserContext';
 
 export default function Login() {
+      const API = import.meta.env.VITE_API_URL
       const navigate = useNavigate()
       const { setMessage } = useOutletContext()
       const { setUser } = useContext(UserContext)
@@ -32,10 +33,10 @@ export default function Login() {
       };
     
       const handleSubmit = async (e) => {
-        const API = import.meta.env.VITE_API_URL
         e.preventDefault()
         const currentFields = Object.values(formData)
         if (currentFields.every((val) => val === '')) return
+
         try {
           const res = await fetch(`${API}/login`, {
             method:"POST",
@@ -58,6 +59,33 @@ export default function Login() {
           })
           setBannerMessage(setMessage, "Invalid email or password!", true, 3)
           console.log(error)
+        }
+      }
+
+      async function handleReset() {
+        console.log(formData.email)
+        if (formData.email === '') {
+          return setBannerMessage(setMessage, "Please enter a valid email", true, 3)
+        }
+        try {
+          const res = await fetch(`${API}/password-forgot`, {
+            method:"POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: formData.email.toLowerCase()
+            })
+          })
+          setBannerMessage(setMessage, "If the account exists, you will receive a password reset link shortly.", false, 5)
+          setFormData((prev) => {
+            return Object.keys(prev).reduce((acc, key) => {
+                acc[key] = ''
+                return acc
+            }, {})
+          });
+        } catch(error) {
+            console.log(error)
         }
       }
     
@@ -103,6 +131,7 @@ export default function Login() {
                     > {passwordType === "password" ? "Show" : "Hide"}
                     </div>
                   </div>
+                  <div className={`${styles.forgotContainer} text small link`}><p onClick={() => handleReset()}>Forgot password?</p></div>
                   <div className={`${styles.buttonContainer}`}><button type="submit" className={`${styles.button} button text medium`}><span>Sign In</span></button></div>
                 </form>
     

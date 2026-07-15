@@ -475,7 +475,7 @@ export default function Book() {
                     ></Timeslots>}
                     
               </div>
-              <div className={`${styles.backlineText} ${checkAllSelected() && !showBackline ? '' : 'hiddenDisplay'} text regular link bold`}
+              <div className={`${styles.backlineText} ${checkAllSelected() && !showBackline ? '' : 'hiddenDisplay'} text medium link`}
               onClick={() => {setShowBackline(true)}}>Add backline?</div>
               <div className={`${styles.backlineContainer} ${showBackline ? '' : 'hiddenDisplay'}`}>
                 <CartInfo 
@@ -498,7 +498,7 @@ export default function Book() {
         ? <ul>
           { cart.length > 0 
           ?   
-          <div>
+          <div className={`${styles.checkoutContainer}`}>
             {cart.map((item) => {
             return (
             <li key={item.id}>

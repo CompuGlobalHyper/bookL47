@@ -30,7 +30,7 @@ router.get('/api/me', (req, res, next) => {
     if (err) {
       return next(err)
     }
-    req.user = user[0] || null
+    req.user = user || null
     next()
   })(req, res, next)
 }, controllers.meGet)
@@ -41,11 +41,14 @@ router.post('/login',
     controllers.loginPost)
 
 router.post('/register', controllers.registerPost)
+router.get('/logout', controllers.logoutGet)
+router.post('/password-forgot', controllers.passwordForgot)
+router.post('/password-reset', controllers.passwordReset)
 
 router.get('/bookings', authUser, controllers.bookingsGet)
 router.put('/cancel', authUser, controllers.bookingsCancel)
 
-router.get('/logout', controllers.logoutGet)
+
 
 router.get('/cart', authUser, controllers.cartGet)
 router.post('/cart', authUser, controllers.cartPost)

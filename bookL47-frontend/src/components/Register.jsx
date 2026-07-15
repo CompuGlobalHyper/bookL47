@@ -46,8 +46,8 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
 
     const togglePassword = () => {
     setPasswordType((prev) =>
-    prev === "password" ? "text" : "password"
-    );
+        prev === "password" ? "text" : "password"
+        );
     };
 
     const handleClick = () => {
@@ -205,7 +205,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     />
                     <label htmlFor="lastName">Last Name</label>
                 </div>
-                {errors.lastName && (<p className={`${styles.error} bold small`}> {errors.lastName}</p>)}
+                {errors.lastName && (<p className={`${styles.error} bold small text`}> {errors.lastName}</p>)}
 
                 <div className={`${styles.field} text medium`}>
                     <input
@@ -220,7 +220,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     />
                     <label htmlFor="email">example@afm47.org</label>
                 </div>
-                {errors.email && (<p className={`${styles.error} bold small`}> {errors.email}</p>)}
+                {errors.email && (<p className={`${styles.error} bold small text`}> {errors.email}</p>)}
 
                 <div className={`${styles.field} text medium`}>
                     <input
@@ -241,7 +241,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     > {passwordType === "password" ? "Show" : "Hide"}
                     </div>
                 </div>
-                {errors.password && (<p className={`${styles.error} bold small`}> {errors.password}</p>)}
+                {errors.password && (<p className={`${styles.error} bold small text`}> {errors.password}</p>)}
                 <div className={`${styles.field} text medium`}>
                     <input
                     id="confirm"

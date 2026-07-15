@@ -9,7 +9,7 @@
         flex-direction: column;
         justify-content: flex-start;
         margin-top: 23px;
-        width: clamp(200px, 100%, 500px);
+        width: clamp(200px, 50dvw, 500px);
     }
     .calendar {
         max-width: 500px;
@@ -41,16 +41,23 @@
 
 }
 
+.submitButtonContainer {
+    margin-top: auto;
+}
+
 .submitButton {
     display: flex;
     justify-content: flex-start;
     width: 100%;
 }
 
+.checkoutContainer {
+  
+}
 .checkoutButton {
     justify-content: flex-start;
-    width: 100%;
-    max-width: 400px;
+    width: 50%;
+    max-width: 600px;
 }
 
 

@@ -3,9 +3,12 @@ const Jotform = require('jotform').default
 const { createClient } = require('@supabase/supabase-js')
 const squareClient = require("./square");
 const jwt = require('jsonwebtoken')
-const { register } = require('node:module')
+const sgMail = require('@sendgrid/mail')
 const bcrypt = require('bcryptjs')
+const crypto = require('crypto')
 const { generateHours, getTotal, createFee } = require('./prices.js')
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 function supabaseClient () {
     return createClient(
@@ -25,6 +28,7 @@ function googleAuth () {
 
 const controllers = {
 
+    //User profile routes
     async meGet(req, res) {
         const user = req.user
         if (user) {
@@ -49,7 +53,7 @@ const controllers = {
             return res.status(400).json({auth: false})
         }
         //store id in token as well as secret
-        jwt.sign({ id: user.id }, process.env.JWT_SECRET, {expiresIn: '8hr'}, (err, token) => {
+        jwt.sign({ id: user.id, sessionVersion: user.session_version }, process.env.JWT_SECRET, {expiresIn: '8hr'}, (err, token) => {
             if (err) {
                 console.error(err);
                 //frontend reads res.auth = false
@@ -97,6 +101,208 @@ const controllers = {
         }
         return res.status(200).json({message: 'successful registration'})
     },
+    async logoutGet(req, res) {
+        res.clearCookie("access_token", {
+            httpOnly: true,
+            sameSite: "none",
+            secure: true,
+            path: '/',
+        });
+        console.log('logging you out..')
+        return res.status(200).json({ role: 'guest' })
+
+    },
+    async passwordForgot(req, res) {
+        try {
+            const email = 'phineas.crisp@afm47.org'
+            // const email = req.body.email
+            const supabase = supabaseClient()
+            const { data: userData, error: userError } = await supabase
+            .from('user')
+            .select('*')
+            .eq('email', email)
+            if (userError) {
+                throw(userError)
+            }
+            const user = userData[0]
+            if (!user) {
+                return res.status(200).json({message: 'If account exists, sent an email.'})
+            }
+            const token = crypto.randomBytes(32).toString("hex");
+            const token_hash = crypto
+            .createHash("sha256")
+            .update(token)
+            .digest("hex")
+            const expires_at = new Date(Date.now() + 1000 * 60 * 60) //10 minutes
+            const { data: resetData, error: resetError} = await supabase
+            .from('password_reset')
+            .insert({ 
+                user_id: user.id,
+                token_hash,
+                expires_at
+            })
+            if (resetError) {
+                throw(resetError)
+            }
+            const link = `${process.env.CLIENT_URL}/reset-password?token=${token}`
+            await sgMail.send({
+                to: email,
+                from: "info@afm47.org",
+                subject: "Book L47: Password reset link",
+                html: 
+                    `<body style="
+                    margin: 0;
+                    padding: 40px;
+                    background-color: #f4f4f4;
+                    font-family: Arial, Helvetica, sans-serif;
+                    ">
+                    <div style="
+                        max-width: 500px;
+                        margin: 0 auto;
+                        background: white;
+                        padding: 40px;
+                        border-radius: 2px;
+                    ">
+                        <div style="
+                        text-align: center;
+                        margin-bottom: 30px;
+                        ">
+                        <h1 style="
+                            margin: 0;
+                            font-size: 28px;
+                            color: #222;
+                        ">
+                            Book L47
+                        </h1>
+                        </div>
+                        <h2 style="
+                        color: #222;
+                        font-size: 22px;
+                        margin-bottom: 20px;
+                        ">
+                        Reset your password
+                        </h2>
+                        <p style="
+                        color: #555;
+                        font-size: 16px;
+                        line-height: 1.5;
+                        ">
+                        A password reset request was made for your Book L47 account.
+                        </p>
+                        <p style="
+                        color: #555;
+                        font-size: 16px;
+                        line-height: 1.5;
+                        ">
+                        Click the button below to reset your password. This link will expire in 1 hour.
+                        </p>
+                        <div style="
+                        text-align: center;
+                        margin: 30px 0;
+                        ">
+                        <a 
+                            href="${link}"
+                            style="
+                            cursor: pointer;
+                            font-weight: 900;
+                            background-color: rgb(1, 179, 227);
+                            color: white;
+                            padding: 14px 28px;
+                            border-radius: 2px;
+                            text-decoration: none;
+                            font-size: 16px;
+                            display: inline-block;
+                            "
+                        >
+                            Reset Password
+                        </a>
+                        </div>
+                        <p style="
+                        color: #555;
+                        font-size: 14px;
+                        line-height: 1.5;
+                        ">
+                        If you did not request a password reset, you can safely ignore this email.
+                        Your password will remain unchanged.
+                        </p>
+                        <hr style="
+                        border: none;
+                        border-top: 1px solid #ddd;
+                        margin: 30px 0;
+                        "></hr>
+                        <p style="
+                        color: #888;
+                        font-size: 12px;
+                        text-align: center;
+                        ">
+                        Book L47<br></br>
+                        booking@afm47.org<br></br>
+						323.993.3172
+                        </p>
+                        </div>
+                    </body>`
+            })
+            return res.status(200).json({message: 'If account exists, sent an email.'})
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({message: 'Error processing request'})
+        }
+        
+
+    },
+    async passwordReset(req, res) {
+        const { token, password } = req.body
+        if (!token || !password || password.length < 8) {
+            return res.status(400).json({message: 'Invalid or expired reset link.'})
+        }
+        try {
+            const hash = crypto
+            .createHash("sha256")
+            .update(token)
+            .digest("hex")
+            const supabase = supabaseClient()
+            const { data: resetData, error: resetError } = await supabase
+            .from('password_reset')
+            .select('*')
+            .eq('token_hash', hash)
+            if (resetError) {
+                throw(resetError)
+            }
+            if (!resetData[0]) {
+                return res.status(400).json({message: 'Invalid or expired reset link.'})
+            }
+            if (new Date(resetData[0].expires_at) <= new Date() ) {
+                return res.status(400).json({message: 'Invalid or expired reset link.'})
+            }
+            const { data: userData, error: userError } = await supabase
+            .from('user')
+            .select('*')
+            .eq('id', resetData[0].user_id)
+            const user = userData[0]
+            const hashedPassword = await bcrypt.hash(password, 10)
+
+            const { data: updateData, error: updateError } = await supabase
+            .from('user')
+            .update({ password: hashedPassword, session_version: user.session_version + 1 })
+            .eq('id', user.id)
+            if (updateError) {
+                throw(updateError)
+            }
+            const { data: deleteData, error: deleteError } = await supabase
+            .from('password_reset')
+            .delete()
+            .eq('token_hash', hash)
+            if (deleteError) {
+                throw(deleteError)
+            }
+            return res.status(200).json({message: 'Success!'})
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({message: 'Error processing request'})
+        }
+    },
+    //Current booking routes
     async bookingsGet(req, res) {
         if (!req.user) {
             return res.status(401).json({ message: 'not logged in' })
@@ -184,6 +390,7 @@ const controllers = {
             return res.status(500).json({error: error.message})
         }
     },
+    //Cart routes
     async cartGet(req, res) {
         if (!req.user) {
             return res.status(401).json({ message: 'not logged in' })
@@ -295,6 +502,7 @@ const controllers = {
         }
         res.sendStatus(200)
     },
+    //Checkout routes
     async checkoutGet(req, res) {
     },
     async checkoutPost(req, res) {
@@ -369,17 +577,7 @@ const controllers = {
         }
 
     },
-    async logoutGet(req, res) {
-        res.clearCookie("access_token", {
-            httpOnly: true,
-            sameSite: "none",
-            secure: true,
-            path: '/',
-        });
-        console.log('logging you out..')
-        return res.status(200).json({ role: 'guest' })
-
-    },
+    
 
 
 
