@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
-import { useOutletContext } from 'react-router'
+import { useNavigate, useOutletContext } from 'react-router'
 import styles from './styles/Checkout.module.css'
 import { CartContext } from '../../contexts/CartContext'
 import { formatDate, formatTime, createTotal, createFee } from '../../functions/formatter.js'
 import { UserContext } from '../../contexts/UserContext.jsx'
 import Loading from '../../components/Loading.jsx'
 import setBannerMessage from '../../functions/bannerMessage.js'
+
+import squareLogo from '../../assets/square-logo.webp'
 
 
 const appId = import.meta.env.VITE_SANDBOX_SQUARE_APP_ID
@@ -56,11 +58,13 @@ async function tokenize(card, verificationDetails) {
 
 
 export default function Checkout() {
+    const navigate = useNavigate()
     const { setMessage } = useOutletContext()
     const { user, loading: userLoading } = useContext(UserContext)
     const { cart, getCart, setCart, deleteCartItem, loading: cartLoading } = useContext(CartContext)
     const [loading, setLoading] = useState(true)
     const [loadingCheckout, setLoadingCheckout] = useState(true)
+    const [viewCart, setViewCart] = useState(true)
     const [activePayButton, setActivePayButton] = useState(true)
     const cardRef = useRef(null);
     const initializedRef = useRef(false);
@@ -123,9 +127,11 @@ export default function Checkout() {
         try {
             const tokenResult = await tokenize(card, verificationDetails)
             const paymentResults = await CreatePayment(tokenResult);
-            setActivePayButton(true)
-            setBannerMessage(setMessage, 'Payment successful', false, 5)
-            
+            console.log(paymentResults)
+            setCart([])
+            const id = paymentResults.paymentId
+            navigate(`/confirmation?payment=${id}`)
+
         }
         catch(error) {
             console.log(error)
@@ -142,7 +148,8 @@ export default function Checkout() {
   return (
     <div className={styles.main}>
         <div className={styles.sideCheckout}>
-            <div className={`${styles.title} large text`}>Your Cart</div>
+            <div className={`${styles.title}`}><span className='large text' onClick={() => setViewCart(true)}>Your Cart</span><span className={`${styles.viewButton} text small`} onClick={() => setViewCart(prev => !prev)}>{viewCart ? 'Close' : 'Open'}</span></div>
+            {viewCart &&
             <ul className={`${styles.cart}`}>
                 {cart.map((item) => {
                     return (
@@ -152,14 +159,14 @@ export default function Checkout() {
                                     <div className={`${styles.date} text bold`}>{formatDate(item.date)}</div>
                                     <div className={`${styles.time} text small`}>{`${formatTime(item.start)} - ${formatTime(item.end)} (${item.hours} hrs)`}</div>
                                 </div>
-                                {user.role === 'member' || user.role === 'life'
-                                ? <div className={`${styles.price} text`}>{`$${item.price}`}</div>
-                                : <div className={`${styles.price} text`}>{`$${(item.price).toFixed(2)}`}</div>}
+                                <div className={`${styles.price} text`}>{`$${(item.price).toFixed(2)}`}</div>               
                             </div>
                         </li>
                     )
                 })}
-            </ul>
+            </ul> 
+            }
+            {user.role === 'life' && viewCart && <div className={`${styles.memberNote} text small`}><em>Note: As a life member, your $5 discount has been applied to all bookings.</em></div>}
             <div className={`${styles.subTotal}`}>
                 <span className='text regular bold'>Subtotal:</span>
                 <div className={`${styles.priceTotal} text regular bold`}>{`$${subtotal}`}
@@ -179,12 +186,37 @@ export default function Checkout() {
 
         </div>
         <div className={`${styles.sideSquare}`}>
-            {loadingCheckout ? <Loading></Loading> : <></>}
-            <div className='text large'>Enter payment details:</div>
-            <div className={styles.checkoutContainer}>
-                <div id='card' className={`${styles.card} text`}></div>
-                <div className={`${styles.payButton} text button medium ${!activePayButton ? styles.disabled : ''}`} onClick={() => handleClick()}>Secure checkout</div>
-            </div>  
+            <div className={`${styles.paymentTitle} text large`}>Enter payment details:</div>
+            <div className={`${styles.infoContainer}`}>
+                <div className={`${styles.nameContainer} text medium`}>
+                    <div className={styles.paymentDetail}>
+                        <div className={`${styles.detailLabel} text small`}>First Name</div>
+                        <div className={`${styles.detail} text medium`}>{user.firstName}</div>
+                    </div>
+                    <div className={styles.paymentDetail}>
+                        <div className={`${styles.detailLabel} text small`}>Last Name</div>
+                        <div className={`${styles.detail} text medium`}>{user.lastName}</div>
+                    </div>
+                </div>
+                <div className={styles.paymentDetail}>
+                    <div className={`${styles.detailLabel} text small`}>Email Address</div>
+                    <div className={`${styles.email} text medium`}>{user.email}</div>
+                </div>
+            </div>
+
+            <div className={`${styles.squareContainer}`}>
+                {loadingCheckout 
+                ? <Loading></Loading> 
+                : <></>}
+                <div className={styles.checkoutContainer}>
+                    <div className={`${styles.detailLabel} text regular`}>Credit or Debit Card</div>
+                    <div className={styles.paymentDetail}>
+                        <div id='card' className={`${styles.card} text`}></div>
+                    </div>
+                <div className={styles.image}><img src={squareLogo} alt="Square logo" /></div>
+                </div> 
+            </div>
+            <div className={`${styles.payButton} text button medium ${!activePayButton ? styles.disabled : ''}`} onClick={() => handleClick()}>Secure checkout</div>
         </div>
         
     </div>

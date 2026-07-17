@@ -48,7 +48,8 @@ router.post('/password-reset', controllers.passwordReset)
 router.get('/bookings', authUser, controllers.bookingsGet)
 router.put('/cancel', authUser, controllers.bookingsCancel)
 
-
+router.get('/calendar', authUser, controllers.calendarGet)
+router.get('/rooms', authUser, controllers.roomsGet)
 
 router.get('/cart', authUser, controllers.cartGet)
 router.post('/cart', authUser, controllers.cartPost)
@@ -59,13 +60,11 @@ router.get('/checkout', authUser, controllers.checkoutGet)
 router.post('/checkout', authUser, controllers.checkoutPost)
 
 router.post('/payment', authUser, controllers.paymentPost)
-
+router.get('/confirmation', authUser, controllers.confirmationGet)
 
 //routes to populate db and gain google auth
 router.get('/auth/google', controllers.googleAuthGet)
 router.get('/auth/google/callback', controllers.googleAuthCallbackGet)
-router.get('/calendar', authUser, controllers.calendarGet)
-router.get('/rooms', authUser, controllers.roomsGet)
 router.get('/jotform', controllers.jotformGet)
 
 module.exports = router

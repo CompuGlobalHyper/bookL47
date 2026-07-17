@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles/Register.module.css'
 import setBannerMessage from '../functions/bannerMessage';
+import { Link } from 'react-router';
 
 export default function Register({viewRegister, setViewRegister, setViewLogin, setMessage}) {
     const [allowRegister, setAllowRegister] = useState(true)
@@ -174,7 +175,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
             </div>
             <div className={styles.header}>
                 <h1 className={`text medium`}>Create a free account!</h1>
-                <p className={`text small`}>Already have an account? <span className={`${styles.link} text link blue`} onClick={() => handleClick()}>Sign in!</span></p>
+                <p className={`text small`}>Already have an account? <Link to={'/login'}className={`${styles.link} text link blue`}>Sign in!</Link></p>
             </div>
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
                 <div className={`${styles.field} text medium`}>

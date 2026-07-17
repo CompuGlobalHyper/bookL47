@@ -191,6 +191,7 @@ textarea {
 }
 
 .button {
+  width: clamp(100px, 100%, 400px);
   padding: 10px 14px 10px 14px;
   user-select: none;
   display: flex;
@@ -243,6 +244,10 @@ textarea {
 
 .large {
   font-size: clamp(32px, 4vw, 48px);
+}
+
+.error {
+  color: var(--reject-color);
 }
 
 .hiddenOpacity {

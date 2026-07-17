@@ -15,6 +15,7 @@ import Book from './routes/bookRoutes/Book.jsx';
 import Bookings from './routes/bookRoutes/Bookings.jsx';
 import Cart from './routes/bookRoutes/Cart.jsx';
 import Checkout from './routes/bookRoutes/Checkout.jsx';
+import Confirmation from './routes/bookRoutes/Confirmation.jsx';
 import NotFound from './routes/general/NotFound.jsx';
 import requireUser from './loaders/requireUser.js';
 import { UserProvider } from './contexts/UserContext.jsx';
@@ -42,7 +43,8 @@ const router = createBrowserRouter([
           { path: "/book", element: <Book />},
           { path: "/bookings", element: <Bookings />},
           { path: '/cart', element: <Cart />},
-          { path: '/checkout', element: <Checkout/>}
+          { path: '/checkout', element: <Checkout/>},
+          { path: '/confirmation', element: <Confirmation />}
         ]
       }
     ],

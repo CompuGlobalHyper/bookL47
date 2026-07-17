@@ -53,10 +53,10 @@ export default function Cart() {
   return (
     <div className={styles.container}>
       <div className={styles.main}>
-        <div className={styles.cartHeader}>
+        <div className={`${styles.cartHeader} text large`}>
           <div 
           className={`${styles.open} ${styles.header} text`}
-          >Your Cart</div>
+          >Your Cart {cart.some(item => item.status === 'conflict') && <div className='text small error'>Error: One or more of your bookings is no longer available.</div>}</div>
         </div>
         {!cartLoading
         ? <>
@@ -82,12 +82,14 @@ export default function Cart() {
         
         
       </div>
-      {cart.length > 0 && !cartLoading && <div className={`${styles.priceContainer}`}>
-        <div className={`${styles.totalText} text medium`}>Est. Total</div>
-        <div className={`${styles.priceTotal} text medium bold`}>{`$${(createTotal(cart)).toFixed(2)}`}</div>
-      </div>}
-      <div className={styles.bottomButtons}>
-        {cart.length > 0 && <Link className={`${styles.brandButton} button text medium`} to={'/checkout'}><span>Checkout</span></Link>}
+      <div className={styles.bottom}>
+        {cart.length > 0 && !cartLoading && <div className={`${styles.priceContainer}`}>
+          <div className={`${styles.totalText} text medium`}>Est. Total</div>
+          <div className={`${styles.priceTotal} text medium bold`}>{`$${(createTotal(cart)).toFixed(2)}`}</div>
+        </div>}
+        <div className={styles.bottom}>
+          {cart.length > 0 && cart.every(item => item.status !== 'conflict') && <Link className={`${styles.brandButton} button text medium`} to={'/checkout'}><span>Checkout</span></Link>}
+        </div>
       </div>
       
     </div>

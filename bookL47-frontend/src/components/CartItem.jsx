@@ -17,6 +17,7 @@ export default function CartItem({ abridged, item, active, setActive, equipment,
       {!cartLoading 
       &&
       <div className={styles.container}>
+        {item.status === 'conflict' && <div className='text small error'>This booking is no longer available, please remove.</div>}
         <div className={`${styles.date} text bold regular`}>{formatDate(item.date)}</div>
         <div className={`${styles.time} text bold regular`}>{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
         <div className={`${styles.room} text bold small`}>{item.location}</div>
@@ -37,7 +38,6 @@ export default function CartItem({ abridged, item, active, setActive, equipment,
                   : setActive(item.id)}>+ View details</span>}
               </div>
         }
-        {}
         <div 
         onClick={() => deleteCartItem(item.id)}
         className={`${styles.delete} text regular bold`}><span>Delete</span></div>

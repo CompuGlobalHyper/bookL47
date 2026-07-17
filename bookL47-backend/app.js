@@ -60,9 +60,10 @@ passport.use(new JwtStrategy(
     const supabase = supabaseClient()
     const { data, error } = await supabase
     .from('user')
-    .select('*')
+    .select('id, created_at, first_name, last_name, email, phone_number, role')
     .eq("id", `${payload.id}`)
-    const user = data[0]
+    .single()
+    const user = data
     if (!user) {
       return done(null, false)
     }
@@ -80,15 +81,22 @@ passport.use(
       const supabase = supabaseClient()
       const { data, error } = await supabase
       .from('user')
-      .select('*')
+      .select('id, created_at, first_name, last_name, email, phone_number, role')
       .eq("email", `${email}`)
-      
+      .single()
+
+      const { data: passwordData, error: passwordError } = await supabase
+      .from('user')
+      .select('password')
+      .eq("email", `${email}`)
+      .single()
+
       if (error) return console.log(error)
-      const user = data[0]
+      const user = data
        if (!user) {
          return done(null, false, { message: "Incorrect email address/password" });
       }
-      const match = await bcrypt.compare(password, user.password);
+      const match = await bcrypt.compare(password, passwordData.password);
       if (!match) {
         return done(null, false, { message: "Incorrect email address/password" })
       }

@@ -31,7 +31,6 @@ export default function Bookings() {
       credentials: "include"   
     })
     const data = await res.json()
-    console.log(data)
     return data
   }
   
@@ -64,6 +63,7 @@ export default function Bookings() {
       })
     const { message } = await res.json()
     load()
+    setActive({})
     setBannerMessage(setMessage, message, false, 5)
     setShowCancel(false)
   }

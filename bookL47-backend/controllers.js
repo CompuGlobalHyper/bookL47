@@ -354,9 +354,9 @@ const controllers = {
             }
             const booking = bookingData[0]
             const now = new Date()
-            const hoursUntilBooking = ((new Date(booking.start_date) - now) / (1000 * 60 * 60))
+            const hoursUntilBooking = ((new Date(booking.starts_at) - now) / (1000 * 60 * 60))
             if (hoursUntilBooking < 48) {
-                const { data: cancelData, error: cancelError } = await supabase
+                const { error: cancelError } = await supabase
                 .from('booking')
                 .update({ status: 'cancelled' })
                 .eq("id", booking.id)
@@ -375,13 +375,27 @@ const controllers = {
                     currency: "USD",
                 },
             });
-            console.log(refund)
-            const { data: refundData, error: refundError } = await supabase
+            const { error: refundError } = await supabase
             .from('booking')
             .update({ status: 'cancelled', refund_id: refund.id })
             .eq("id", booking.id)
             if (refundError) {
                 throw(refundError)   
+            }
+            const { data: paymentData, error: paymentError } = await supabase
+            .from('payment')
+            .select('refunded_amount')
+            .eq("id", paymentId)
+            .single()
+            if (paymentError) {
+                throw(paymentError)   
+            }
+            const { error: updatePaymentError } = await supabase
+            .from('payment')
+            .update({refunded_amount: paymentData.refunded_amount + (price * 100)})
+            .eq("id", paymentId)
+            if (updatePaymentError) {
+                throw(updatePaymentError)   
             }
             return res.status(200).json({message: "Cancelled booking, refund pending"})
         } catch(error) {
@@ -395,17 +409,43 @@ const controllers = {
             return res.status(401).json({ message: 'not logged in' })
         }
         const user = req.user
-        console.log(user)
         const supabase = supabaseClient()
-        const { data, error } = await supabase
-        .from('cart')
-        .select('*')
-        .eq("user_id", user.id)
-        if (error) {
-            console.log(error)
-            res.status(500).json({message: "Database error"})
+        const { data: cartData, error: cartError } = await supabase
+            .from('cart')
+            .select('*')
+            .eq("user_id", user.id)
+            if (cartError) {
+                console.log(cartError)
+                return res.status(500).json({message: "Database error"})
         }
-        res.status(200).json(data)
+        async function checkConflicts(cart) { 
+            for (const item of cart) {
+                const { data: bookingData, error: bookingError } = await supabase
+                .from('booking')
+                .select('id')
+                .eq('location_id', item.location_id)
+                .lt('starts_at', item.ends_at)
+                .gt('ends_at', item.starts_at)
+                .neq('status', 'refunded')
+                .neq('status', 'cancelled')
+                if (bookingError) {
+                    throw(bookingError)
+                }
+                const status = bookingData.length > 0 ? 'conflict' : 'pending'
+                item.status = status
+                const { error: updateError } = await supabase
+                .from('cart')
+                .update({status: status})
+                .eq('id', item.id)
+                if (updateError) {
+                    console.log(updateError)
+                    return res.status(500).json({message: "Database error"})
+                }
+            }
+            return cart      
+        }
+        const updatedCart = await checkConflicts(cartData)
+        return res.status(200).json(updatedCart)
     },
     async cartPost(req, res) {
         const supabase = supabaseClient()
@@ -437,6 +477,10 @@ const controllers = {
             hourly_rate = 65
             price = hourly_rate * hours
         }
+        if (user.role === 'admin') {
+            hourly_rate = 0
+            price = 0
+        }
         const { data, error } = await supabase
         .from('cart')
         .insert({...booking, user_id: user.id, hours, price, hourly_rate})
@@ -464,7 +508,6 @@ const controllers = {
         const supabase = supabaseClient()
         const id = req.body.id
         const newItem = req.body.newItem
-        console.log(newItem)
         if (req.body.checked === undefined) {
             const { data, error } = await supabase
                 .from('cart')
@@ -484,7 +527,6 @@ const controllers = {
             console.log(equipmentError)
             return res.status(500).json({message: "Database error"})
         }
-        console.log(equipmentData)
         let equipmentCopy = equipmentData[0].equipment_request.map(item => item)
         if (req.body.checked) {
             equipmentCopy.push(newItem)
@@ -513,10 +555,9 @@ const controllers = {
             return res.status(401).json({ message: 'not logged in' })
         }
         const user = req.user
-        
-
         try {
             const supabase = supabaseClient()
+            //retrieve data from cart db
             const { data: cartData, error: cartError } = await supabase
             .from('cart')
             .select('*')
@@ -524,10 +565,11 @@ const controllers = {
             if (cartError) {
                     throw cartError;
             }
-            console.log(cartData)
+            //calculate prices
             const subtotal = Number(getTotal(cartData))
             const fee = Number(createFee(subtotal))
             const amount = Math.round((subtotal + fee) * 100)
+            //insert data into booking db with pending status
             const { data: bookingData, error: bookingError } = await supabase
                 .from('booking')
                 .insert(cartData.map((booking) => ({
@@ -540,6 +582,7 @@ const controllers = {
             }
 
             console.log('reached backend payment step')
+            //attempt to charge the provided credit card
             const payment = await squareClient.payments.create({
                 sourceId,
                 idempotencyKey,
@@ -549,12 +592,70 @@ const controllers = {
                     currency: "USD"
                 }
             });
+            const paymentId = payment.payment.id
+            const total_amount = Number(payment.payment.amountMoney.amount)
+            const currency = payment.payment.amountMoney.currency
+            //add data to payments db
+            const { data: paymentData, error: paymentError } = await supabase
+            .from('payment')
+            .insert( {
+                id: paymentId,
+                total_amount,
+                currency,
+                user_id: user.id
+            })
+            if (paymentError) {
+                throw paymentError;
+            }
+            //retrieve google calendar tokens
+            const oauth2Client = googleAuth()
+            const { data: adminData, error: adminError } = await supabase
+            .from('admin')
+            .select('google_token')
+            .eq('name', 'phin')
+            const tokens = adminData[0].google_token
+            oauth2Client.setCredentials(tokens);
+            //create calendar client
+            const calendar = google.calendar({
+                version: "v3",
+                auth: oauth2Client
+            });
+            //create booking objects for Google calendar
+            const eventsList = bookingData.map((booking) => {
+                return ({
+                    'summary': `${booking.location} - ${booking.first_name} ${booking.last_name}`,
+                    'location': `${booking.location}`,
+                    'description': `${booking.equipment_request.join(', ')}
+                    ${booking.description}`,
+                    'start': {
+                        'dateTime': booking.starts_at,
+                        'timeZone': booking.timezone
+                    },
+                    'end': {
+                        'dateTime': booking.ends_at,
+                        'timeZone': booking.timezone
+                    }
+                })
+            })
+            //add to Google calendar
+            for (const event of eventsList) {
+                calendar.events.insert({
+                calendarId: 'c_lk6ofmjl263kkl6h66dai4orr8@group.calendar.google.com',
+                resource: event,
+                }, function(err, event) {
+                if (err) {
+                    console.log('There was an error contacting the Calendar service: ' + err);
+                    return;
+                }
+                console.log('Event created:', event);
+                });
+            }
             const bookingIds = bookingData.map(b => b.id)
             const { error: updateError } = await supabase
                 .from("booking")
                 .update({
                     status: "paid",
-                    payment_id: payment.payment.id
+                    payment_id: paymentId
                 })
                 .in("id", bookingIds);
             if (updateError) {
@@ -567,8 +668,7 @@ const controllers = {
             if (deleteError) {
                 throw deleteError;
             }
-
-            return res.json({ success: true, paymentId: payment.payment.id});
+            return res.status(200).json({ success: true, paymentId: payment.payment.id });
         } catch(error) {
             console.log(error);
             res.status(400).json({
@@ -577,12 +677,41 @@ const controllers = {
         }
 
     },
+    async confirmationGet(req, res) {
+        const user = req.user
+        if (!req.user) {
+            return res.status(401).json({ message: 'not logged in' })
+        }
+        const paymentId = req.query.payment
+        const supabase = supabaseClient()
+        try {
+            const {data: paymentData, error: paymentError} = await supabase
+            .from('payment')
+            .select('*')
+            .eq('id', paymentId)
+            .single()
+            
+            if (!paymentData.id) {
+                return res.status(422).json({message: "Expired or invalid link"})
+            }
+            if (paymentData.user_id !== user.id) {
+                return res.status(422).json({message: "Expired or invalid link"})
+            }
+            const now = new Date()
+            const createdAt = new Date(paymentData.created_at)
+            const minutesPassed = Math.floor((now - created) / 1000 * 60) // ms * secs
+            if (minutesPassed > 15) {
+                return res.status(422).json({message: "Expired or invalid link"})
+            }
+            return res.status(200).json({message: "Confirmation page allowable"})
+
+        } catch(error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Database error' })
+        }
+        
+    },
     
-
-
-
-
-
 
     //sign in to get auth
     googleAuthGet(req, res) {
@@ -590,7 +719,7 @@ const controllers = {
         const url = oauth2Client.generateAuthUrl({
             access_type: "offline",
             scope: [
-                "https://www.googleapis.com/auth/calendar.readonly"
+                "https://www.googleapis.com/auth/calendar"
             ],
             prompt: "consent"
         });
@@ -609,7 +738,7 @@ const controllers = {
         const supabase = supabaseClient()
         const { data, error } = await supabase
         .from('admin')
-        .insert(
+        .upsert(
             {
                 name: 'phin',
                 google_token: tokens, 
@@ -650,34 +779,32 @@ const controllers = {
         const rows = events.map((event) => {
             return {
                 google_id: event.id,
-                room: event.location || "No location found",
+                location: event.location || "No location found",
                 created_at: event.created,
                 date: event.start.dateTime.split('T')[0],
                 start: event.start.dateTime.split('T')[1].split('-')[0],
                 end: event.end.dateTime.split('T')[1].split('-')[0],
                 timezone: event.start.timeZone,
-                description: event.summary || "No description"
+                title: event.summary || "No title available",
+                description: event.description
             }
         })
         //upload 180 days of events to Supabase
         const { data: bookingdData, error: bookingError } = await supabase
-        .from('google_calendar')
+        .from('booking')
         .upsert(rows,{
             onConflict: 'google_id'
         })
+        if (bookingError) {
+            console.log(bookingError)
+        }
         //create list of next 180 days
         const next180 = []
         for (let i = 0; i < 180; i++) {
             newDate = new Date(Date.now() + 1000 * 60 * 60 * 24 * i )
             newDateStr = newDate.toISOString().split('T')[0]
-            next180.push({ booking_date: newDateStr })
+            next180.push(newDateStr)
         }
-        //insert next 180 days into date table
-        const { data: dateData, error: dateError } = await supabase
-        .from('date')
-        .upsert(next180,{
-            onConflict: 'booking_date'
-        })
         //create list of all rooms
         const { data: roomData, error: roomError } = await supabase
         .from('location')
@@ -685,15 +812,14 @@ const controllers = {
         
         const bookingData = next180.map((date) => {
             let roomsAndSlots = roomData.map((room) => {
-                let filteredBookings = rows.filter((row) => row.room === room.name && row.date === date.booking_date)
+                let filteredBookings = rows.filter((row) => row.location === room.name && row.date === date)
                 let timeObjects = filteredBookings.map((booking) => {
                     return { start: booking.start, end: booking.end }
                 })
                 return { name: room.name, filledTimes: timeObjects}
             })
-            return { date: date.booking_date, rooms: roomsAndSlots }
+            return { date: date, rooms: roomsAndSlots }
         })
-
         res.json(bookingData);
     },
     //populate db with jotform data

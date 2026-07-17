@@ -394,7 +394,8 @@ export default function Book() {
               start,
               end,
               equipment_request: chosenEquipment,
-              description: description
+              description: description,
+              status: 'pending'
           }
           console.log(booking)
           const success = addToCart(booking)
@@ -490,15 +491,21 @@ export default function Book() {
               </div>
             </div>
         </div>
-        
+        <div className={`${styles.checkoutContainer}`}>
         {viewCart 
-        ? <div className={`${styles.inCart} medium text link`} onClick={() => setViewCart(false)}>Close Cart</div>
-        : <div className={`${styles.inCart} medium text link`} onClick={() => setViewCart(true)}>View Cart ({cart.length})<span></span></div>}
+        ? <div className={`${styles.inCart} medium text link`} onClick={() => setViewCart(false)}><span>Close Cart</span></div>
+        : <div className={`${styles.inCart} medium text link`} onClick={() => {
+          setViewCart(true) 
+          setDropdown((prev) => {
+          return prev.map((item) => {
+            return {...item, open: false}
+          })
+        })}}><span>View Cart ({cart.length})</span></div>}
         {viewCart 
-        ? <ul>
+        ? <ul className={styles.checkoutList}>
           { cart.length > 0 
           ?   
-          <div className={`${styles.checkoutContainer}`}>
+          <div>
             {cart.map((item) => {
             return (
             <li key={item.id}>
@@ -516,7 +523,7 @@ export default function Book() {
           : <div className={`text thin`}>Your cart is empty.</div> }
         </ul>
         : <></>}
-        
+        </div>
       </div>
     )
 }
