@@ -1,7 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router'
+import Loading from '../../components/Loading'
 
 export default function NotFound() {
+
+  return (
+    <Loading></Loading>
+  )
   return (
     <div>
       <h1 className='text'>Error 404</h1>

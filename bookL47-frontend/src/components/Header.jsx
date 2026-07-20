@@ -16,6 +16,7 @@ import DashboardIcon from '../assets/dashboard.svg?react'
 import CalendarEventIcon from '../assets/calendarEvent.svg?react'
 import ShiftsIcon from '../assets/shifts.svg?react'
 import LogoutIcon from '../assets/logout.svg?react'
+import CartIcon from '../assets/cart.svg?react'
 
 
 
@@ -103,7 +104,8 @@ export default function Header( { setMessage }) {
             : <Link 
                 to='/cart'
                 className={`${styles.cart} text bold`}
-                onClick={() => setViewMenu(false)}>Cart ({cart.length})</Link>}
+                onClick={() => setViewMenu(false)}><CartIcon></CartIcon><span className='small'>{cart.length}</span></Link>
+            }
             <div 
                 className={`${styles.hamburger} text`}
                 onClick={() => {

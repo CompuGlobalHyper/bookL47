@@ -3,9 +3,9 @@
 .container {
     display: flex;
     flex-direction: column;
-    width: clamp(250px, 100%, 600px);
+    width: clamp(250px, 100%, 500px);
     margin: 10px 0;
-    padding: 10px 20px;
+    padding: 10px 10px 10px 20px;
     border-radius: 2px;
     background-color: var(--surface-color);
 }
@@ -15,15 +15,20 @@
 }
 
 .room {
-    padding-bottom: 5px;
     color: var(--text-secondary-color);
-    border-bottom: 0.5px solid var(--border-color);
-    margin: 0 50px 10px 0;
 
 }
 
 .time {
+    padding-top: 5px;
+     border-top: 0.5px solid var(--text-secondary-color);
 
+}
+
+.iconContainer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
 }
 
 .option {
@@ -97,13 +102,20 @@
 
 }
 
+.bottomHalf {
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .delete {
     display: flex;
     justify-content: center;
     cursor: pointer;
-    margin: 5px 10px 5px auto;
-    padding: 5px 5px;
-    width: clamp(25px, 25dvw, 200px);
-    color: var(--brand-text-color);
-    background-color: var(--reject-color);
+    margin: 0 0 0 auto;
+}
+
+.delete:hover {
+    color: var(--reject-color);
 }

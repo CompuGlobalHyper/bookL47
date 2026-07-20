@@ -26,8 +26,9 @@ export default function Confirmation() {
   })
   return (
     <div>
-      <div className='text large'>You're all set!</div>
-      <div className='text medium'>Thank you for booking with AFM Local 47. Click <Link className='link blue text' to={'/bookings'}>here</Link> to view you're upcoming bookings.</div>
+      <div className='text large thin'>You're all set!</div>
+      <div className='text medium'>Thank you for booking with AFM Local 47. </div>
+      <div className='text medium'>Click <Link className='link blue text' to={'/bookings'}>here</Link> to view you're upcoming bookings.</div>
     </div>
   )
 }

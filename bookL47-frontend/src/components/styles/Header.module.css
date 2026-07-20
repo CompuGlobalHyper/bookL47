@@ -15,6 +15,7 @@
 
 .title {
     color: var(--brand-text-color);
+    margin-right: auto;
     cursor: pointer;
 
 }
@@ -24,8 +25,8 @@
 }
 
 .cart {
+    display: flex;
     cursor: pointer;
-    margin-left: auto;
     color: var(--brand-text-color);
 }
 
@@ -73,16 +74,13 @@
         padding: 4px 16px;
     }
     .hamburger {
-        margin-left: auto;
+        margin-left: 20px;
         display: block;
         color: var(--brand-text-color);
         cursor: pointer;
     }
     .menuClose, .menuOpen {
         color: var(--brand-text-color);
-    }
-    .cart {
-        display: none;
     }
     .list {
         padding: 0 20px;

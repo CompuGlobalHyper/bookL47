@@ -76,7 +76,7 @@ export default function Cart() {
                 </li>
                 )
               })
-          : <div className={`text large`}>It looks like your cart is empty..</div> }
+          : <div className={`text medium thin`}>It looks like your cart is empty.</div> }
         </ul></>
         : <Loading></Loading>}
         

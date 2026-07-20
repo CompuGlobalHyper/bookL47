@@ -1,22 +1,27 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './styles/Loading.module.css'
 import { useNavigate } from 'react-router'
 
 export default function Loading() {
   const navigate = useNavigate()
+  const [loadingMessage, setLoadingMessage] = useState('Loading...')
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      navigate('/error')
+      setLoadingMessage('App restarting, please wait...')
     }, 30000)
+
+    const error = setTimeout(() => {
+      navigate('/error')
+    }, 60000)
 
     return () => clearTimeout(timeout)
 
   }, [navigate])
 
   return (
-    <div>
-      <div className={`text medium bold ${styles.text}`}>Loading...</div>
+    <div className={styles.container}>
+      <div className={`text medium bold ${styles.text}`}>{loadingMessage}</div>
       <div className={`${styles.loading}`}></div>
       
     </div>

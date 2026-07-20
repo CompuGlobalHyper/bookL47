@@ -1,10 +1,14 @@
 .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border-bottom: 0.5px solid var(--border-color);
     padding: 10px 0;
     margin-bottom: 20px
 }
 
 .bookingsContainer {
+    min-width: 315px;
     margin-bottom: 40px;
 }
 
@@ -42,6 +46,13 @@
 
 }
 
+.bottomHalf {
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .details {
     cursor: pointer;
 }
@@ -56,6 +67,8 @@
 }
 
 .cancel {
+    margin-top: auto;
+    max-height: 28px;
     width: 30%;
 }
 .cancel, .confirmCancel {

@@ -6,6 +6,8 @@ import { formatDate, formatTime, createTotal, createFee } from '../../functions/
 import { UserContext } from '../../contexts/UserContext.jsx'
 import Loading from '../../components/Loading.jsx'
 import setBannerMessage from '../../functions/bannerMessage.js'
+import ChevronUpIcon from '../../assets/chevronUp.svg?react'
+import ChevronDownIcon from '../../assets/chevronDown.svg?react'
 
 import squareLogo from '../../assets/square-logo.webp'
 
@@ -148,7 +150,7 @@ export default function Checkout() {
   return (
     <div className={styles.main}>
         <div className={styles.sideCheckout}>
-            <div className={`${styles.title}`}><span className='large text' onClick={() => setViewCart(true)}>Your Cart</span><span className={`${styles.viewButton} text small`} onClick={() => setViewCart(prev => !prev)}>{viewCart ? 'Close' : 'Open'}</span></div>
+            <div className={`${styles.title}`}><span className='large text' onClick={() => setViewCart(true)}>Your Cart</span><span className={`${styles.viewButton} text small`} onClick={() => setViewCart(prev => !prev)}>{viewCart ? <ChevronUpIcon  className={`largeIcon`}/> : <ChevronDownIcon className={`largeIcon`}/>}</span></div>
             {viewCart &&
             <ul className={`${styles.cart}`}>
                 {cart.map((item) => {
@@ -168,8 +170,8 @@ export default function Checkout() {
             }
             {user.role === 'life' && viewCart && <div className={`${styles.memberNote} text small`}><em>Note: As a life member, your $5 discount has been applied to all bookings.</em></div>}
             <div className={`${styles.subTotal}`}>
-                <span className='text regular bold'>Subtotal:</span>
-                <div className={`${styles.priceTotal} text regular bold`}>{`$${subtotal}`}
+                <span className='text secondaryText regular bold'>Subtotal:</span>
+                <div className={`${styles.priceTotal} text secondaryText regular bold`}>{`$${subtotal}`}
                 </div>
             </div>
             <div className={`${styles.processingFee}`}>
@@ -191,16 +193,16 @@ export default function Checkout() {
                 <div className={`${styles.nameContainer} text medium`}>
                     <div className={styles.paymentDetail}>
                         <div className={`${styles.detailLabel} text small`}>First Name</div>
-                        <div className={`${styles.detail} text medium`}>{user.firstName}</div>
+                        <div className={`${styles.detail} secondaryText medium`}>{user.firstName}</div>
                     </div>
                     <div className={styles.paymentDetail}>
                         <div className={`${styles.detailLabel} text small`}>Last Name</div>
-                        <div className={`${styles.detail} text medium`}>{user.lastName}</div>
+                        <div className={`${styles.detail} secondaryText medium`}>{user.lastName}</div>
                     </div>
                 </div>
                 <div className={styles.paymentDetail}>
                     <div className={`${styles.detailLabel} text small`}>Email Address</div>
-                    <div className={`${styles.email} text medium`}>{user.email}</div>
+                    <div className={`${styles.email} secondaryText text medium`}>{user.email}</div>
                 </div>
             </div>
 

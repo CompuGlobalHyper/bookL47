@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import styles from "./styles/Dropdown.module.css"
 import { useClickOutside } from '../functions/clickOutside'
+import ChevronUpIcon from '../assets/chevronUp.svg?react'
+import ChevronDownIcon from '../assets/chevronDown.svg?react'
 
 export default function Dropdown({ list, selected, setSelected, id, dropdown, setDropdown }) {
     const dropdownRef = useRef(null);
@@ -36,8 +38,8 @@ export default function Dropdown({ list, selected, setSelected, id, dropdown, se
             <span className={`${styles.invisibleText}`}>This is placeholder text</span>
             <span className={`${styles.selected} regular`}>{selected.name}</span>
             <div
-            className={`${styles.button} bold`}>
-                {open ? "-" : "+"}
+            className={`${styles.button} text medium`}>
+                {open ? <ChevronUpIcon className='mediumIcon'></ChevronUpIcon> : <ChevronDownIcon className='mediumIcon'></ChevronDownIcon>}
             </div>
             </div>
         <div className={`${styles.dropdownContainer}`}>

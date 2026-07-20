@@ -16,6 +16,8 @@ import setBannerMessage from '../../functions/bannerMessage'
 import generateRoomList from '../../functions/generateRoomList'
 import Loading from '../../components/Loading'
 import { Link } from 'react-router'
+import ChevronUpIcon from '../../assets/chevronUp.svg?react'
+import ChevronDownIcon from '../../assets/chevronDown.svg?react'
 
 import { fromZonedTime } from "date-fns-tz"
 
@@ -492,15 +494,15 @@ export default function Book() {
             </div>
         </div>
         <div className={`${styles.checkoutContainer}`}>
-        {viewCart 
-        ? <div className={`${styles.inCart} medium text link`} onClick={() => setViewCart(false)}><span>Close Cart</span></div>
+        { viewCart 
+        ? <div className={`${styles.inCart} medium text link`} onClick={() => setViewCart(false)}><span>Cart</span><ChevronUpIcon className='largeIcon'></ChevronUpIcon></div>
         : <div className={`${styles.inCart} medium text link`} onClick={() => {
           setViewCart(true) 
           setDropdown((prev) => {
           return prev.map((item) => {
             return {...item, open: false}
           })
-        })}}><span>View Cart ({cart.length})</span></div>}
+        })}}><span>Cart ({cart.length})</span><ChevronDownIcon className='largeIcon'></ChevronDownIcon></div>}
         {viewCart 
         ? <ul className={styles.checkoutList}>
           { cart.length > 0 

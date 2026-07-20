@@ -6,6 +6,9 @@ import { formatDate, formatTime } from '../../functions/formatter'
 import Modal from '../../components/Modal'
 import setBannerMessage from '../../functions/bannerMessage'
 import { useOutlet, useOutletContext } from 'react-router'
+import DotsIcon from '../../assets/dotsHorizontal.svg?react'
+import ChevronUpIcon from '../../assets/chevronUp.svg?react'
+import ChevronDownIcon from '../../assets/chevronDown.svg?react'
 
 function getTotalPages(count, perPage = 5) {
   return Math.ceil(count / perPage)
@@ -17,6 +20,7 @@ export default function Bookings() {
   const { setMessage } = useOutletContext()
   const currentDate = new Date()
   const [viewPast, setViewPast] = useState(false)
+  const [viewUpcoming, setViewUpcoming] = useState(true)
   const [upcomingPage, setUpcomingPage] = useState(1)
   const [pastPage, setPastPage] = useState(1)
   const [loading, setLoading] = useState(true)
@@ -47,6 +51,7 @@ export default function Bookings() {
       }
 
     const bookings = await fetchBookings();
+    console.log(bookings)
     setBookings(bookings);
     setLoading(false);
     setLoadingNewData(false);
@@ -80,8 +85,11 @@ export default function Bookings() {
   return (
     <div>
       <div className={`${styles.bookingsContainer}`}>
-        <div className={`${styles.title} text large link`} onClick={() => setViewPast(false)}><span>Upcoming Bookings</span></div>
-        { !viewPast 
+        <div className={`${styles.title} text large link`} onClick={() => setViewUpcoming(prev => !prev)}>
+          <span>Current Bookings</span>
+          {!viewUpcoming ? <ChevronDownIcon className={`largeIcon`}/> : <ChevronUpIcon className={`largeIcon`}/>}
+        </div>
+        { viewUpcoming 
         ? <>
         { loadingNewData
         ? <Loading></Loading>
@@ -92,13 +100,20 @@ export default function Bookings() {
               return (
                 <li key={item.id} className={`${styles.container} ${item.status === 'cancelled' ? styles.disabled : ''}`}>
                   <div className={`${styles.date} text medium`}>{formatDate(item.date)} {item.status === 'cancelled' ? <em className='text medium'>(Cancelled)</em> : ''}</div>
-                  <div className={`${styles.time} text regular`}>{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
-                  <div className={`${styles.room} text small`}>{item.location}</div>
-                  <span className={`text regular ${styles.details}`} onClick={() => setActive(item)}> {active.id !== item.id ? 'Details' : ''}</span>
+                  <div className={styles.bottomHalf}>
+                    <div>
+                      <div className={`${styles.time} text regular`}>{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
+                      <div className={`${styles.room} text small`}>{item.location}</div>
+                    </div>
+                    { active.id !== item.id && <DotsIcon className={`text regular ${styles.details}`} onClick={() => setActive(item)}></DotsIcon>}
+                  </div>
                   { active.id === item.id 
                   && <>
                     <div className={`${styles.options} text regular`}>
-                        <div className={styles.equipment}><div className='text small'>{item.equipment_request.join(', ')}</div></div>
+                        <div className={styles.equipment}>
+                          <div className='text secondaryText small'>{item.equipment_request.length > 0 ? item.equipment_request.join(', ') : 'No backline requested.'}</div>
+                          <div className='text secondaryText small'>{item.description.length > 0 ? item.description : 'No additional information provided.'}</div>
+                        </div>
                         <div className={`${styles.cancel} text regular button`} onClick={() => setShowCancel(true)}>Cancel</div>
                       </div>
                   </>
@@ -119,8 +134,11 @@ export default function Bookings() {
         } </>
         : <></>}
       </div>
-      <div className={`${styles.pastContainer}`}>
-        <div className={`${styles.title} text large link`} onClick={() => setViewPast(true)}><span>Past Bookings</span></div>
+      <div className={`${styles.bookingsContainer}`}>
+        <div className={`${styles.title} text large link`} onClick={() => setViewPast(prev => !prev)}>
+          <span>Past Bookings</span>
+          {!viewPast ? <ChevronDownIcon className={`largeIcon`}/> : <ChevronUpIcon className={`largeIcon`}/>}
+        </div>
         { viewPast 
         ? <>
         { loadingNewData
@@ -130,7 +148,11 @@ export default function Bookings() {
           ? <ul>
             {bookings.past.map((item) => {
               return (
-                <li></li>
+                <li key={item.id} className={`${styles.container} ${styles.disabled}`}>
+                  <div className={`${styles.date} text medium`}>{formatDate(item.date)}</div>
+                  <div className={`${styles.time} text regular`}>{`${formatTime(item.start)} - ${formatTime(item.end)}`}</div>
+                  <div className={`${styles.room} text small`}>{item.location}</div>
+                </li>
               )
             })}
           </ul>
