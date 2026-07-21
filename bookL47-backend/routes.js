@@ -45,6 +45,9 @@ router.get('/logout', controllers.logoutGet)
 router.post('/password-forgot', controllers.passwordForgot)
 router.post('/password-reset', controllers.passwordReset)
 
+router.put('/profile', authUser, controllers.profilePut)
+router.post('/link-account', authUser, controllers.linkAccountPost)
+
 router.get('/bookings', authUser, controllers.bookingsGet)
 router.put('/cancel', authUser, controllers.bookingsCancel)
 

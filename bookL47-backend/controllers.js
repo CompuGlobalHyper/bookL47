@@ -301,6 +301,53 @@ const controllers = {
             return res.status(500).json({message: 'Error processing request'})
         }
     },
+    async profilePut(req, res) {
+        const user = req.user
+        const {firstName, lastName, email} = req.body
+        const supabase = supabaseClient()
+        console.log('attempting to update')
+        try {
+            const {error: updateError} = await supabase
+            .from('user')
+            .update({first_name: firstName, last_name: lastName, email})
+            .eq('id', user.id)
+            if (updateError) {
+                throw updateError
+            }
+            return res.status(200).json({message: 'Profile updated successfully'})
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({message: 'Database error'})
+
+        }
+
+    },
+    async linkAccountPost(req, res) {
+        const memberId = Number(req.body.memberId)
+        const id = req.user.id
+        const supabase = supabaseClient()
+        try {
+            const {data: memberData, error: memberError} = await supabase
+            .from('member')
+            .select('id')
+            .eq('id', memberId)
+            if (memberError) {
+                throw memberError
+            }
+            if (memberData[0]?.id === memberId) {
+                return res.status(200).json({message: "Member account linked!"})
+            } else {
+                return res.status(500).json({message: "No matching account found"})
+            }
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({message: "No matching account found"})
+
+        }
+        
+
+
+    },
     //Current booking routes
     async bookingsGet(req, res) {
         if (!req.user) {
@@ -343,6 +390,7 @@ const controllers = {
     },
     async bookingsCancel(req, res) {
         const id = req.body.id
+        let message
         try {
             const supabase = supabaseClient()
             const { data: bookingData, error: bookingError } = await supabase
@@ -363,41 +411,64 @@ const controllers = {
                 if (cancelError) {
                     throw(cancelError)
                 }
-                return res.status(200).json({message: "Cancelled booking, non-refundable"})
+                message = "Cancelled booking, non-refundable"
+            } else {
+                const price = booking.price
+                const paymentId = booking.payment_id
+                const { refund } = await squareClient.refunds.refundPayment({
+                    idempotencyKey: crypto.randomUUID(),
+                    paymentId,
+                    amountMoney: {
+                        amount: BigInt(price * 100),
+                        currency: "USD",
+                    },
+                });
+                const { error: refundError } = await supabase
+                .from('booking')
+                .update({ status: 'cancelled', refund_id: refund.id })
+                .eq("id", booking.id)
+                if (refundError) {
+                    throw(refundError)   
+                }
+                const { data: paymentData, error: paymentError } = await supabase
+                .from('payment')
+                .select('refunded_amount')
+                .eq("id", paymentId)
+                .single()
+                if (paymentError) {
+                    throw(paymentError)   
+                }
+                const { error: updatePaymentError } = await supabase
+                .from('payment')
+                .update({refunded_amount: paymentData.refunded_amount + (price * 100)})
+                .eq("id", paymentId)
+                if (updatePaymentError) {
+                    throw(updatePaymentError)   
+                }
+                message = "Cancelled booking, refund pending"
             }
-            const price = booking.price
-            const paymentId = booking.payment_id
-            const { refund } = await squareClient.refunds.refundPayment({
-                idempotencyKey: crypto.randomUUID(),
-                paymentId,
-                amountMoney: {
-                    amount: BigInt(price * 100),
-                    currency: "USD",
-                },
-            });
-            const { error: refundError } = await supabase
-            .from('booking')
-            .update({ status: 'cancelled', refund_id: refund.id })
-            .eq("id", booking.id)
-            if (refundError) {
-                throw(refundError)   
+            console.log(booking.google_id)
+            if (booking.google_id) {
+                //retrieve google calendar tokens
+                const oauth2Client = googleAuth()
+                const { data: adminData, error: adminError } = await supabase
+                .from('admin')
+                .select('google_token')
+                .eq('name', 'phin')
+                const tokens = adminData[0].google_token
+                oauth2Client.setCredentials(tokens);
+                //create calendar client
+                const calendar = google.calendar({
+                    version: "v3",
+                    auth: oauth2Client
+                });
+                await calendar.events.delete({
+                calendarId: 'c_lk6ofmjl263kkl6h66dai4orr8@group.calendar.google.com',
+                eventId: booking.google_id,
+                });
+                console.log('Google event deleted successfully.');
             }
-            const { data: paymentData, error: paymentError } = await supabase
-            .from('payment')
-            .select('refunded_amount')
-            .eq("id", paymentId)
-            .single()
-            if (paymentError) {
-                throw(paymentError)   
-            }
-            const { error: updatePaymentError } = await supabase
-            .from('payment')
-            .update({refunded_amount: paymentData.refunded_amount + (price * 100)})
-            .eq("id", paymentId)
-            if (updatePaymentError) {
-                throw(updatePaymentError)   
-            }
-            return res.status(200).json({message: "Cancelled booking, refund pending"})
+            return res.status(200).json({message})
         } catch(error) {
             console.log(error)
             return res.status(500).json({error: error.message})
@@ -623,43 +694,47 @@ const controllers = {
             //create booking objects for Google calendar
             const eventsList = bookingData.map((booking) => {
                 return ({
-                    'summary': `${booking.location} - ${booking.first_name} ${booking.last_name}`,
-                    'location': `${booking.location}`,
-                    'description': `${booking.equipment_request.join(', ')}
-                    ${booking.description}`,
-                    'start': {
-                        'dateTime': booking.starts_at,
-                        'timeZone': booking.timezone
-                    },
-                    'end': {
-                        'dateTime': booking.ends_at,
-                        'timeZone': booking.timezone
+                    id: booking.id,
+                    event:{
+                        'summary': `${booking.location} - ${booking.first_name} ${booking.last_name}`,
+                        'location': `${booking.location}`,
+                        'description': `${booking.equipment_request.join(', ')}
+                        ${booking.description}`,
+                        'start': {
+                            'dateTime': booking.starts_at,
+                            'timeZone': booking.timezone
+                        },
+                        'end': {
+                            'dateTime': booking.ends_at,
+                            'timeZone': booking.timezone
+                        }
                     }
                 })
             })
             //add to Google calendar
-            for (const event of eventsList) {
-                calendar.events.insert({
+            for (const bookingEvent of eventsList) {
+                await calendar.events.insert({
                 calendarId: 'c_lk6ofmjl263kkl6h66dai4orr8@group.calendar.google.com',
-                resource: event,
-                }, function(err, event) {
-                if (err) {
-                    console.log('There was an error contacting the Calendar service: ' + err);
-                    return;
-                }
-                console.log('Event created:', event);
+                resource: bookingEvent.event,
+                }, async function(err, event) {
+                    if (err) {
+                        console.log('There was an error contacting the Calendar service: ' + err);
+                        return;
+                    }
+                    console.log('Event created:', event.data.id);
+                    const { error: updateError } = await supabase
+                    .from("booking")
+                    .update({
+                        status: "paid",
+                        payment_id: paymentId,
+                        google_id: event.data.id
+                    })
+                    .eq("id", bookingEvent.id);
+                    if (updateError) {
+                        throw updateError;
+                    }
                 });
-            }
-            const bookingIds = bookingData.map(b => b.id)
-            const { error: updateError } = await supabase
-                .from("booking")
-                .update({
-                    status: "paid",
-                    payment_id: paymentId
-                })
-                .in("id", bookingIds);
-            if (updateError) {
-                throw updateError;
+                
             }
             const { data: deleteData, error: deleteError } = await supabase
             .from('cart')
