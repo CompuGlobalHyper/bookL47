@@ -1,0 +1,113 @@
+.container {
+    max-width: 500px;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+    border-bottom: 0.5px solid var(--border-color);
+}
+
+.field {
+  position: relative;
+  width: 100%;
+}
+
+.field input {
+  width: 100%;
+  padding: 16px 20px 10px 20px;
+  border: none;
+  border-radius: 2px;
+  box-sizing: border-box;
+  background-color: var(--surface-elevated-color);
+  height: 60px;
+}
+
+.field input:focus {
+    outline: none;
+    border: 2px solid var(--brand-color);
+}
+
+.field label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  color: var(--text-secondary-color);
+  pointer-events: none;
+
+  transition:
+    transform 200ms ease,
+    top 200ms ease,
+    font-size 200ms ease,
+    color 200ms ease;
+}
+
+.field div {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+}
+
+
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label {
+  top: 4px;
+  transform: translateY(0);
+
+  font-size: 10px;
+  color: var(--text-secondary-color);
+}
+
+.showHide {
+    cursor: pointer;
+}
+
+.error {
+    margin-top: -15px;
+    padding: 4px 0 0 10px;
+    font-size: 10px;
+    color: var(--reject-color);
+}
+
+.buttonContainer {
+    width: clamp(20px, 100%, 500px);
+}
+
+.button {
+    padding: 13px 20px 13px 14px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    border: none;
+}
+
+.button:hover {
+    background-color: var(--brand-hover-color);
+}
+
+.disabled {
+    background-color: var(--border-color);
+}
+.disabled:hover {
+    background-color: var(--text-secondary-color);
+}
+
+.memberIdContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}

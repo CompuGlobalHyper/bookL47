@@ -201,7 +201,7 @@ textarea {
   padding: 10px 14px 10px 14px;
   user-select: none;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   cursor: pointer;
   color: var(--brand-text-color);
@@ -210,8 +210,13 @@ textarea {
 }
 
 .button:active {
-    background-color: var(--brand-color);
-    color: var(--brand-text-color)
+    background-color: var(--brand-text-color);
+    color: var(--brand-color)
+}
+
+.button:hover {
+  background-color: var(--brand-hover-color);
+  color: var(--brand-text-color)
 }
 
 .link {

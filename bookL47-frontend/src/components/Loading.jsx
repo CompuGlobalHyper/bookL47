@@ -15,14 +15,19 @@ export default function Loading() {
       navigate('/error')
     }, 60000)
 
-    return () => clearTimeout(timeout)
+    return () => {
+      clearTimeout(timeout)
+      clearTimeout(error)
+    }
 
   }, [navigate])
 
   return (
     <div className={styles.container}>
-      <div className={`text medium bold ${styles.text}`}>{loadingMessage}</div>
-      <div className={`${styles.loading}`}></div>
+      <div className={`text medium bold ${styles.text}`}>{loadingMessage}
+        <div className={`${styles.loading}`}></div>
+      </div>
+      
       
     </div>
   )
