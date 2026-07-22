@@ -4,7 +4,7 @@ import { useOutletContext } from 'react-router'
 import setBannerMessage from '../../functions/bannerMessage'
 
 export default function UserHome() {
-  const {user} = useContext(UserContext)
+  const { user } = useContext(UserContext)
   const { setMessage } = useOutletContext()
   const API = import.meta.env.VITE_API_URL
   const [allowSend, setAllowSend] = useState(true)

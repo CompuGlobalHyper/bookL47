@@ -22,6 +22,7 @@ export default function Timeslots({
     selectedDate }) {
 
     const { addToCart, cart } = useContext(CartContext)
+    console.log(availableSlots)
 
     function handleSelect(id) {
         setAvailableSlots((prev) => {
@@ -36,7 +37,7 @@ export default function Timeslots({
   return (
     <div className={styles.main}>
         <div className={`${Object.keys(selectedRoom).length === 0 ? styles.hidden : ''}`}>
-            {user.role === "nonMember" || user.role === "admin" 
+            { user.role === "nonMember" || user.role === "admin" 
             ? <div className={`${styles.startEnd}`}>
                 <div className={`${styles.timeContainer}`}>
                     <div className={`${styles.title} text bold medium`}>Start:</div>

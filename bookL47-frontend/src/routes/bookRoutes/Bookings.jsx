@@ -77,6 +77,11 @@ export default function Bookings() {
     load()
   }, [upcomingPage, pastPage])
 
+  useEffect(() => {
+    setActive({})
+
+  }, [viewUpcoming, viewPast])
+
 
   if (loading) {
     return <Loading></Loading>
@@ -114,7 +119,7 @@ export default function Bookings() {
                           <div className='text secondaryText small'>{item.equipment_request.length > 0 ? item.equipment_request.join(', ') : 'No backline requested.'}</div>
                           <div className='text secondaryText small'>{item.description.length > 0 ? item.description : 'No additional information provided.'}</div>
                         </div>
-                        <div className={`${styles.cancel} text regular button`} onClick={() => setShowCancel(true)}>Cancel</div>
+                        <div className={`${styles.cancel} text regular button`} onClick={() => setShowCancel(true)}><p>Cancel</p></div>
                       </div>
                   </>
                     

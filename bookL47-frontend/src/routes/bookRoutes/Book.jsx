@@ -164,6 +164,7 @@ export default function Book() {
     return false
   }
   useEffect(() => {
+      if (cartLoading || userLoading) return
       async function setInitial() {
         const calendarRes = await fetch(`${API}/calendar`, {
             method: 'GET',
@@ -174,11 +175,10 @@ export default function Book() {
         setEvents(data)
         const rooms = await generateRoomList()
         setAvailableRooms(rooms)
-        if (cartLoading) return
         setLoading(false)
       }
       setInitial()
-  }, [cartLoading])
+  }, [cartLoading, userLoading])
     useEffect(() => {
       if (events.length === 0) return
       let firstDateStr = firstDate.toISOString().split('T')[0]
@@ -212,6 +212,7 @@ export default function Book() {
     useEffect(() => { 
       if (cartLoading) return
         const bookedSlotSet = new Set(bookedSlots.flatMap(slot => generateBookedArray(slot)));
+        console.log(bookedSlotSet)
         const cartSet = new Set(
             cart
             .filter(item =>
@@ -451,7 +452,7 @@ export default function Book() {
                     selectedRoom={selectedRoom}
                     setSelectedRoom={setSelectedRoom} 
                     ></Rooms>
-                    {user.role !== "member" || user.role !== "life"
+                    { user.role !== "member" && user.role !== "life"
                     ? <Timeslots
                     dropdown={dropdown}
                     setDropdown={setDropdown}

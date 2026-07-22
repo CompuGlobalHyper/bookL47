@@ -39,7 +39,7 @@ export default function VerifyEmail() {
             const data = await res.json()
             if (res.status === 200) {
                 setBannerMessage(setMessage, "Email address verified!", false, 5 )
-                navigate('/')
+                navigate('/book')
             } else {
                 setBannerMessage(setMessage, data.message, true, 3 )
                 setAllowVerify(true)

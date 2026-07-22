@@ -483,31 +483,33 @@ const controllers = {
         try {
             const {error: updateError} = await supabase
             .from('user')
-            .update({first_name: firstName, last_name: lastName, email})
+            .update({first_name: firstName, last_name: lastName, email, verified: false})
             .eq('id', user.id)
             if (updateError) {
                 throw updateError
             }
-            return res.status(200).json({message: 'Profile updated successfully'})
+            return res.status(200).json({message: 'Profile updated successfully, please re-verify email.'})
         } catch (error) {
             console.log(error)
-            return res.status(500).json({message: 'Database error'})
+            return res.status(500).json({message: 'Database error, could not update.'})
 
         }
 
     },
     async linkAccountPost(req, res) {
         const memberId = Number(req.body.memberId)
+        console.log(memberId)
         const id = req.user.id
         const supabase = supabaseClient()
         try {
             const {data: memberData, error: memberError} = await supabase
             .from('member')
-            .select('id')
+            .select('*')
             .eq('id', memberId)
             if (memberError) {
                 throw memberError
             }
+            console.log(memberData)
             if (memberData[0]?.id === memberId
                 && memberData[0]?.user_id === null
             ) {
@@ -521,25 +523,25 @@ const controllers = {
                 const {error: userError} = await supabase
                 .from('user')
                 .update({member_id: memberId, role})
-                .eq('id', user.id)
+                .eq('id', id)
                 if (userError) {
                     throw userError
                 }
 
                 const {error: updateError} = await supabase
                 .from('member')
-                .update({user_id: user.id})
+                .update({user_id: id})
                 .eq('id', memberId)
                 if (updateError) {
                     throw updateError
                 }
                 return res.status(200).json({message: "Member account linked!"})
             } else {
-                return res.status(500).json({message: "No matching account found"})
+                return res.status(500).json({message: "No matching account found."})
             }
         } catch (error) {
             console.log(error)
-            return res.status(500).json({message: "No matching account found"})
+            return res.status(500).json({message: "No matching account found."})
 
         }
         

@@ -1,5 +1,5 @@
 .container {
-    max-width: 500px;
+    width: clamp(400px, 50dvw, 800px)
 }
 .header {
     display: flex;

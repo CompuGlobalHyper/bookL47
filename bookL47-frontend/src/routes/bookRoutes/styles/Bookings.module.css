@@ -67,6 +67,8 @@
 }
 
 .cancel {
+    display: flex;
+    justify-content: center;
     margin-top: auto;
     max-height: 28px;
     width: 30%;
