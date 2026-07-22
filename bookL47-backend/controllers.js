@@ -25,6 +25,127 @@ function googleAuth () {
     );
 }
 
+async function sendVerificationEmail (user) {
+    const supabase = supabaseClient()
+    try {
+        const token = crypto.randomBytes(32).toString("hex");
+        const token_hash = crypto
+        .createHash("sha256")
+        .update(token)
+        .digest("hex")
+        const expires_at = new Date(Date.now() + 1000 * 60 * 60 * 24) //24 hours
+        const { error } = await supabase
+        .from("email_verification")
+        .upsert(
+            {
+                user_id: user.id,
+                token_hash,
+                expires_at,
+            },
+            {
+                onConflict: "user_id",
+            }
+        );
+        if (error) {
+            throw error;
+        }
+        const link = `${process.env.CLIENT_URL}/email-verification?token=${token}`
+        await sgMail.send({
+            to: user.email,
+            from: "info@afm47.org",
+            subject: "Book L47: Email verification link",
+            html: 
+                `<body style="
+                margin: 0;
+                padding: 40px;
+                background-color: #f4f4f4;
+                font-family: Arial, Helvetica, sans-serif;
+                ">
+                <div style="
+                    max-width: 500px;
+                    margin: 0 auto;
+                    background: white;
+                    padding: 40px;
+                    border-radius: 2px;
+                ">
+                    <div style="
+                    text-align: center;
+                    margin-bottom: 30px;
+                    ">
+                    <h1 style="
+                        margin: 0;
+                        font-size: 28px;
+                        color: #222;
+                    ">
+                        Book L47
+                    </h1>
+                    </div>
+                    <h2 style="
+                    color: #222;
+                    font-size: 22px;
+                    margin-bottom: 20px;
+                    ">
+                    Verify your email
+                    </h2>
+                    <p style="
+                    color: #555;
+                    font-size: 16px;
+                    line-height: 1.5;
+                    ">
+                    An email verification request was made for your Book L47 account.
+                    </p>
+                    <p style="
+                    color: #555;
+                    font-size: 16px;
+                    line-height: 1.5;
+                    ">
+                    Click the button below to verify your email address. This link will expire in 24 hours.
+                    </p>
+                    <div style="
+                    text-align: center;
+                    margin: 30px 0;
+                    ">
+                    <a 
+                        href="${link}"
+                        style="
+                        cursor: pointer;
+                        font-weight: 900;
+                        background-color: rgb(1, 179, 227);
+                        color: white;
+                        padding: 14px 28px;
+                        border-radius: 2px;
+                        text-decoration: none;
+                        font-size: 16px;
+                        display: inline-block;
+                        "
+                    >
+                        Verify Email
+                    </a>
+                    </div>
+                    <hr style="
+                    border: none;
+                    border-top: 1px solid #ddd;
+                    margin: 30px 0;
+                    "></hr>
+                    <p style="
+                    color: #888;
+                    font-size: 12px;
+                    text-align: center;
+                    ">
+                    Book L47<br></br>
+                    booking@afm47.org<br></br>
+                    323.993.3172
+                    </p>
+                    </div>
+                </body>`
+        })
+        return true
+    } catch (error) {
+        console.log(error)
+        return null
+    }
+}
+
 
 const controllers = {
 
@@ -38,7 +159,8 @@ const controllers = {
                     firstName: user.first_name,
                     lastName: user.last_name,
                     email: user.email,
-                    role: user.role
+                    role: user.role,
+                    verified: user.verified
                 })
         } else {
             return res.status(200).json({ auth: false })
@@ -73,7 +195,8 @@ const controllers = {
                     firstName: user.first_name,
                     lastName: user.last_name,
                     email: user.email,
-                    role: user.role
+                    role: user.role,
+                    verified: user.verified
                 })
         })
     },
@@ -95,11 +218,17 @@ const controllers = {
         const { data, error } =  await supabase
         .from('user')
         .insert(user)
-
+        .select('*')
         if (error) {
             return res.status(400).json({error: error})
         }
-        return res.status(200).json({message: 'successful registration'})
+        console.log('Created user')
+        const userData = data[0]
+        const sentEmail = await sendVerificationEmail(userData)
+        if (!sentEmail) {
+            console.log('Failed to send email verification')
+        }
+        return res.status(200).json({message: 'Successful registration'})
     },
     async logoutGet(req, res) {
         res.clearCookie("access_token", {
@@ -110,6 +239,51 @@ const controllers = {
         });
         console.log('logging you out..')
         return res.status(200).json({ role: 'guest' })
+
+    },
+    async resendEmailVerification(req, res) {
+        const user = req.user
+        console.log(user)
+        const sentEmail = await sendVerificationEmail(user)
+        if (sentEmail) {
+            return res.status(200).json({ message: 'Sent verification email!'})
+        } else {
+            return res.status(400).json({ message: 'Verification email could not be sent'})
+        }
+    },
+    async verifyEmail(req, res) {
+        const { token } = req.body
+        if (!token) {
+            return res.status(400).json({message: 'Invalid or expired link.'})
+        }
+        try {
+            const hash = crypto
+            .createHash("sha256")
+            .update(token)
+            .digest("hex")
+            const supabase = supabaseClient()
+            const { data, error } = await supabase
+            .from('email_verification')
+            .select('*')
+            .eq('token_hash', hash)
+            if (error) {
+                throw(error)
+            }
+            if (!data[0]) {
+                return res.status(400).json({message: 'Invalid or expired link.'})
+            }
+            if (new Date(data[0].expires_at) <= new Date() ) {
+                return res.status(400).json({message: 'Invalid or expired link.'})
+            }
+            const { data: userData, error: userError } = await supabase
+            .from('user')
+            .update({verified: true})
+            .eq('id', data[0].user_id)
+            return res.status(200).json({message: 'Success!'})
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({message: 'Error processing request'})
+        }
 
     },
     async passwordForgot(req, res) {
@@ -132,7 +306,7 @@ const controllers = {
             .createHash("sha256")
             .update(token)
             .digest("hex")
-            const expires_at = new Date(Date.now() + 1000 * 60 * 60) //10 minutes
+            const expires_at = new Date(Date.now() + 1000 * 60 * 60) //60 minutes
             const { data: resetData, error: resetError} = await supabase
             .from('password_reset')
             .insert({ 
@@ -334,7 +508,31 @@ const controllers = {
             if (memberError) {
                 throw memberError
             }
-            if (memberData[0]?.id === memberId) {
+            if (memberData[0]?.id === memberId
+                && memberData[0]?.user_id === null
+            ) {
+                let role
+                if (memberData[0].status === 'Life') {
+                    role = 'life'
+                }
+                if (memberData[0].status === 'Regular') {
+                    role = 'member'
+                }
+                const {error: userError} = await supabase
+                .from('user')
+                .update({member_id: memberId, role})
+                .eq('id', user.id)
+                if (userError) {
+                    throw userError
+                }
+
+                const {error: updateError} = await supabase
+                .from('member')
+                .update({user_id: user.id})
+                .eq('id', memberId)
+                if (updateError) {
+                    throw updateError
+                }
                 return res.status(200).json({message: "Member account linked!"})
             } else {
                 return res.status(500).json({message: "No matching account found"})

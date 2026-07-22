@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { useOutletContext } from "react-router";
 
 import GuestHome from './GuestHome.jsx'
-import NonMemberHome from './NonMemberHome.jsx'
+import UserHome from './UserHome.jsx'
 import MemberHome from './MemberHome.jsx'
 import CrewHome from './CrewHome.jsx'
 import AdminHome from './AdminHome.jsx'
@@ -15,9 +15,9 @@ export default function Home() {
 
   const homePages = {
   guest: <GuestHome setMessage={setMessage} />,
-  nonMember: <NonMemberHome setMessage={setMessage} />,
-  member: <MemberHome setMessage={setMessage} />,
-  life: <MemberHome setMessage={setMessage} />,
+  nonMember: <UserHome setMessage={setMessage} />,
+  member: <UserHome setMessage={setMessage} />,
+  life: <UserHome setMessage={setMessage} />,
   crew: <CrewHome setMessage={setMessage} />,
   admin: <AdminHome setMessage={setMessage} />,
   };

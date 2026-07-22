@@ -22,6 +22,7 @@ import requireUser from './loaders/requireUser.js';
 import { UserProvider } from './contexts/UserContext.jsx';
 import { CartProvider } from './contexts/CartContext.jsx';
 import ResetPassword from './routes/general/ResetPassword.jsx';
+import VerifyEmail from './routes/general/VerifyEmail.jsx';
 
 
 
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
       { path: "/code-of-conduct", element: <Conduct />},
       { path: "/contact-us", element: <Contact />},
       { path: "/rooms", element: <RoomInfo />},
+      { path: "/email-verification", element:<VerifyEmail/> },
       { path: "/reset-password", element:<ResetPassword/> },
       { path: "*", element: <NotFound/>},
       { loader: requireUser,

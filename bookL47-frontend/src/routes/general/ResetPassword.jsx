@@ -35,7 +35,6 @@ export default function ResetPassword() {
         }
         setLoading(false)
 
-
     }, [])
 
     if (loading) {

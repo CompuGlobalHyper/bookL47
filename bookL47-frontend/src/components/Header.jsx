@@ -123,7 +123,6 @@ export default function Header( { setMessage }) {
                             onClick={() => {
                                 if (link.name === 'Logout') {
                                   handleLogout()
-                                  setUser({ role: guest })
                                 }
                                 setViewMenu(false)
                             }}>{link.name}</Link>

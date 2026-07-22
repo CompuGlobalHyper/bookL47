@@ -42,6 +42,9 @@ router.post('/login',
 
 router.post('/register', controllers.registerPost)
 router.get('/logout', controllers.logoutGet)
+
+router.get('/resend-email-verification', authUser, controllers.resendEmailVerification)
+router.post('/verify-email', controllers.verifyEmail)
 router.post('/password-forgot', controllers.passwordForgot)
 router.post('/password-reset', controllers.passwordReset)
 

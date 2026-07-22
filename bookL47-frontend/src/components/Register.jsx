@@ -77,7 +77,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     password: formData.password,
                 })
             })
-            setBannerMessage(setMessage, "Account created successfully!", false, 5 )
+            setBannerMessage(setMessage, "Account created! Please check your inbox to verify your email.", false, 5 )
             setFormData((prev) => {
                 return Object.keys(prev).reduce((acc, key) => {
                     acc[key] = ''
