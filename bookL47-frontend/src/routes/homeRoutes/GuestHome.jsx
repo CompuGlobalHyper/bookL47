@@ -26,7 +26,7 @@ export default function GuestHome({ setMessage }) {
       </Register>
        <div className={styles.content}>
           <div className={styles.textContainer}>
-            <h1 className={`text`}>Welcome to Book L47</h1>
+            <h1 className={`text large thin`}>Welcome to Book L47</h1>
             <p className={`text`}>This is the home page users will see when they are visiting or have not logged in.</p>
           </div>
           <div className={`${styles.image} text`}></div>

@@ -36,11 +36,12 @@ export default function UserHome() {
   return (
     <div>
       <div className='large text'>Hello {user.firstName}!</div>
-      {!user.verified 
-      && <div>
+      { !user.verified 
+      ? <div>
           <p className='text'>You must verfiy your email to gain full access.</p>
           <div className='button text' onClick={() => handleClick()}>Resend verification email</div>
-        </div>}
+        </div>
+      : <></> } 
     </div>
   )
 }

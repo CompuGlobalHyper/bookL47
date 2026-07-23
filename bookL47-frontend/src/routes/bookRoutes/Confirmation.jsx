@@ -9,10 +9,11 @@ export default function Confirmation() {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
   const location = useLocation()
-  const params = new URLSearchParams(location.search)
-  const payment = params.get('payment')
   useEffect(() => {
     async function load() {
+      const params = new URLSearchParams(location.search)
+      const payment = params.get('payment')
+      if (!payment) navigate('/')
       const res = await fetch(`${API}/confirmation?payment=${payment}`, {
         method: "GET",
         credentials: 'include'
@@ -23,12 +24,13 @@ export default function Confirmation() {
         navigate('/')
       }
     }
+    load()
   })
   return (
     <div>
       <div className='text large thin'>You're all set!</div>
       <div className='text medium'>Thank you for booking with AFM Local 47. </div>
-      <div className='text medium'>Click <Link className='link blue text' to={'/bookings'}>here</Link> to view you're upcoming bookings.</div>
+      <div className='text medium'>Click <Link className='link blue text' to={'/bookings'}>here</Link> to view your upcoming bookings.</div>
     </div>
   )
 }

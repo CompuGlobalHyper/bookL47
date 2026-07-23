@@ -6,10 +6,10 @@ export default function Join() {
       <div className='text large thin'>Stronger Together</div>
       <p className='text regular paragraph'>As a professional musician, your real strength comes from working collectively with other musicians. If you're considering becoming a member of the musicians union, ask yourself:</p>
       <ul>
-        <li><p className='text regular paragraph'> - Do I want to be paid fairly for my talent and skill?</p></li>
-        <li><p className='text regular paragraph'> - Do I want access to quality health care and pension?</p></li>
-        <li><p className='text regular paragraph'> - Do I want to be safe at my workplace?</p></li>
-        <li><p className='text regular paragraph'> - Do I want access to expert assistance if something goes wrong?</p></li>
+        <li><p className='text regular paragraph bold'> - Do I want to be paid fairly for my talent and skill?</p></li>
+        <li><p className='text regular paragraph bold'> - Do I want access to quality health care and pension?</p></li>
+        <li><p className='text regular paragraph bold'> - Do I want to be safe at my workplace?</p></li>
+        <li><p className='text regular paragraph bold'> - Do I want access to expert assistance if something goes wrong?</p></li>
       </ul>
       <p className='text regular paragraph'>If you answered yes, you’re ready to join the union!</p>
       <p className='text regular paragraph'>Serving thousands of professional musicians throughout Los Angeles, the American Federation of Musicians Local 47 promotes and protects the concerns of professional musicians in all areas of the music industry. Isolated musicians are more easily exploited and less likely to receive the benefits AFM Local 47 members enjoy — contracts that are more than just pieces of paper, health care and pension, scale wages worthy of professionals, and more.</p>

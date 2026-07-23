@@ -1026,76 +1026,89 @@ const controllers = {
     async calendarGet(req, res) {
         const oauth2Client = googleAuth()
         const supabase = supabaseClient()
-        //get saved admin credentials
-        const { data: adminData, error: adminError } = await supabase
-        .from('admin')
-        .select('google_token')
-        .eq('name', 'phin')
-        const tokens = adminData[0].google_token
-        oauth2Client.setCredentials(tokens);
-        //create calendar client
-        const calendar = google.calendar({
-            version: "v3",
-            auth: oauth2Client
-        });
-        //get 180 days of events from Google calendar
-        const result = await calendar.events.list({
-            calendarId: "primary",
-            timeMin: new Date().toISOString(),
-            timeMax: new Date(
-                Date.now() + 1000 * 60 * 60 * 24 * 180
-            ).toISOString(),
-            singleEvents: true,
-            orderBy: "startTime"
-        });
-        //cleanup
-        const events = result.data.items
-        //arrange for Supabase upload
-        const rows = events.map((event) => {
-            return {
-                google_id: event.id,
-                location: event.location || "No location found",
-                created_at: event.created,
-                date: event.start.dateTime.split('T')[0],
-                start: event.start.dateTime.split('T')[1].split('-')[0],
-                end: event.end.dateTime.split('T')[1].split('-')[0],
-                timezone: event.start.timeZone,
-                title: event.summary || "No title available",
-                description: event.description
+        try {
+            //get saved admin credentials
+            const { data: adminData, error: adminError } = await supabase
+            .from('admin')
+            .select('google_token')
+            .eq('name', 'phin')
+            if (adminError) {
+                throw adminError
             }
-        })
-        //upload 180 days of events to Supabase
-        const { data: bookingdData, error: bookingError } = await supabase
-        .from('booking')
-        .upsert(rows,{
-            onConflict: 'google_id'
-        })
-        if (bookingError) {
-            console.log(bookingError)
-        }
-        //create list of next 180 days
-        const next180 = []
-        for (let i = 0; i < 180; i++) {
-            newDate = new Date(Date.now() + 1000 * 60 * 60 * 24 * i )
-            newDateStr = newDate.toISOString().split('T')[0]
-            next180.push(newDateStr)
-        }
-        //create list of all rooms
-        const { data: roomData, error: roomError } = await supabase
-        .from('location')
-        .select('name')
-        
-        const bookingData = next180.map((date) => {
-            let roomsAndSlots = roomData.map((room) => {
-                let filteredBookings = rows.filter((row) => row.location === room.name && row.date === date)
-                let timeObjects = filteredBookings.map((booking) => {
-                    return { start: booking.start, end: booking.end }
-                })
-                return { name: room.name, filledTimes: timeObjects}
+            const tokens = adminData[0].google_token
+            oauth2Client.setCredentials(tokens);
+            //create calendar client
+            const calendar = google.calendar({
+                version: "v3",
+                auth: oauth2Client
+            });
+            //get 180 days of events from Google calendar
+            const result = await calendar.events.list({
+                calendarId: "primary",
+                timeMin: new Date().toISOString(),
+                timeMax: new Date(
+                    Date.now() + 1000 * 60 * 60 * 24 * 180
+                ).toISOString(),
+                singleEvents: true,
+                orderBy: "startTime"
+            });
+            //cleanup data
+            const events = result.data.items
+            //arrange for Supabase upload
+            const rows = events.map((event) => {
+                return {
+                    google_id: event.id,
+                    location: event.location || "No location found",
+                    created_at: event.created,
+                    date: event.start.dateTime.split('T')[0],
+                    start: event.start.dateTime.split('T')[1].split('-')[0],
+                    end: event.end.dateTime.split('T')[1].split('-')[0],
+                    timezone: event.start.timeZone,
+                    title: event.summary || "No title available",
+                    description: event.description
+                }
             })
-            return { date: date, rooms: roomsAndSlots }
-        })
-        res.json(bookingData);
+            //upload 180 days of events to Supabase
+            const { data: bookingData, error: bookingError } = await supabase
+            .from('booking')
+            .upsert(rows,{
+                onConflict: 'google_id'
+            })
+            .select('*')
+            if (bookingError) {
+                throw bookingError
+            }
+            //create list of next 180 days
+            const next180 = []
+            for (let i = 0; i < 180; i++) {
+                newDate = new Date(Date.now() + 1000 * 60 * 60 * 24 * i )
+                newDateStr = newDate.toISOString().split('T')[0]
+                next180.push(newDateStr)
+            }
+            //create list of all rooms
+            const { data: roomData, error: roomError } = await supabase
+            .from('location')
+            .select('name')
+            if (roomError) {
+                throw roomError
+            }
+            const calendarData = next180.map((date) => {
+                let roomsAndSlots = roomData.map((room) => {
+                    let filteredBookings = bookingData.filter((row) => row.location === room.name && row.date === date)
+                    let timeObjects = filteredBookings.map((booking) => {
+                        return { start: booking.start, end: booking.end }
+                    })
+                    return { name: room.name, filledTimes: timeObjects}
+                })
+                return { date: date, rooms: roomsAndSlots }
+            })
+            res.status(200).json(calendarData);
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({message: "Database Error"})
+        }
+        
+        
     },
     //populate db with jotform data
     async jotformGet(req, res) {
