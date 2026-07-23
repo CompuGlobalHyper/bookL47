@@ -294,3 +294,7 @@ textarea {
 .hiddenDisplay {
     display: none;
 }
+
+.paragraph {
+  margin-top: 10px;
+}
