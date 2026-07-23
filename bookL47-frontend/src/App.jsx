@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { Outlet, Link, useLocation } from 'react-router'
 import styles from './App.module.css'
 import Header from './components/Header'
+import Register from './components/Register'
 import Footer from './components/Footer'
 import getUser from './functions/getUser'
 import { UserContext } from './contexts/UserContext'
@@ -11,6 +12,7 @@ import ScrollToTop from './components/ScrollToTop'
 function App() {
   const location = useLocation();
   const {user, setUser, loading: userLoading} = useContext(UserContext)
+  const [viewRegister, setViewRegister] = useState(false)
   const [message, setMessage] = useState({
     text: '',
     error: false
@@ -27,8 +29,10 @@ function App() {
   return (
     <div className={styles.body}>
       <> {user?.role === 'admin' ? <div className={`${styles.adminMessage} text bold medium`}><span>You are in admin mode</span></div> : <div></div>}
-      <Header 
-        setMessage={setMessage}>
+      <Header
+          viewRegister={viewRegister}
+          setViewRegister={setViewRegister}
+          setMessage={setMessage}>
       </Header>
       <div className={`${styles.messageContainer} text regular`}>
         <p className={`
@@ -38,8 +42,13 @@ function App() {
           `}><span>{message.text}</span></p>
       </div>
       <ScrollToTop></ScrollToTop>
+      <Register
+          viewRegister={viewRegister}
+          setViewRegister={setViewRegister}
+          setMessage={setMessage}>
+      </Register>
        <div className={styles.main} key={location.pathname}>
-          <Outlet context={{ setMessage }}/>
+          <Outlet context={{ setMessage, viewRegister, setViewRegister }}/>
       </div>
       <div className={styles.footer}><Footer/></div> 
       </>

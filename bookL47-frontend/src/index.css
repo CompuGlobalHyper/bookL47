@@ -133,13 +133,13 @@ a {
 
   /* Status */
   --confirm-color: light-dark(
-    rgb(32, 202, 111),
-    rgb(30, 149, 106)
+    rgb(0, 199, 93),
+    rgb(0, 193, 122)
   );
 
   --reject-color: light-dark(
     rgb(230, 72, 72),
-    rgb(182, 66, 66)
+    rgb(199, 43, 43)
   );
 
   --active-reject-color: light-dark(
@@ -297,4 +297,5 @@ textarea {
 
 .paragraph {
   margin-top: 10px;
+  max-width: 800px;
 }

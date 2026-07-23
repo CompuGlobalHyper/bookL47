@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { UserContext } from '../../contexts/UserContext'
-import { useOutletContext } from 'react-router'
+import { Link, useOutletContext } from 'react-router'
 import setBannerMessage from '../../functions/bannerMessage'
 
 export default function UserHome() {
@@ -42,6 +42,7 @@ export default function UserHome() {
           <div className='button text' onClick={() => handleClick()}>Resend verification email</div>
         </div>
       : <></> } 
+      { user.role === 'nonMember' && <div className='text regular'>If you're a member, navigate to <Link className='blue link bold' to='/profile'>Profile</Link> and connect your Ensemble 2.0 account to access your member discounts.</div> }
     </div>
   )
 }

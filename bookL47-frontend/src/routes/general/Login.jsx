@@ -94,6 +94,7 @@ export default function Login() {
       }, [ viewRegister])
   return (
     <div className={styles.mainFormContainer}>
+      <div className='large text thin'>Sign In :</div>
             <Register
               viewRegister={viewRegister}
               setViewRegister={setViewRegister}

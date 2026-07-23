@@ -17,10 +17,11 @@ import CalendarEventIcon from '../assets/calendarEvent.svg?react'
 import ShiftsIcon from '../assets/shifts.svg?react'
 import LogoutIcon from '../assets/logout.svg?react'
 import CartIcon from '../assets/cart.svg?react'
+import ContactIcon from '../assets/envelope.svg?react'
 
 
 
-export default function Header( { setMessage }) {
+export default function Header({ setMessage, viewRegister, setViewRegister }) {
     const API = import.meta.env.VITE_API_URL
     const { user, setUser } = useContext(UserContext)
     const { cart } = useContext(CartContext)
@@ -33,6 +34,7 @@ export default function Header( { setMessage }) {
         { name: "Join Local 47", link: "/join-L47", icon: MusicIcon },
         { name: "About", link: "/about", icon: InfoCircleIcon },
         { name: "Code of Conduct", link: "/code-of-conduct", icon: ChecklistIcon },
+        { name: "Contact Us", link: "/contact", icon: ContactIcon },
       ],
 
       nonMember: [
@@ -42,6 +44,7 @@ export default function Header( { setMessage }) {
         { name: "My Bookings", link: "/bookings", icon: CalendarEventIcon },
         { name: "Profile", link: "/profile", icon: UserIcon },
         { name: "Code of Conduct", link: "/code-of-conduct", icon: ChecklistIcon },
+        { name: "Contact Us", link: "/contact", icon: ContactIcon },
         { name: "Logout", link: "/", icon: LogoutIcon },
       ],
 
@@ -58,6 +61,7 @@ export default function Header( { setMessage }) {
         { name: "Book a Room", link: "/book", icon: CalendarIcon },
         { name: "My Bookings", link: "/bookings", icon: CalendarEventIcon },
         { name: "Profile", link: "/profile", icon: UserIcon },
+        { name: "Contact Us", link: "/contact", icon: ContactIcon },
         { name: "Logout", link: "/", icon: LogoutIcon },
       ],
 
@@ -98,9 +102,11 @@ export default function Header( { setMessage }) {
     <div className={styles.container}>
         <div className={styles.main}>
             <div className={styles.image}></div>
-            <Link to='/' className={`${styles.title} text large bold`} onClick={() => setViewMenu(false)}>{`AFM 47`}</Link>
-            {user.role === 'guest' 
-            ? <></> 
+            <Link to='/' className={`${styles.title} text large deco`} onClick={() => setViewMenu(false)}>AFM 47</Link>
+            { user.role === 'guest' 
+            ? <Link className={styles.signInContainer} to='/login'>
+              <div className={`${styles.signInOption} text small`}>Sign In / Register</div>
+            </Link> 
             : <Link 
                 to='/cart'
                 className={`${styles.cart} text bold`}

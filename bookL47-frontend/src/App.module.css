@@ -46,7 +46,7 @@
     border-radius: 2px;
     padding: 10px 10px;
     text-align: center;
-    width: clamp(300px, 30dvw, 1000px);
+    width: clamp(100px, 80dvw, 400px);
     opacity: 0;
     z-index: 2;
     position: fixed;

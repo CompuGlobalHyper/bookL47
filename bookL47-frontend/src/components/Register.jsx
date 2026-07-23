@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles/Register.module.css'
 import setBannerMessage from '../functions/bannerMessage';
 import { Link } from 'react-router';
+import CloseIcon from '../assets/x.svg?react'
 
 export default function Register({viewRegister, setViewRegister, setViewLogin, setMessage}) {
     const [allowRegister, setAllowRegister] = useState(true)
@@ -168,14 +169,13 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
         autoFocus>
         <div className={styles.registerContainer}>
             <div className={`${styles.closeButton} link text`}>
-                <span onClick={() => {
+                <CloseIcon className='text' onClick={() => {
                 setViewRegister(false)}}>
-                    Close
-                </span>
+                </CloseIcon>
             </div>
             <div className={styles.header}>
                 <h1 className={`text medium`}>Create a free account!</h1>
-                <p className={`text small`}>Already have an account? <Link to={'/login'}className={`${styles.link} text link blue`}>Sign in!</Link></p>
+                <p className={`text small`}>Already have an account? <Link to={'/login'} onClick={() => {setViewRegister(false)}}className={`${styles.link} text link blue`}>Sign in!</Link></p>
             </div>
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
                 <div className={`${styles.field} text medium`}>

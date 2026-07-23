@@ -63,6 +63,7 @@ passport.use(new JwtStrategy(
     .select('id, created_at, first_name, last_name, email, phone_number, role, verified')
     .eq("id", `${payload.id}`)
     .single()
+
     const user = data
     if (!user) {
       return done(null, false)
@@ -81,7 +82,7 @@ passport.use(
       const supabase = supabaseClient()
       const { data, error } = await supabase
       .from('user')
-      .select('id, created_at, first_name, last_name, email, phone_number, role')
+      .select('id, created_at, first_name, last_name, email, phone_number, role, verified')
       .eq("email", `${email}`)
       .single()
 

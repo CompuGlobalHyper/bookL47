@@ -191,7 +191,7 @@ const controllers = {
             //frontend reads res.auth = true
             return res.status(200).json(
                 { 
-                    auth: true, 
+                    auth: true,
                     firstName: user.first_name,
                     lastName: user.last_name,
                     email: user.email,

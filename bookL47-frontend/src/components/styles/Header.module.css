@@ -1,25 +1,29 @@
 .container {
     display: flex;
     flex-direction: column;
+    
 
 
 }
 
 .main {
-    padding: 0 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    min-height: 65px;
+    position: relative;
+    
     background-color: var(--brand-color);
 }
 
 .title {
     color: var(--brand-text-color);
-    margin-right: auto;
     cursor: pointer;
-
 }
 
+
+
+.signInOption {
+    color: var(--brand-text-color);
+
+}
 .hamburger {
     display: none;
 }
@@ -42,6 +46,29 @@
 }
 
 @media screen and (min-width: 1000px) {
+    .main {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+    .title {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .cart {
+        margin:auto 40px auto 0px;
+        
+    }
+
+    .signInContainer {
+        min-height: 65px;
+        margin-right: 40px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
     .list {
         z-index: 1;
         display: flex;
@@ -72,9 +99,20 @@
 @media screen and (max-width: 1000px) {
     .main {
         padding: 4px 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .title { 
+        margin: 0 auto 0 0;  
+    }
+    .signInContainer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
     }
     .hamburger {
-        margin-left: 20px;
+        margin-left: 10px;
         display: block;
         color: var(--brand-text-color);
         cursor: pointer;

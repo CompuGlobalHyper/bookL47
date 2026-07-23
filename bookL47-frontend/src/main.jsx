@@ -36,7 +36,7 @@ const router = createBrowserRouter([
       { path: "/about", element: <About />},
       { path: "/join-L47", element: <Join />},
       { path: "/code-of-conduct", element: <Conduct />},
-      { path: "/contact-us", element: <Contact />},
+      { path: "/contact", element: <Contact />},
       { path: "/rooms", element: <RoomInfo />},
       { path: "/email-verification", element:<VerifyEmail/> },
       { path: "/reset-password", element:<ResetPassword/> },
