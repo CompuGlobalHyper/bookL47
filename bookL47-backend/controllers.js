@@ -188,6 +188,7 @@ const controllers = {
                 maxAge: 60000 * 60 * 8 // 1 min * 60 (1hr) * 8 (8hr)
             })
             console.log('login successful, token created')
+            console.log(user.verified)
             //frontend reads res.auth = true
             return res.status(200).json(
                 { 
