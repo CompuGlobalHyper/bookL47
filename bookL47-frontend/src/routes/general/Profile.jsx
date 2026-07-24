@@ -22,8 +22,6 @@ export default function Profile() {
         email: "",
     })
 
-    const [touched, setTouched] = useState({})
-    const [passwordType, setPasswordType] = useState("password");
     const [allowEdit, setAllowEdit] = useState(false)
     const [allowUpdate, setAllowUpdate] = useState(true)
 
@@ -32,8 +30,7 @@ export default function Profile() {
         setFormData((prev) => ({
             ...prev,
             [name]: value,
-            }));
-        
+            }));    
     };
 
     const handleBlur = (e) => {
@@ -45,12 +42,6 @@ export default function Profile() {
             [name]: validateField(name, value)
         }))
     }
-
-    const togglePassword = () => {
-    setPasswordType((prev) =>
-        prev === "password" ? "text" : "password"
-        );
-    };
 
     async function handleReset() {
       try {

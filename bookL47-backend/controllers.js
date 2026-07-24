@@ -146,8 +146,81 @@ async function sendVerificationEmail (user) {
     }
 }
 
-async function adminBooking (bookingData) {
+async function adminBooking (user, bookingData) {
+    const supabase = supabaseClient()
+    //retrieve google calendar tokens
+    const oauth2Client = googleAuth()
+    try {
+        const { data: adminData, error: adminError } = await supabase
+        .from('admin')
+        .select('google_token')
+        .eq('name', 'phin')
+        if (adminError) {
+            throw adminError
+        }
+        const tokens = adminData[0].google_token
+        oauth2Client.setCredentials(tokens);
+        //create calendar client
+        const calendar = google.calendar({
+            version: "v3",
+            auth: oauth2Client
+        });
+        //create booking objects for Google calendar
+        const eventsList = bookingData.map((booking) => {
+            return ({
+                id: booking.id,
+                event:{
+                    'summary': `${booking.location} - ${booking.first_name} ${booking.last_name}`,
+                    'location': `${booking.location}`,
+                    'description': `${booking.equipment_request.join(', ')}
+                    ${booking.description}`,
+                    'start': {
+                        'dateTime': booking.starts_at,
+                        'timeZone': booking.timezone
+                    },
+                    'end': {
+                        'dateTime': booking.ends_at,
+                        'timeZone': booking.timezone
+                    }
+                }
+            })
+        })
+        //add to Google calendar
+        for (const bookingEvent of eventsList) {
+            await calendar.events.insert({
+            calendarId: 'c_lk6ofmjl263kkl6h66dai4orr8@group.calendar.google.com',
+            resource: bookingEvent.event,
+            }, async function(err, event) {
+                if (err) {
+                    throw new Error(err)
+                    return;
+                }
+                console.log('Event created:', event.data.id);
+                const { error: updateError } = await supabase
+                .from("booking")
+                .update({
+                    status: "admin",
+                    google_id: event.data.id
+                })
+                .eq("id", bookingEvent.id);
+                if (updateError) {
+                    throw updateError;
+                }
+            });
+            
+        }
+        const { data: deleteData, error: deleteError } = await supabase
+        .from('cart')
+        .delete()
+        .eq("user_id", user.id)
+        if (deleteError) {
+            throw deleteError;
+        }
 
+    } catch(error) {
+        console.log(error)
+    }
+    
 }
 
 async function checkConflicts(cart) { 
@@ -155,7 +228,7 @@ async function checkConflicts(cart) {
     for (const item of cart) {
         const { data: bookingData, error: bookingError } = await supabase
         .from('booking')
-        .select('id')
+        .select('id, first_name')
         .eq('location_id', item.location_id)
         .lt('starts_at', item.ends_at)
         .gt('ends_at', item.starts_at)
@@ -164,6 +237,7 @@ async function checkConflicts(cart) {
         if (bookingError) {
             throw(bookingError)
         }
+        console.log(bookingData)
         const status = bookingData.length > 0 ? 'conflict' : 'pending'
         item.status = status
         const { error: updateError } = await supabase
@@ -757,8 +831,8 @@ const controllers = {
             price = hourly_rate * hours
         }
         if (user.role === 'admin') {
-            hourly_rate = 0
-            price = 0
+            hourly_rate = null
+            price = null
         }
         const { data, error } = await supabase
         .from('cart')
@@ -828,6 +902,50 @@ const controllers = {
     },
     async checkoutPost(req, res) {
     },
+    async paymentAdminGet(req, res) {
+        if (!req.user) {
+            return res.status(401).json({ message: 'not logged in' })
+        }
+        const user = req.user
+        try {
+            const supabase = supabaseClient()
+            //retrieve data from cart db
+            const { data: cartData, error: cartError } = await supabase
+            .from('cart')
+            .select('*')
+            .eq("user_id", user.id)
+            if (cartError) {
+                    throw cartError;
+            }
+            const updatedCart = await checkConflicts(cartData)
+            if (updatedCart.some(item => item.status === 'conflict')) {
+                return res.status(500).json({message: 'Conflict found in cart'})
+            }
+            //insert data into booking db with pending status
+            const { data: bookingData, error: bookingError } = await supabase
+                .from('booking')
+                .insert(cartData.map((booking) => ({
+                    ...booking,
+                    status: 'pending'
+                })))
+                .select('*')
+            if (bookingError) {
+                throw bookingError;
+            }
+            if (user.role === 'admin') {
+                try {
+                    await adminBooking(user, bookingData)
+                } catch (error) {
+                    console.log(error)
+                    res.status(500).json({message: "Error using admin booking function"})
+                }
+                return res.status(200).json({message: 'Admin booking successful'})
+            }
+        } catch(error) {
+            console.log(error)
+            res.status(500).json({message: "Error using admin booking function"})
+        }
+    },
     async paymentPost(req, res) {
         const { sourceId, locationId, idempotencyKey } = req.body
         if (!req.user) {
@@ -863,7 +981,15 @@ const controllers = {
             if (bookingError) {
                 throw bookingError;
             }
-            
+            if (user.role === 'admin') {
+                try {
+                    await adminBooking(bookingData)
+                } catch (error) {
+                    console.log(error)
+                    res.status(500).json({message: "Error using admin booking function"})
+                }
+                return res.status(200).json({message: 'Admin booking successful'})
+            }
             console.log('reached backend payment step')
             //attempt to charge the provided credit card
             const payment = await squareClient.payments.create({

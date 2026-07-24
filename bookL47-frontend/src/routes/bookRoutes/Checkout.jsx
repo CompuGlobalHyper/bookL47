@@ -70,6 +70,46 @@ export default function Checkout() {
     const [activePayButton, setActivePayButton] = useState(true)
     const cardRef = useRef(null);
     const initializedRef = useRef(false);
+    const [formData, setFormData] = useState({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+    });
+    
+    const [errors, setErrors] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+    })
+
+    const handleChange = (e) => {
+            const { name, value } = e.target;
+            setFormData((prev) => ({
+                ...prev,
+                [name]: value,
+                }));    
+        };
+    
+    const handleBlur = (e) => {
+        const currentFields = Object.values(formData)
+        if (currentFields.every(val => val === '')) return
+        const { name, value } = e.target
+        setErrors((prev) => ({
+            ...prev,
+            [name]: validateField(name, value)
+        }))
+    }
+
+    const validateField = (name, value) => {
+        switch (name) {
+            case "firstName":
+                return value.trim() ? "" : "First name required.";
+            case "lastName":
+                return value.trim() ? "" : "Last name required.";
+            case "email":
+                return value.includes("@") ? "" : "Enter a valid email address.";
+        }
+    } 
 
     const subtotal = createTotal(cart).toFixed(2);
     const fee = Number(createFee(subtotal, 0.033, 0.30));
@@ -116,15 +156,20 @@ export default function Checkout() {
         init();
     }, []);
     async function handleClick() {
-        setActivePayButton(false)
         if (!cardRef.current) return
+        const currentErrors = Object.values(errors)
+        if (!currentErrors.every((val) => val === '')) return
+        const currentFields = Object.values(formData)
+        console.log(currentFields)
+        if (currentFields.some((val) => val === '')) return
         let card = cardRef.current
+        setActivePayButton(false)
         const verificationDetails = { 
             amount,
             billingContact: {
-                givenName: user.first_name,
-                familyName: user.last_name,
-                email: user.email,
+                givenName: formData.firstName,
+                familyName: formData.lastName,
+                email: formData.email,
             },
             currencyCode: 'USD',
             intent: 'CHARGE',
@@ -195,23 +240,52 @@ export default function Checkout() {
         </div>
         <div className={`${styles.sideSquare}`}>
             <div className={`${styles.paymentTitle} text large`}>Enter payment details:</div>
-            <div className={`${styles.infoContainer}`}>
-                <div className={`${styles.nameContainer} text medium`}>
-                    <div className={styles.paymentDetail}>
-                        <div className={`${styles.detailLabel} text small`}>First Name</div>
-                        <div className={`${styles.detail} secondaryText medium`}>{user.firstName}</div>
-                    </div>
-                    <div className={styles.paymentDetail}>
-                        <div className={`${styles.detailLabel} text small`}>Last Name</div>
-                        <div className={`${styles.detail} secondaryText medium`}>{user.lastName}</div>
-                    </div>
+            <form className={styles.form} noValidate>
+                <div className={`${styles.field} text medium`}>
+                    <input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder=' '
+                    required
+                    />
+                    <label htmlFor="firstName">First Name</label>
                 </div>
-                <div className={styles.paymentDetail}>
-                    <div className={`${styles.detailLabel} text small`}>Email Address</div>
-                    <div className={`${styles.email} secondaryText text medium`}>{user.email}</div>
-                </div>
-            </div>
+                {errors.firstName && (<p className={`${styles.error} bold small text`}> {errors.firstName}</p>)}
 
+                <div className={`${styles.field} text medium`}>
+                    <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder=' '
+                    required
+                    />
+                    <label htmlFor="lastName">Last Name</label>
+                </div>
+                {errors.lastName && (<p className={`${styles.error} bold small text`}> {errors.lastName}</p>)}
+
+                <div className={`${styles.field} text medium`}>
+                    <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder=' '
+                    required
+                    />
+                    <label htmlFor="email">Email Address</label>
+                </div>
+                {errors.email && (<p className={`${styles.error} bold small text`}> {errors.email}</p>)}
+            </form>
             <div className={`${styles.squareContainer}`}>
                 {loadingCheckout 
                 ? <Loading></Loading> 

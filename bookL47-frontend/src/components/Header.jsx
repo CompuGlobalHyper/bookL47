@@ -76,7 +76,7 @@ export default function Header({ setMessage, viewRegister, setViewRegister }) {
       admin: [
         { name: "Home", link: "/", icon: HomeIcon },
         { name: "Admin Panel", link: "/admin", icon: DashboardIcon },
-        { name: "Create Bookings", link: "/admin/bookings", icon: CalendarIcon },
+        { name: "Create Bookings", link: "/book", icon: CalendarIcon },
         { name: "Events", link: "/events", icon: CalendarEventIcon },
         { name: "Shifts", link: "/shifts", icon: ShiftsIcon },
         { name: "Logout", link: "/", icon: LogoutIcon },

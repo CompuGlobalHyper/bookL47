@@ -20,8 +20,8 @@
 }
 
 .activeDate {
-    background-color: var(--brand-color);
-}
+    background-color: var(--brand-color) !important;
+} 
 
 .notAllowedDate {
     background-color: var(--surface-color);

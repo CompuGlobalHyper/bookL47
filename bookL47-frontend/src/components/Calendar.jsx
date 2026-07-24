@@ -23,16 +23,21 @@ export default function Calendar({
   const dayCalendarRef = useRef(null)
 
   const handleClick = (cell) => {
-    if (cell.date.getDay() === 0 || cell.date.getDay() === 6) {
+    if (user.role !== 'admin') {
+        if (cell.date.getDay() === 0 || cell.date.getDay() === 6) {
         console.log('no weekends')
         return
+        }
+        if (cell.dateStr < firstDate.toISOString().split('T')[0]) {
+            console.log('not an allowed date')
+            return
+        }
+        console.log(cell)
+        setSelectedDate(cell.dateStr)
+    } else {
+        console.log(cell)
+        setSelectedDate(cell.dateStr)  
     }
-    if (cell.dateStr < firstDate.toISOString().split('T')[0]) {
-        console.log('not an allowed date')
-        return
-    }
-    console.log(cell)
-    setSelectedDate(cell.dateStr)
   }
   
   useEffect(() => {
@@ -50,7 +55,7 @@ export default function Calendar({
                 initialDate={selectedDate}
                 validRange={validRange}
                 events={events}
-                weekends={false}
+                weekends={user.role === 'admin'}
                 titleFormat={{weekday: "long", month: "long", day: "numeric"}}
                 ref={dayCalendarRef}
                 datesSet={(info) => {
@@ -72,7 +77,7 @@ export default function Calendar({
                 events={[]}
                 validRange={validRange}
                 dateClick={handleClick}
-                weekends={false}
+                weekends={user.role === 'admin'}
                 dayCellClassNames={(cell) => {
                     const today = new Date();
                     const tomorrow = new Date();
@@ -80,19 +85,21 @@ export default function Calendar({
 
                     const todayStr = today.toISOString().split('T')[0];
                     const tomorrowStr = tomorrow.toISOString().split('T')[0]
-
+                    cell.date.toISOString().split('T')[0]
                     let formattedDate = cell.date.toISOString().split('T')[0]
-                    if (todayStr === formattedDate) {
+                    if (todayStr === formattedDate && user.role !== 'admin') {
                         return [styles.currentDate]
                     }
-                    if (formattedDate < todayStr ||
-                        tomorrowStr === formattedDate) {
+                    if ((formattedDate < todayStr ||
+                        tomorrowStr === formattedDate)
+                        && user.role !== 'admin'
+                    ) {
                         return [styles.notAllowedDate]
                     }
-                    if (selectedDate && formattedDate === selectedDate) {      
+                    if (selectedDate && formattedDate === selectedDate) {   
+                        console.log(formattedDate)   
                         return [styles.activeDate]
                     }
-                    
                     return []
                 }}
                 />

@@ -9,7 +9,7 @@ import Loading from '../../components/Loading.jsx'
 import { UserContext } from '../../contexts/UserContext.jsx'
 import setBannerMessage from '../../functions/bannerMessage.js'
 
-
+const API = import.meta.env.VITE_API_URL
 const example = { 
                     id: crypto.randomUUID(),
                     equipment_request: [],
@@ -64,17 +64,17 @@ export default function Cart() {
   }, [cart])
 
   const handleClick = async () => {
-    const res = await fetch(`${API}/payment`, {
-    method: 'POST',
+    const res = await fetch(`${API}/payment/admin`, {
+    method: 'GET',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     });
+    const data = await res.json()
     if (res.status === 200) {
       setBannerMessage(setMessage, 'Added bookings to calendar!', false, 5)
+      const cartData = await getCart()
+      setCart(cartData)
     } else {
-      setBannerMessage()
+      setBannerMessage(setMessage, data.message, true, 5)
     }
 
   }
@@ -117,8 +117,12 @@ export default function Cart() {
           <div className={`${styles.priceTotal} text medium bold`}>{`$${(createTotal(cart)).toFixed(2)}`}</div>
         </div>}
         <div className={styles.bottom}>
-          {cart.length > 0 && cart.every(item => item.status !== 'conflict') && <Link className={`${styles.brandButton} button text medium`} to={'/checkout'}><span>Checkout</span></Link>}
-          {user.role === 'admin' && allowSubmit && <div className='text link blue' onClick={() => handleClick()}>Admin bypass, click here to add bookings to Google calendar.</div>}
+          {user.role !== 'admin' && cart.length > 0 && cart.every(item => item.status !== 'conflict') && <Link className={`${styles.brandButton} button text medium`} to={'/checkout'}><span>Checkout {user.role === 'admin' ? 'as a customer' : ''}</span></Link>}
+          {user.role === 'admin' 
+          && allowSubmit 
+          && cart.length > 0 
+          && cart.every(item => item.status !== 'conflict')
+          && <div className='text button medium paragraph' onClick={() => handleClick()}>Add without payment</div>}
         </div>
       </div>
       

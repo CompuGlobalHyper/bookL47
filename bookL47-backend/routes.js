@@ -65,6 +65,7 @@ router.put('/cart', authUser, controllers.cartPut)
 router.get('/checkout', authUser, controllers.checkoutGet)
 router.post('/checkout', authUser, controllers.checkoutPost)
 
+router.get('/payment/admin', authUser, controllers.paymentAdminGet)
 router.post('/payment', authUser, controllers.paymentPost)
 router.get('/confirmation', authUser, controllers.confirmationGet)
 

@@ -46,7 +46,10 @@ export default function Book() {
   const { cart, loading: cartLoading, addToCart, deleteCartItem } = useContext(CartContext)
   const API = import.meta.env.VITE_API_URL
   const firstDate = new Date();
-  firstDate.setDate(firstDate.getDate() + 2)
+  if (user.role !== 'admin') {
+    firstDate.setDate(firstDate.getDate() + 2)
+  }
+  
 
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
@@ -431,9 +434,15 @@ export default function Book() {
               user={user}
               validRange={() => {
                 const start = new Date()
-                const end = new Date()
-                end.setDate(start.getDate() + 181)
-                return {start, end}
+                if (user.role === 'admin') {
+                  const end = new Date()
+                  end.setDate(start.getDate() + 365)
+                  return {start, end}
+                } else {
+                  const end = new Date()
+                  end.setDate(start.getDate() + 181)
+                  return {start, end}
+                } 
               }}
               selectedRoom={selectedRoom}
               firstDate={firstDate}

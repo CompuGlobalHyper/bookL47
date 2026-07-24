@@ -2,6 +2,9 @@
 .fc .fc-day-today {
   position: relative;
 }
+.fc .fc-daygrid-day.fc-day-today { 
+  background-color: rgb(183, 234, 255);
+}
 
 /* Use a pseudo-element to build an overlay border */
 .fc .fc-day-today::before {
