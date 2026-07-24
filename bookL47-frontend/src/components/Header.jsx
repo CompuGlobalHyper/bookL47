@@ -104,7 +104,7 @@ export default function Header({ setMessage, viewRegister, setViewRegister }) {
             <div className={styles.image}></div>
             <Link to='/' className={`${styles.title} text large deco`} onClick={() => setViewMenu(false)}>AFM 47</Link>
             { user.role === 'guest' 
-            ? <Link className={styles.signInContainer} to='/login'>
+            ? <Link className={styles.signInContainer} to='/login' onClick={() => setViewMenu(false)}>
               <div className={`${styles.signInOption} text small`}>Sign In / Register</div>
             </Link> 
             : <Link 

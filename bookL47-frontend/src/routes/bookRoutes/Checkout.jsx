@@ -92,10 +92,15 @@ export default function Checkout() {
                 if (!userLoading && !cartLoading) {
                     setLoading(false)
                 }
+                const cart = await getCart()
+                if (cart.length === 0
+                    || cart.some(item => item.status === 'conflict')
+                ) {
+                    return navigate('/cart')
+                }
                 const payments = await square.payments(appId, locationId);
                 const card = await payments.card(cardOptions);
                 cardRef.current = card
-                const cart = await getCart()
                 await card.attach("#card");
                 setCart(cart)
                 setLoadingCheckout(false)
@@ -139,6 +144,7 @@ export default function Checkout() {
             console.log(error)
             setActivePayButton(true)
             setBannerMessage(setMessage, 'Payment unsuccessful', true, 5)
+            navigate('/cart')
             
         }
     }

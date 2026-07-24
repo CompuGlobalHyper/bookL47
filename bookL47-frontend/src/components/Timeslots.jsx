@@ -22,7 +22,6 @@ export default function Timeslots({
     selectedDate }) {
 
     const { addToCart, cart } = useContext(CartContext)
-    console.log(availableSlots)
 
     function handleSelect(id) {
         setAvailableSlots((prev) => {

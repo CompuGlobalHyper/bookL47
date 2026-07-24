@@ -146,6 +146,38 @@ async function sendVerificationEmail (user) {
     }
 }
 
+async function adminBooking (bookingData) {
+
+}
+
+async function checkConflicts(cart) { 
+    const supabase = supabaseClient()
+    for (const item of cart) {
+        const { data: bookingData, error: bookingError } = await supabase
+        .from('booking')
+        .select('id')
+        .eq('location_id', item.location_id)
+        .lt('starts_at', item.ends_at)
+        .gt('ends_at', item.starts_at)
+        .neq('status', 'refunded')
+        .neq('status', 'cancelled')
+        if (bookingError) {
+            throw(bookingError)
+        }
+        const status = bookingData.length > 0 ? 'conflict' : 'pending'
+        item.status = status
+        const { error: updateError } = await supabase
+        .from('cart')
+        .update({status: status})
+        .eq('id', item.id)
+        if (updateError) {
+            console.log(updateError)
+            return res.status(500).json({message: "Database error"})
+        }
+    }
+    return cart      
+}
+
 
 const controllers = {
 
@@ -690,32 +722,7 @@ const controllers = {
                 console.log(cartError)
                 return res.status(500).json({message: "Database error"})
         }
-        async function checkConflicts(cart) { 
-            for (const item of cart) {
-                const { data: bookingData, error: bookingError } = await supabase
-                .from('booking')
-                .select('id')
-                .eq('location_id', item.location_id)
-                .lt('starts_at', item.ends_at)
-                .gt('ends_at', item.starts_at)
-                .neq('status', 'refunded')
-                .neq('status', 'cancelled')
-                if (bookingError) {
-                    throw(bookingError)
-                }
-                const status = bookingData.length > 0 ? 'conflict' : 'pending'
-                item.status = status
-                const { error: updateError } = await supabase
-                .from('cart')
-                .update({status: status})
-                .eq('id', item.id)
-                if (updateError) {
-                    console.log(updateError)
-                    return res.status(500).json({message: "Database error"})
-                }
-            }
-            return cart      
-        }
+        
         const updatedCart = await checkConflicts(cartData)
         return res.status(200).json(updatedCart)
     },
@@ -837,6 +844,10 @@ const controllers = {
             if (cartError) {
                     throw cartError;
             }
+            const updatedCart = await checkConflicts(cartData)
+            if (updatedCart.some(item => item.status === 'conflict')) {
+                return res.status(500).json({message: 'Conflict found in cart'})
+            }
             //calculate prices
             const subtotal = Number(getTotal(cartData))
             const fee = Number(createFee(subtotal))
@@ -852,7 +863,7 @@ const controllers = {
             if (bookingError) {
                 throw bookingError;
             }
-
+            
             console.log('reached backend payment step')
             //attempt to charge the provided credit card
             const payment = await squareClient.payments.create({
@@ -879,12 +890,16 @@ const controllers = {
             if (paymentError) {
                 throw paymentError;
             }
+            
             //retrieve google calendar tokens
             const oauth2Client = googleAuth()
             const { data: adminData, error: adminError } = await supabase
             .from('admin')
             .select('google_token')
             .eq('name', 'phin')
+            if (adminError) {
+                throw adminError
+            }
             const tokens = adminData[0].google_token
             oauth2Client.setCredentials(tokens);
             //create calendar client
@@ -919,7 +934,7 @@ const controllers = {
                 resource: bookingEvent.event,
                 }, async function(err, event) {
                     if (err) {
-                        console.log('There was an error contacting the Calendar service: ' + err);
+                        throw new Error(err)
                         return;
                     }
                     console.log('Event created:', event.data.id);
@@ -944,7 +959,7 @@ const controllers = {
             if (deleteError) {
                 throw deleteError;
             }
-            return res.status(200).json({ success: true, paymentId: payment.payment.id });
+            return res.status(200).json({ success: true, paymentId: payment.payment.id || 'admin booking'});
         } catch(error) {
             console.log(error);
             res.status(400).json({

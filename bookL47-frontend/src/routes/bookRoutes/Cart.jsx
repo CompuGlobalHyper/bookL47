@@ -1,11 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useOutletContext } from 'react-router'
 import { CartContext } from '../../contexts/CartContext'
 import CartItem from '../../components/CartItem'
 import styles from './styles/Cart.module.css'
 import CartInfo from '../../components/CartInfo'
 import { createTotal } from '../../functions/formatter.js'
 import Loading from '../../components/Loading.jsx'
+import { UserContext } from '../../contexts/UserContext.jsx'
+import setBannerMessage from '../../functions/bannerMessage.js'
+
 
 const example = { 
                     id: crypto.randomUUID(),
@@ -14,7 +17,9 @@ const example = {
                 }
 
 export default function Cart() {
-  const { cart, clearCart, loading: cartLoading } = useContext(CartContext)
+  const { user } = useContext(UserContext)
+  const {setMessage } = useOutletContext()
+  const { cart, getCart, setCart, clearCart, loading: cartLoading } = useContext(CartContext)
   const [equipment, setEquipment] = useState([
       {
         name: "PA System and Microphone",
@@ -43,12 +48,36 @@ export default function Cart() {
       },
     ])
   const [ exampleItem, setExampleItem ] = useState(example)
+  const [allowSubmit, setAllowSubmit] = useState(true)
   const [active, setActive] = useState(null)
   const { deleteCartItem, updateCartItemEquipment, updateCartItemDescription, applyToAllCartItems } = useContext(CartContext)
 
   useEffect(() => {
+    async function init() {
+      const data = await getCart()
+      setCart(data)
+    }
+    init()
+  }, [])
 
+  useEffect(() => {
   }, [cart])
+
+  const handleClick = async () => {
+    const res = await fetch(`${API}/payment`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    });
+    if (res.status === 200) {
+      setBannerMessage(setMessage, 'Added bookings to calendar!', false, 5)
+    } else {
+      setBannerMessage()
+    }
+
+  }
   
   return (
     <div className={styles.container}>
@@ -89,6 +118,7 @@ export default function Cart() {
         </div>}
         <div className={styles.bottom}>
           {cart.length > 0 && cart.every(item => item.status !== 'conflict') && <Link className={`${styles.brandButton} button text medium`} to={'/checkout'}><span>Checkout</span></Link>}
+          {user.role === 'admin' && allowSubmit && <div className='text link blue' onClick={() => handleClick()}>Admin bypass, click here to add bookings to Google calendar.</div>}
         </div>
       </div>
       
