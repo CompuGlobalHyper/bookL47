@@ -355,7 +355,7 @@ const controllers = {
         if (sentEmail) {
             return res.status(200).json({ message: 'Sent verification email!'})
         } else {
-            return res.status(400).json({ message: 'Verification email could not be sent'})
+            return res.status(400).json({ message: 'Verification email could not be sent.'})
         }
     },
     async verifyEmail(req, res) {
@@ -1217,6 +1217,9 @@ const controllers = {
                 onConflict: 'google_id'
             })
             .select('*')
+            .neq('status', 'refunded')
+            .neq('status', 'cancelled')
+
             if (bookingError) {
                 throw bookingError
             }

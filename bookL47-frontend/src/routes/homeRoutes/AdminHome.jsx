@@ -5,8 +5,7 @@ import Dropdown from '../../components/Dropdown'
 export default function AdminHome() {
   return (
     <div>
-      <div>Links:</div>
-      <Link to='/book'>Book</Link>
+      <div className='large text'>Hello {user.firstName}!</div>
     </div>
   )
 }
