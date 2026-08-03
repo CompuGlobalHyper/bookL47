@@ -28,11 +28,14 @@ const requireRole = (...roles) => {
 router.get('/api/me', (req, res, next) => {
   passport.authenticate( "jwt", { session: false }, (err, user) => {
     if (err) {
+      console.log(err)
+      console.log('Error in router');
       return next(err)
     }
     req.user = user || null
     next()
   })(req, res, next)
+
 }, controllers.meGet)
 
 router.post('/login', 

@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken')
 const sgMail = require('@sendgrid/mail')
 const bcrypt = require('bcryptjs')
 const crypto = require('crypto')
-const { generateHours, getTotal, createFee } = require('./prices.js')
+const { generateHours, getTotal, createFee } = require('./prices.js');
+const { start } = require('repl');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
@@ -1205,20 +1206,34 @@ const controllers = {
                     date: event.start.dateTime.split('T')[0],
                     start: event.start.dateTime.split('T')[1].split('-')[0],
                     end: event.end.dateTime.split('T')[1].split('-')[0],
+                    starts_at: event.start.dateTime,
+                    ends_at: event.end.dateTime,
+                    status: 'google',
                     timezone: event.start.timeZone,
                     title: event.summary || "No title available",
                     description: event.description
                 }
             })
             //upload 180 days of events to Supabase
-            const { data: bookingData, error: bookingError } = await supabase
+            const { error: upsertError } = await supabase
             .from('booking')
             .upsert(rows,{
                 onConflict: 'google_id'
             })
+            if (upsertError) {
+                throw upsertError
+            }
+            const endDateQuery = new Date(Date.now() + 1000 * 60 * 60 * 24 * 180)
+            const startDateQuery = new Date(Date.now() - 1000 * 60 * 60 * 24)
+            console.log(endDateQuery)
+            const { data: bookingData, error: bookingError } = await supabase
+            .from('booking')
             .select('*')
             .neq('status', 'refunded')
             .neq('status', 'cancelled')
+            .lte('ends_at', endDateQuery.toISOString())
+            .gte('starts_at', startDateQuery.toISOString())
+
 
             if (bookingError) {
                 throw bookingError

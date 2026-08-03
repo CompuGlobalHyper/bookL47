@@ -113,6 +113,7 @@ export default function Checkout() {
 
     const subtotal = createTotal(cart).toFixed(2);
     const fee = Number(createFee(subtotal, 0.033, 0.30));
+    const feeString = fee.toFixed(2)
     const amount = (Number(subtotal) + fee).toFixed(2)
 
     useEffect(() => {
@@ -189,7 +190,6 @@ export default function Checkout() {
             console.log(error)
             setActivePayButton(true)
             setBannerMessage(setMessage, 'Payment unsuccessful', true, 5)
-            navigate('/cart')
             
         }
     }
@@ -227,7 +227,7 @@ export default function Checkout() {
             </div>
             <div className={`${styles.processingFee}`}>
                 <span className='text regular'>Processing Fee <em>(2.9% + $0.30)</em>:</span>
-                <div className={`${styles.feeTotal} text regular`}>{`$${fee}`}
+                <div className={`${styles.feeTotal} text regular`}>{`$${feeString}`}
                 </div>
             </div>
             <div className={`${styles.totalDue}`}>
