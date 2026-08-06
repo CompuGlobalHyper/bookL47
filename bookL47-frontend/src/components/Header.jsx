@@ -110,7 +110,7 @@ export default function Header({ setMessage, viewRegister, setViewRegister }) {
             : <Link 
                 to='/cart'
                 className={`${styles.cart} text bold`}
-                onClick={() => setViewMenu(false)}><CartIcon></CartIcon><span className='small'>{cart.length}</span></Link>
+                onClick={() => setViewMenu(false)}><CartIcon className='mediumIcon'></CartIcon><span className='small'>{cart.length}</span></Link>
             }
             <div 
                 className={`${styles.hamburger} text`}

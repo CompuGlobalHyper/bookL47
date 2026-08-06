@@ -226,6 +226,7 @@ async function adminBooking (user, bookingData) {
 
 async function checkConflicts(cart) { 
     const supabase = supabaseClient()
+    console.log(cart)
     for (const item of cart) {
         const { data: bookingData, error: bookingError } = await supabase
         .from('booking')
@@ -239,8 +240,15 @@ async function checkConflicts(cart) {
             throw(bookingError)
         }
         console.log(bookingData)
-        const status = bookingData.length > 0 ? 'conflict' : 'pending'
-        item.status = status
+        let status = bookingData.length > 0 ? 'conflict' : 'pending'
+        
+        const bookingStart = new Date(item.starts_at)
+        console.log("Cart Item starts at: ", bookingStart)
+        const cutoff = new Date(Date.now() + 1000 * 60 * 60 * 48)
+        console.log("48 hours cutoff is", cutoff)
+        if (bookingStart < cutoff) {
+            status = 'conflict'
+        }
         const { error: updateError } = await supabase
         .from('cart')
         .update({status: status})
@@ -251,6 +259,28 @@ async function checkConflicts(cart) {
         }
     }
     return cart      
+}
+
+function formatDate(dateString = '2026-07-13') {
+    const date = new Date(`${dateString}T12:00:00Z`)
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'America/Los_Angeles',
+    });
+    
+    return formatter.format(date)
+}
+function formatTime(timeString = '12:30:00') {
+    const [ hours, minutes ] = timeString.split(':')
+    const hour = Number(hours)
+    const period = hour >= 12 ? 'pm' : 'am'
+    const displayHour = hour % 12 || 12
+
+    return `${displayHour}${minutes !== '00' ? ":" + minutes : ""}${period}`
+
 }
 
 
@@ -295,7 +325,6 @@ const controllers = {
                 maxAge: 60000 * 60 * 8 // 1 min * 60 (1hr) * 8 (8hr)
             })
             console.log('login successful, token created')
-            console.log(user.verified)
             //frontend reads res.auth = true
             return res.status(200).json(
                 { 
@@ -351,7 +380,6 @@ const controllers = {
     },
     async resendEmailVerification(req, res) {
         const user = req.user
-        console.log(user)
         const sentEmail = await sendVerificationEmail(user)
         if (sentEmail) {
             return res.status(200).json({ message: 'Sent verification email!'})
@@ -606,7 +634,6 @@ const controllers = {
     },
     async linkAccountPost(req, res) {
         const memberId = Number(req.body.memberId)
-        console.log(memberId)
         const id = req.user.id
         const supabase = supabaseClient()
         try {
@@ -617,7 +644,6 @@ const controllers = {
             if (memberError) {
                 throw memberError
             }
-            console.log(memberData)
             if (memberData[0]?.id === memberId
                 && memberData[0]?.user_id === null
             ) {
@@ -645,7 +671,7 @@ const controllers = {
                 }
                 return res.status(200).json({message: "Member account linked!"})
             } else {
-                return res.status(500).json({message: "No matching account found."})
+                return res.status(500).json({message: "Unable to link accounts."})
             }
         } catch (error) {
             console.log(error)
@@ -697,6 +723,10 @@ const controllers = {
         return res.status(200).json({upcoming: upcomingData, upcomingCount, past: pastData, pastCount})
     },
     async bookingsCancel(req, res) {
+        if (!req.user) {
+            return res.status(401).json({ message: 'not logged in' })
+        }
+        const user = req.user
         const id = req.body.id
         let message
         try {
@@ -755,7 +785,6 @@ const controllers = {
                 }
                 message = "Cancelled booking, refund pending"
             }
-            console.log(booking.google_id)
             if (booking.google_id) {
                 //retrieve google calendar tokens
                 const oauth2Client = googleAuth()
@@ -776,6 +805,90 @@ const controllers = {
                 });
                 console.log('Google event deleted successfully.');
             }
+            const formattedDate = formatDate(booking.date)
+            const formattedTime = formatTime(booking.start)
+            await sgMail.send({
+                to: email,
+                from: "info@afm47.org",
+                subject: "Book L47: Cancelled Booking",
+                html: 
+                    `<body style="
+                    margin: 0;
+                    padding: 40px;
+                    background-color: #f4f4f4;
+                    font-family: Arial, Helvetica, sans-serif;
+                    ">
+                    <div style="
+                        max-width: 500px;
+                        margin: 0 auto;
+                        background: white;
+                        padding: 40px;
+                        border-radius: 2px;
+                    ">
+                        <div style="
+                        text-align: center;
+                        margin-bottom: 30px;
+                        ">
+                        <h1 style="
+                            margin: 0;
+                            font-size: 28px;
+                            color: #222;
+                        ">
+                            Book L47
+                        </h1>
+                        </div>
+                        <h2 style="
+                        color: #222;
+                        font-size: 22px;
+                        margin-bottom: 20px;
+                        ">
+                        Your booking has been canceled...
+                        </h2>
+                        <p style="
+                        color: #555;
+                        font-size: 16px;
+                        line-height: 1.5;
+                        ">
+                        ${formattedDate} at ${formattedTime} in ${booking.location}
+                        </p>
+                        <div style="
+                        text-align: center;
+                        margin: 30px 0;
+                        ">
+                        
+                        </div>
+                        <p style="
+                        color: #555;
+                        font-size: 14px;
+                        line-height: 1.5;
+                        ">
+                        A refund will be automatically processed if you are canceling with more than <strong>48 hours</strong> notice.
+                        </p>
+                        <p style="
+                        color: #555;
+                        font-size: 14px;
+                        line-height: 1.5;
+                        ">
+                        
+                        If you have any questions, please reach out to us at booking@afm47.org.
+                        </p>
+                        <hr style="
+                        border: none;
+                        border-top: 1px solid #ddd;
+                        margin: 30px 0;
+                        "></hr>
+                        <p style="
+                        color: #888;
+                        font-size: 12px;
+                        text-align: center;
+                        ">
+                        Book L47<br></br>
+                        booking@afm47.org<br></br>
+						323.993.3172
+                        </p>
+                        </div>
+                    </body>`
+            })
             return res.status(200).json({message})
         } catch(error) {
             console.log(error)
@@ -1086,6 +1199,106 @@ const controllers = {
             if (deleteError) {
                 throw deleteError;
             }
+            const link = `${process.env.CLIENT_URL}/bookings`
+            await sgMail.send({
+                to: email,
+                from: "info@afm47.org",
+                subject: "Book L47: Confirmation email",
+                html: 
+                    `<body style="
+                    margin: 0;
+                    padding: 40px;
+                    background-color: #f4f4f4;
+                    font-family: Arial, Helvetica, sans-serif;
+                    ">
+                    <div style="
+                        max-width: 500px;
+                        margin: 0 auto;
+                        background: white;
+                        padding: 40px;
+                        border-radius: 2px;
+                    ">
+                        <div style="
+                        text-align: center;
+                        margin-bottom: 30px;
+                        ">
+                        <h1 style="
+                            margin: 0;
+                            font-size: 28px;
+                            color: #222;
+                        ">
+                            Book L47
+                        </h1>
+                        </div>
+                        <h2 style="
+                        color: #222;
+                        font-size: 22px;
+                        margin-bottom: 20px;
+                        ">
+                        You're all set!
+                        </h2>
+                        <p style="
+                        color: #555;
+                        font-size: 16px;
+                        line-height: 1.5;
+                        ">
+                        Thank you for booking with AFM Local 47.
+                        </p>
+                        <p style="
+                        color: #555;
+                        font-size: 16px;
+                        line-height: 1.5;
+                        ">
+                        To view your upcoming reservations, please click the link below:
+                        </p>
+                        <div style="
+                        text-align: center;
+                        margin: 30px 0;
+                        ">
+                        <a 
+                            href="${link}"
+                            style="
+                            cursor: pointer;
+                            font-weight: 900;
+                            background-color: rgb(1, 179, 227);
+                            color: white;
+                            padding: 14px 28px;
+                            border-radius: 2px;
+                            text-decoration: none;
+                            font-size: 16px;
+                            display: inline-block;
+                            "
+                        >
+                            My Bookings
+                        </a>
+                        </div>
+                        <p style="
+                        color: #888;
+                        font-size: 14px;
+                        line-height: 1.5
+                        color: #888;
+                        font-size: 12px;
+                        ">
+                        Note: If you need to reschedule, please contact us at booking@afm47.org. 
+                        </p>
+
+                        <hr style="
+                        border: none;
+                        border-top: 1px solid #ddd;
+                        margin: 30px 0;
+                        "></hr>
+                        <p style="
+                        color: #888;
+                        font-size: 12px;
+                        text-align: center;
+                        ">
+                        Book L47<br></br>
+                        booking@afm47.org<br></br>
+						323.993.3172
+                        </p>
+                        </div>
+                    </body>`
+            })
             return res.status(200).json({ success: true, paymentId: payment.payment.id || 'admin booking'});
         } catch(error) {
             console.log(error);
@@ -1117,7 +1330,8 @@ const controllers = {
             }
             const now = new Date()
             const createdAt = new Date(paymentData.created_at)
-            const minutesPassed = Math.floor((now - created) / 1000 * 60) // ms * secs
+            const minutesPassed = Math.floor((now - createdAt) / (1000 * 60)) // ms * secs
+            console.log("Minutes passed since payment: ", minutesPassed)
             if (minutesPassed > 15) {
                 return res.status(422).json({message: "Expired or invalid link"})
             }
@@ -1225,7 +1439,6 @@ const controllers = {
             }
             const endDateQuery = new Date(Date.now() + 1000 * 60 * 60 * 24 * 180)
             const startDateQuery = new Date(Date.now() - 1000 * 60 * 60 * 24)
-            console.log(endDateQuery)
             const { data: bookingData, error: bookingError } = await supabase
             .from('booking')
             .select('*')
@@ -1288,7 +1501,6 @@ const controllers = {
                 offset += limit
 
             }
-            console.log(all.length)
             return all
         }
         const unsortedContent = await getAllSubmissions()

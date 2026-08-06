@@ -183,15 +183,9 @@ export default function Book() {
       setInitial()
   }, [cartLoading, userLoading])
     useEffect(() => {
-      if (events.length === 0) return
-      let firstDateStr = firstDate.toISOString().split('T')[0]
-      let firstDateObject = findDateObject(events, firstDateStr)
-      setDateObject(firstDateObject)
-    }, [events])
-
-    useEffect(() => {
         if(Object.keys(dateObject).length === 0) return
         setBookedSlots(findSlotObject(dateObject.rooms, selectedRoom.name))
+        console.log("Setting booked slots: ", findSlotObject(dateObject.rooms, selectedRoom.name))
         setSelectedSlot({})
         setSelectedStart({})
         setSelectedEnd({})
@@ -199,6 +193,7 @@ export default function Book() {
 
     useEffect(() => {
         if (loading) return
+        if (events.length === 0) return
         let tempDateObject = events.find((obj) => obj.date === selectedDate)
         setBookedSlots(findSlotObject(tempDateObject.rooms, selectedRoom.name))
         setDateObject(tempDateObject)
@@ -210,7 +205,7 @@ export default function Book() {
         setSelectedSlot({})
         setSelectedStart({})
         setSelectedEnd({})
-      }, [selectedDate]);
+      }, [events, selectedDate]);
     // If booked slots, update available slots.
     useEffect(() => { 
       if (cartLoading) return
@@ -414,6 +409,8 @@ export default function Book() {
           setSelectedSlot({})
           setSelectedStart({})
           setSelectedEnd({})
+          setDescription('')
+          setEquipment((prev) => prev.map(equipment => ({...equipment, selected:false})))
       }      
     }
 

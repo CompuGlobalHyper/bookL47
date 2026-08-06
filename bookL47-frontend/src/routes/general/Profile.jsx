@@ -207,7 +207,7 @@ export default function Profile() {
                 }
             </form>
             <div className='link small text' onClick={() => handleReset()}>Send reset password link?</div>
-            {user.role === 'nonMember' 
+            { user.role === 'nonMember' 
             && <div className={styles.memberIdContainer}>
                   <div className='text medium'>Are you a member? <div className='small'>Log in to Ensemble 2.0 and enter your E2 account number below to receive your member discounts!</div></div>
                   <div className={`${styles.field} text medium`}>

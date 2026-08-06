@@ -57,10 +57,10 @@ export default function VerifyEmail() {
     }
   return (
     <div>
-        <div className='text large thin'>Verify your email address</div>
-        <p className='text regular'>Please confirm that you want to use this as your BookL47 account email address.</p>
-        <p className='text medium'>Then you can start booking!</p>
-        <div className='button text medium' onClick={() => {
+        <div className='text large thin'>Almost done...</div>
+        <p className='text regular mt-20'>Please confirm that you want to use this as your BookL47 account email address.</p>
+        <p className='text regular paragraph'>Then you can start booking!</p>
+        <div className='button text medium confirmButton mt-20' onClick={() => {
             if (allowVerify) {
                 handleClick()
             }

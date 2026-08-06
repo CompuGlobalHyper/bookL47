@@ -25,17 +25,16 @@ export default function Calendar({
   const handleClick = (cell) => {
     if (user.role !== 'admin') {
         if (cell.date.getDay() === 0 || cell.date.getDay() === 6) {
-        console.log('no weekends')
         return
         }
         if (cell.dateStr < firstDate.toISOString().split('T')[0]) {
             console.log('not an allowed date')
             return
         }
-        console.log(cell)
+        
         setSelectedDate(cell.dateStr)
     } else {
-        console.log(cell)
+        
         setSelectedDate(cell.dateStr)  
     }
   }
@@ -61,6 +60,7 @@ export default function Calendar({
                 datesSet={(info) => {
                     const date = new Date(info.view.currentStart)
                     const dateStr = date.toISOString().split('T')[0]
+                    console.log(dateStr)
                     setSelectedDate(dateStr)
                 }}
                 validRange={{
@@ -96,8 +96,7 @@ export default function Calendar({
                     ) {
                         return [styles.notAllowedDate]
                     }
-                    if (selectedDate && formattedDate === selectedDate) {   
-                        console.log(formattedDate)   
+                    if (selectedDate && formattedDate === selectedDate) {     
                         return [styles.activeDate]
                     }
                     return []
