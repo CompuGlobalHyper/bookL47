@@ -1213,7 +1213,7 @@ const controllers = {
             }
             const link = `${process.env.CLIENT_URL}/bookings`
             await sgMail.send({
-                to: email,
+                to: user.email,
                 from: "info@afm47.org",
                 subject: "Book L47: Confirmation email",
                 html: 
