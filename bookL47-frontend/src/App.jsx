@@ -42,17 +42,11 @@ function App() {
           `}><span>{message.text}</span></p>
       </div>
       <ScrollToTop></ScrollToTop>
-      <Register
-          viewRegister={viewRegister}
-          setViewRegister={setViewRegister}
-          setMessage={setMessage}>
-      </Register>
        <div className={styles.main} key={location.pathname}>
           <Outlet context={{ setMessage, viewRegister, setViewRegister }}/>
       </div>
       <div className={styles.footer}><Footer/></div> 
       </>
-       
     </div>
   )
 }

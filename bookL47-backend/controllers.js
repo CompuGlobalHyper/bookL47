@@ -344,6 +344,16 @@ const controllers = {
             || !req.body.password) {
                 return res.status(400).json({error: "Missing fields"})
             }
+        const supabase = supabaseClient()
+        const {data: emailData, error: emailError} = await supabase
+        .from('user')
+        .select('*')
+        .eq('email', req.body.email)
+
+        if (emailData.length > 0 || emailError) {
+            console.log("Supabase error: ", emailError)
+            return res.status(500).json({message: 'An account already exisits with that email address.'})
+        }
         const password = await bcrypt.hash(req.body.password, 10)
         const user = {
             first_name: req.body.firstName,
@@ -351,21 +361,23 @@ const controllers = {
             email: req.body.email,
             password: password
         }
-        const supabase = supabaseClient()
+        
         const { data, error } =  await supabase
         .from('user')
         .insert(user)
         .select('*')
-        if (error) {
-            return res.status(400).json({error: error})
+        if (error || !data.length > 0) {
+            console.log(error)
+            return res.status(400).json({message: "Failed to create account."})
         }
         console.log('Created user')
         const userData = data[0]
         const sentEmail = await sendVerificationEmail(userData)
         if (!sentEmail) {
             console.log('Failed to send email verification')
+            return res.status(400).json({message: "Failed to send verification email."})
         }
-        return res.status(200).json({message: 'Successful registration'})
+        return res.status(200).json({message: 'Successful registration, please check your email.'})
     },
     async logoutGet(req, res) {
         res.clearCookie("access_token", {

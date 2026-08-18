@@ -92,9 +92,9 @@ passport.use(
       .eq("email", `${email}`)
       .single()
 
-      if (error) return console.log(error)
       const user = data
        if (!user) {
+        console.log("Supabase error: ", error)
          return done(null, false, { message: "Incorrect email address/password" });
       }
       const match = await bcrypt.compare(password, passwordData.password);

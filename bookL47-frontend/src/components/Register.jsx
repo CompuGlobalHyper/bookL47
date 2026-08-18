@@ -6,6 +6,7 @@ import CloseIcon from '../assets/x.svg?react'
 
 export default function Register({viewRegister, setViewRegister, setViewLogin, setMessage}) {
     const [allowRegister, setAllowRegister] = useState(true)
+    const [registerError, setRegisterError] = useState('')
     const API = import.meta.env.VITE_API_URL
     const [formData, setFormData] = useState({
         firstName: "",
@@ -52,17 +53,12 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
         );
     };
 
-    const handleClick = () => {
-        setViewRegister(false)
-        setViewLogin(true)
-    }
-
     const handleSubmit = async (e) => {
+        setRegisterError('')
         e.preventDefault();
         const currentErrors = Object.values(errors)
         if (!currentErrors.every((val) => val === '')) return
         const currentFields = Object.values(formData)
-        console.log(currentFields)
         if (currentFields.some((val) => val === '')) return
         try {
             setAllowRegister(false)
@@ -78,19 +74,33 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
                     password: formData.password,
                 })
             })
-            setBannerMessage(setMessage, "Account created! Please check your inbox to verify your email.", false, 5 )
-            setFormData((prev) => {
+            if (!res.ok) {
+                const data = await res.json()
+                console.log('Probably hit 500')
+                console.log(data.message)
+                setAllowRegister(true)
+                setRegisterError(`${data.message}`)
+                return
+                
+            } else {
+                const data = await res.json()
+                setBannerMessage(setMessage, `${data.message}`, false, 5 )
+                console.log("Successful register")
+                setFormData((prev) => {
                 return Object.keys(prev).reduce((acc, key) => {
                     acc[key] = ''
                     return acc
-                }, {})
-            });
+                    }, {})
+                });
+                setViewRegister(false)
+                setAllowRegister(true)
+            }
         } catch (error) {
-            setBannerMessage(setMessage, `Error: ${error}` ) , true, 3
+            setRegisterError(`Error: ${error}`)
             console.log(error)
+            console.log('catching error')
+            setAllowRegister(true)
         }
-        setAllowRegister(true)
-        setViewRegister(false)
     }
     const validatePassword = (value) => {
         switch (true) {
@@ -157,6 +167,7 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
             dialog.close()
         }
     }, [viewRegister])
+
     const handleCancel = (e) => {
         e.preventDefault()
         setViewRegister(false)
@@ -175,7 +186,8 @@ export default function Register({viewRegister, setViewRegister, setViewLogin, s
             </div>
             <div className={styles.header}>
                 <h1 className={`text medium`}>Create a free account!</h1>
-                <p className={`text small`}>Already have an account? <Link to={'/login'} onClick={() => {setViewRegister(false)}}className={`${styles.link} text link blue`}>Sign in!</Link></p>
+                <span className={`text small`}>Already have an account? <Link to={'/login'} onClick={() => {setViewRegister(false)}}className={`${styles.link} text link blue`}>Sign in!</Link></span>
+                <p className='text small error'>{registerError}</p>
             </div>
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
                 <div className={`${styles.field} text medium`}>

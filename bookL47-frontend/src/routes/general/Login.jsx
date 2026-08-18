@@ -36,7 +36,6 @@ export default function Login() {
         e.preventDefault()
         const currentFields = Object.values(formData)
         if (currentFields.every((val) => val === '')) return
-
         try {
           const res = await fetch(`${API}/login`, {
             method:"POST",
@@ -88,10 +87,6 @@ export default function Login() {
             console.log(error)
         }
       }
-    
-      useEffect(() => {
-        setMessage({text: '', error: false})
-      }, [ viewRegister])
   return (
     <div className={styles.mainFormContainer}>
       <div className='large text thin'>Sign In</div>
