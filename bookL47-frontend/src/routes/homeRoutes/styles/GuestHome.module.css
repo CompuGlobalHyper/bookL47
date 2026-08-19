@@ -85,3 +85,18 @@
 
 }
 
+.listContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+@media screen and (min-width: 700px) {
+    .listContainer {
+        flex-direction: row;
+        gap: 40px;
+        max-width: 1000px;
+        margin-bottom: 20px;
+    }
+}
+

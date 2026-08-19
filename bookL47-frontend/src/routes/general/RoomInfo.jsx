@@ -1,10 +1,16 @@
 import React from 'react'
+import Register from '../../components/Register'
 import { Link, useOutletContext } from 'react-router'
 
 export default function RoomInfo() {
-  const { viewRegister, setViewRegister } = useOutletContext()
+  const { viewRegister, setViewRegister, setMessage } = useOutletContext()
   return (
     <div className='text'>
+      <Register
+        viewRegister={viewRegister}
+        setViewRegister={setViewRegister}
+        setMessage={setMessage}>
+      </Register>
       <div className='text large thin'>Book A Room</div>
       <p className='text regular paragraph'>AFM Local 47 is proud to provide musicians with no-nonsense, comfortable practice space at low cost. </p>
       <p className='text regular paragraph'>From solo practice sessions to 55-piece orchestras, groups of all sizes and styles can choose from small, medium, large, and extra large rooms, and from our newly renovated orchestral rehearsal space. </p>

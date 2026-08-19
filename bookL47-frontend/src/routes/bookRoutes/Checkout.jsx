@@ -189,7 +189,7 @@ export default function Checkout() {
         catch(error) {
             console.log(error)
             setActivePayButton(true)
-            setBannerMessage(setMessage, 'Payment unsuccessful', true, 5)
+            setBannerMessage(setMessage, 'Something went wrong. Please contact us at booking@afm47.org', true, 5)
             
         }
     }
