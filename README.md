@@ -87,7 +87,7 @@ The booking system also needed to prevent conflicting reservations while account
 Working through these problems gave me significantly more experience with date manipulation, asynchronous API calls, database queries, and designing application logic around real-world constraints.
 
 
-**Future Improvements**
+### Future Improvements
 
 Some areas I would like to improve as the application continues to develop include:
 
