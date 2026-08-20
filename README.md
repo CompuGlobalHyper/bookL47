@@ -20,7 +20,6 @@ I built the application from scratch, including both the React frontend and Expr
 ### Screenshots
 
 Calendar and Reservation Selection
-
 ![Calendar and Reservation Selection](screenshots/calendarView.png)
 
 
