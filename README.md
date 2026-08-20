@@ -1,15 +1,15 @@
-# bookL47
+# book47
 ## Overview
 ## Screenshots
 ## Features
 ## Tech Stack
+## Technical Highlights
 ## Technical Challenges
-## What I Learned
 ## Future Improvements
 
 A full-stack rehearsal room reservation application built for AFM Local 47.
 
-**Overview**
+### Overview
 
 bookL47 is an in-house web application I created for AFM Local 47 to manage the reservation process for its rehearsal rooms.
 
@@ -17,7 +17,7 @@ The application allows users to browse available rooms, view availability, creat
 
 I built the application from scratch, including both the React frontend and Express backend, using knowledge I developed through nearly a year of studying JavaScript and full-stack web development.
 
-**Screenshots**
+### Screenshots
 
 Calendar and Reservation Selection
 
@@ -29,39 +29,54 @@ Checkout Page
 
 
 
-**Features**
-User authentication and authorization
-Rehearsal room browsing and selection
-Calendar-based availability
-Room reservations
-Booking management
-Payment processing through Square
-Google Calendar integration
-Role-based functionality
-Timezone-aware booking logic
-Persistent database storage
+### Features
+- User authentication and authorization
+- Rehearsal room browsing and selection
+- Calendar-based availability
+- Room reservations
+- Booking management
+- Payment processing through Square
+- Google Calendar integration
+- Role-based functionality
+- Timezone-aware booking logic
+- Persistent database storage
 
 
-**Tech Stack**
-Frontend
-React
-JavaScript
-CSS
-Backend
-Node.js
-Express
-Passport
-JSON Web Token (JWT)
-Database
-PostgreSQL
-Supabase
-APIs & Integrations
-Square API
-Google API
+### Tech Stack
+#### Frontend
+- React
+- JavaScript
+- CSS
+#### Backend
+- Node.js
+- Express
+- Passport
+- JSON Web Token (JWT)
+#### Database
+- PostgreSQL
+- Supabase
+#### APIs & Integrations
+- Square API
+- Google API
 
+### Technical Highlights
 
-**Technical Challenges**
-Booking and Timezone Logic
+This project was a major step in moving from studying individual JavaScript concepts to building a complete application.
+
+In particular, I gained experience with:
+
+- Designing and consuming REST APIs
+- Authentication and authorization
+- PostgreSQL database design and queries
+- Asynchronous JavaScript
+- React component architecture
+- Managing application state
+- Working with third-party APIs
+- Date and timezone handling
+- Debugging problems across the frontend, backend, and database
+- Structuring a full-stack application
+
+### Technical Challenges
 
 The most challenging part of the project was developing the booking logic.
 
@@ -72,40 +87,16 @@ The booking system also needed to prevent conflicting reservations while account
 Working through these problems gave me significantly more experience with date manipulation, asynchronous API calls, database queries, and designing application logic around real-world constraints.
 
 
-**Full-Stack Integration**
-
-Because I built both the frontend and backend, I had to design the communication between the React application and Express API, handle authentication, send and receive data from PostgreSQL, and integrate third-party services.
-
-This gave me experience working across the entire application rather than building the frontend independently from a pre-existing API.
-
-
-**What I Learned**
-
-This project was a major step in moving from studying individual JavaScript concepts to building a complete application.
-
-In particular, I gained experience with:
-
-Designing and consuming REST APIs
-Authentication and authorization
-PostgreSQL database design and queries
-Asynchronous JavaScript
-React component architecture
-Managing application state
-Working with third-party APIs
-Date and timezone handling
-Debugging problems across the frontend, backend, and database
-Structuring a full-stack application
-
 **Future Improvements**
 
 Some areas I would like to improve as the application continues to develop include:
 
-Improving automated testing
-Adding polished animations
-Expanding error handling
-Improving accessibility
-Refining the user experience
-Further separating application logic into reusable services and components
+- Improving automated testing
+- Adding polished animations
+- Expanding error handling
+- Improving accessibility
+- Refining the user experience
+- Further separating application logic into reusable services and components
 
 **Status**
 
