@@ -19,12 +19,12 @@ I built the application from scratch, including both the React frontend and Expr
 
 **Screenshots**
 
-##Calendar and Reservation Selection
+Calendar and Reservation Selection
 
 ![Calendar and Reservation Selection](screenshots/calendarView.png)
 
 
-##Checkout Page
+Checkout Page
 ![Checkout Page](screenshots/checkoutView.png)
 
 
@@ -40,6 +40,7 @@ Google Calendar integration
 Role-based functionality
 Timezone-aware booking logic
 Persistent database storage
+
 
 **Tech Stack**
 Frontend
@@ -58,6 +59,7 @@ APIs & Integrations
 Square API
 Google API
 
+
 **Technical Challenges**
 Booking and Timezone Logic
 
@@ -69,11 +71,13 @@ The booking system also needed to prevent conflicting reservations while account
 
 Working through these problems gave me significantly more experience with date manipulation, asynchronous API calls, database queries, and designing application logic around real-world constraints.
 
+
 **Full-Stack Integration**
 
 Because I built both the frontend and backend, I had to design the communication between the React application and Express API, handle authentication, send and receive data from PostgreSQL, and integrate third-party services.
 
 This gave me experience working across the entire application rather than building the frontend independently from a pre-existing API.
+
 
 **What I Learned**
 
@@ -91,7 +95,8 @@ Working with third-party APIs
 Date and timezone handling
 Debugging problems across the frontend, backend, and database
 Structuring a full-stack application
-Future Improvements
+
+**Future Improvements**
 
 Some areas I would like to improve as the application continues to develop include:
 
