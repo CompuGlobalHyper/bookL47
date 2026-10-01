@@ -12,7 +12,7 @@ export default function generateBookedArray({ start , end }, buffer = 30, interv
     }
 
     const startMinutes = getMinutes(start) - buffer
-    const endMinutes = getMinutes(end)
+    const endMinutes = getMinutes(end) + buffer
 
     let times = []
 
