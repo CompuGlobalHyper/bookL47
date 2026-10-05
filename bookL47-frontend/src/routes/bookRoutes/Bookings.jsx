@@ -69,7 +69,11 @@ export default function Bookings() {
     const { message } = await res.json()
     load()
     setActive({})
-    setBannerMessage(setMessage, message, false, 5)
+    if (res.ok) {
+      setBannerMessage(setMessage, message, false, 5)
+    } else {
+      setBannerMessage(setMessage, message, true, 5)
+    } 
     setShowCancel(false)
   }
   
