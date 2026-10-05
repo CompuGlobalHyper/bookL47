@@ -1124,16 +1124,11 @@ const controllers = {
                 idempotencyKey,
                 locationId,
                 amountMoney: {
-                    amount: BigInt(100),
+                    amount: BigInt(amount),
                     currency: "USD"
                 },
                 autocomplete: false
             });
-            console.log('API IS WORKING')
-            await squareClient.payments.cancel({
-                paymentId: payment.payment.id
-            });
-            console.log('API IS CANCELLING PAYMENT')
             const paymentId = payment.payment.id
             const total_amount = Number(payment.payment.amountMoney.amount)
             const currency = payment.payment.amountMoney.currency
