@@ -820,7 +820,8 @@ const controllers = {
             const formattedDate = formatDate(booking.date)
             const formattedTime = formatTime(booking.start)
             await sgMail.send({
-                to: email,
+                to: user.email,
+                cc: "booking@afm47.org",
                 from: "info@afm47.org",
                 subject: "Book L47: Cancelled Booking",
                 html: 
@@ -904,7 +905,7 @@ const controllers = {
             return res.status(200).json({message})
         } catch(error) {
             console.log(error)
-            return res.status(500).json({error: error.message})
+            return res.status(500).json({message: "There was an error processing the request"})
         }
     },
     //Cart routes
@@ -1214,6 +1215,7 @@ const controllers = {
             const link = `${process.env.CLIENT_URL}/bookings`
             await sgMail.send({
                 to: user.email,
+                cc: "booking@afm47.org",
                 from: "info@afm47.org",
                 subject: "Book L47: Confirmation email",
                 html: 
