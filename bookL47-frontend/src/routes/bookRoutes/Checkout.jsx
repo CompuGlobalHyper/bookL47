@@ -12,8 +12,8 @@ import ChevronDownIcon from '../../assets/chevronDown.svg?react'
 import squareLogo from '../../assets/square-logo.webp'
 
 
-const appId = import.meta.env.VITE_SANDBOX_SQUARE_APP_ID
-const locationId = import.meta.env.VITE_SANDBOX_SQUARE_LOCATION_ID
+const appId = import.meta.env.VITE_PRODUCTION_SQUARE_APP_ID
+const locationId = import.meta.env.VITE_PRODUCTION_SQUARE_LOCATION_ID
 const API = import.meta.env.VITE_API_URL
 
 
