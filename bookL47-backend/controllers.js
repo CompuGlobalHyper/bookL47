@@ -224,7 +224,7 @@ async function adminBooking (user, bookingData) {
     
 }
 
-async function checkConflicts(cart) { 
+async function checkConflicts(cart, role) { 
     const supabase = supabaseClient()
     console.log(cart)
     for (const item of cart) {
@@ -241,13 +241,14 @@ async function checkConflicts(cart) {
         }
         console.log(bookingData)
         let status = bookingData.length > 0 ? 'conflict' : 'pending'
-        
-        const bookingStart = new Date(item.starts_at)
-        console.log("Cart Item starts at: ", bookingStart)
-        const cutoff = new Date(Date.now() + 1000 * 60 * 60 * 48)
-        console.log("48 hours cutoff is", cutoff)
-        if (bookingStart < cutoff) {
-            status = 'conflict'
+        if (role !== 'admin') {
+            const bookingStart = new Date(item.starts_at)
+            console.log("Cart Item starts at: ", bookingStart)
+            const cutoff = new Date(Date.now() + 1000 * 60 * 60 * 48)
+            console.log("48 hours cutoff is", cutoff)
+            if (bookingStart < cutoff) {
+                status = 'conflict'
+            }
         }
         const { error: updateError } = await supabase
         .from('cart')
@@ -923,8 +924,7 @@ const controllers = {
                 console.log(cartError)
                 return res.status(500).json({message: "Database error"})
         }
-        
-        const updatedCart = await checkConflicts(cartData)
+        const updatedCart = await checkConflicts(cartData, user.role)
         return res.status(200).json(updatedCart)
     },
     async cartPost(req, res) {
