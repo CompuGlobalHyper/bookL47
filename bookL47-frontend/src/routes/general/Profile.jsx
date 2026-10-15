@@ -210,9 +210,9 @@ export default function Profile() {
             { user.role === 'nonMember' 
             && <div className={styles.memberIdContainer}>
                   <div className='text medium'>Are you a member? 
-                    <div className='small'>1. Log in to AFM Local 47 Ensemble 2.0. Click here to open a new tab to the website.</div>
+                    <div className='small'>1. Log in to AFM Local 47 Ensemble 2.0. <a href="https://ensemble.afm47.org" className="link" target="_blank'">Click here to open a new tab to the website.</a></div>
                     <div className='small'>2. Once you're signed in, navigate to your profile. In the top-right of the profile page, you can find your account number.</div>
-                    <div className='small'>3. Enter the account number and click 'Link Ensemble 2.0 account' to receive your member discounts!</div>
+                    <div className='small'>3. Enter the account number and click 'Link account' to receive your member discounts!</div>
                   </div>
                   <div className={`${styles.field} text medium`}>
                     <input
@@ -227,7 +227,7 @@ export default function Profile() {
                     />
                     <label htmlFor="password">Ensemble Account No.</label>
                   </div>
-                  <div className='button text medium' onClick={() => {handleLink()}}><div>Link Ensemble 2.0 account</div></div>
+                  <div className='button text medium' onClick={() => {handleLink()}}><div>Link account</div></div>
               </div>
             }
         </div>
