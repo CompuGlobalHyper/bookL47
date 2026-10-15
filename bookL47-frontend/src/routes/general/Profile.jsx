@@ -209,7 +209,11 @@ export default function Profile() {
             <div className='link small text' onClick={() => handleReset()}>Send reset password link?</div>
             { user.role === 'nonMember' 
             && <div className={styles.memberIdContainer}>
-                  <div className='text medium'>Are you a member? <div className='small'>Log in to Ensemble 2.0 and enter your E2 account number below to receive your member discounts!</div></div>
+                  <div className='text medium'>Are you a member? 
+                    <div className='small'>1. Log in to AFM Local 47 Ensemble 2.0. Click here to open a new tab to the website.</div>
+                    <div className='small'>2. Once you're signed in, navigate to your profile. In the top-right of the profile page, you can find your account number.</div>
+                    <div className='small'>3. Enter the account number and click 'Link Ensemble 2.0 account' to receive your member discounts!</div>
+                  </div>
                   <div className={`${styles.field} text medium`}>
                     <input
                     id="memberId"
