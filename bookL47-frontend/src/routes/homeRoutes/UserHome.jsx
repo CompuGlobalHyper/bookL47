@@ -35,6 +35,8 @@ export default function UserHome() {
 
   return (
     <div>
+      <div className='medium text error'>Note: We are experiencing an issue with the <span className='bold'>Safari </span> web browser.</div>
+      <div className='medium text' >Please use the Google Chrome or Microsoft Edge web browser to use the application.</div>
       <div className='large text'>Hello {user.firstName}!</div>
       { !user.verified 
       ? <div>
