@@ -13,7 +13,7 @@ import squareLogo from '../../assets/square-logo.webp'
 
 
 const appId = import.meta.env.VITE_SANDBOX_SQUARE_APP_ID
-const locationId = import.meta.env.VITE_SANDBOX_SQUARE_LOCATION_ID=LQ6NG5Q6JBB6C
+const locationId = import.meta.env.VITE_SANDBOX_SQUARE_LOCATION_ID
 const API = import.meta.env.VITE_API_URL
 
 
