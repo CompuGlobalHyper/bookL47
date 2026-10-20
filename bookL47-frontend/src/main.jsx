@@ -19,6 +19,7 @@ import Confirmation from './routes/bookRoutes/Confirmation.jsx';
 import Profile from './routes/general/Profile.jsx'
 import NotFound from './routes/general/NotFound.jsx';
 import requireUser from './loaders/requireUser.js';
+import requireVerified from './loaders/requireVerified.js';
 import { UserProvider } from './contexts/UserContext.jsx';
 import { CartProvider } from './contexts/CartContext.jsx';
 import ResetPassword from './routes/general/ResetPassword.jsx';
@@ -43,12 +44,16 @@ const router = createBrowserRouter([
       { path: "*", element: <NotFound/>},
       { loader: requireUser,
         children: [
-          { path: "/book", element: <Book />},
-          { path: "/bookings", element: <Bookings />},
-          { path: '/cart', element: <Cart />},
-          { path: '/checkout', element: <Checkout/>},
-          { path: '/confirmation', element: <Confirmation />},
-          { path: '/profile', element: <Profile />}
+          { path: '/profile', element: <Profile />},
+          { loader: requireVerified, 
+            children: [
+              { path: "/book", element: <Book />},
+              { path: "/bookings", element: <Bookings />},
+              { path: '/cart', element: <Cart />},
+              { path: '/checkout', element: <Checkout/>},
+              { path: '/confirmation', element: <Confirmation />}
+            ]
+          }
         ]
       }
     ],
